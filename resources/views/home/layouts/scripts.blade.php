@@ -21,3 +21,5 @@
 <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
 <script src="{{ asset('assets/js/common.js') }}"></script>
+@section("scripts")
+@show

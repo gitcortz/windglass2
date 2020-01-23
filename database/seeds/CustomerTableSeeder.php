@@ -16,7 +16,7 @@ class CustomerTableSeeder extends Seeder
        $faker = \Faker\Factory::create();
 
        for ($i = 0; $i < 10; $i++) {
-           \App\model\Customer::create([
+           \App\Models\Customer::create([
                'name' => $faker->name, 
                'email' => $faker->email,
                'address' => $faker->address,

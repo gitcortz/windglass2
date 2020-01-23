@@ -27,8 +27,7 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->input(), array(
-            'name' => 'required',
-            'email' => 'required',//unique
+            'name' => 'required',            
         ));
 
         if ($validator->fails()) {
@@ -60,7 +59,6 @@ class CustomerController extends Controller
     {
         $validator = Validator::make($request->input(), array(
             'name' => 'required',
-            'email' => 'required',
         ));
 
         if ($validator->fails()) {
@@ -73,6 +71,11 @@ class CustomerController extends Controller
         $customer = Customer::find($id);
         $customer->name =  $request->input('name');
         $customer->email = $request->input('email');
+        $customer->address = $request->input('address');
+        $customer->phone = $request->input('phone');
+        $customer->mobile = $request->input('mobile');
+        $customer->notes = $request->input('notes');
+        $customer->discount = $request->input('discount');
 
         $customer->save();
 

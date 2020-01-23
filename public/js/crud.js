@@ -3,6 +3,7 @@ var Crud = (function ($) {
         var _component = '';
         var _columns;
         var _datatable;
+        var _loadCallBack;
         var _datatable_container = $('#dataTable');
         var _form = $('#form-addupdate');
         var _modal = $('#modal-addupdate');
@@ -62,13 +63,11 @@ var Crud = (function ($) {
             }
         };
 
-        var loadForm = function(id) {
+        var loadForm = function(id) { 
             ajaxcall("GET", "/"+_component+"/"+id, null, 
                 function(data) {
                     var data = data.data;
-                    _form.find("input[name=id]").val(data.id);
-                    _form.find("input[name=name]").val(data.name);
-                    _form.find("input[name=email]").val(data.email);
+                    _loadCallBack(data);
                 }, function(data) {
                     console.log(data);
                 });
@@ -125,15 +124,17 @@ var Crud = (function ($) {
             });
         };
 
-        var init = function(component, columns) {
+        var init = function(component, columns, loadCallBack) {
             _component = component;
             _columns = columns;
+            _loadCallBack = loadCallBack;
             init_datatable();
             init_events();
         };
 
         return {
-            init: init,           
+            init: init,
+            form_control: _form      
         }
     }
 })(jQuery);

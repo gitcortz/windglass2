@@ -22,3 +22,14 @@ Route::group(['prefix' => 'cities'], function () {
     Route::put('/{id}', [ 'uses' => 'CityController@update', 'as' => 'cities.update',]);
     Route::delete('/{id}', [ 'uses' => 'CityController@destroy', 'as'   => 'cities.destroy',]);
 });
+
+
+//Branches Routes 
+Route::group(['prefix' => 'branches'], function () {
+    Route::get('', [ 'uses' => 'BranchController@index', 'as' => 'branches',]);
+    Route::get('/all', [ 'uses' => 'BranchController@list', 'as' => 'branches.list',]);
+    Route::get('/{id}', [ 'uses' => 'BranchController@show', 'as' => 'branches.show',]);
+    Route::post('/', [ 'uses' => 'BranchController@store', 'as' => 'branches.store',]);
+    Route::put('/{id}', [ 'uses' => 'BranchController@update', 'as' => 'branches.update',]);
+    Route::delete('/{id}', [ 'uses' => 'BranchController@destroy', 'as'   => 'branches.destroy',]);
+});

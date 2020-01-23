@@ -61,8 +61,6 @@
 @endsection
 @section("scripts")
 <script>
-var _list = "{{ route('customers.list')}}";
-var _cnamelist = "{{ route('customers.list')}}";
 var _component = "customers";
 </script>
 <script type="text/javascript" src="{{asset('js/crud.js')}}"></script>

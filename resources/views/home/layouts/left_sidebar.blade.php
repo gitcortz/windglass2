@@ -143,6 +143,14 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{ route('branches') }}" class="nav-link">
+              <i class="nav-icon far fa-image"></i>
+              <p>
+                Branch
+              </p>
+            </a>
+          </li>
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon far fa-envelope"></i>

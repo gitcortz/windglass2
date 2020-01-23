@@ -9,7 +9,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Location / City 
+            <h1 class="m-0 text-dark">Branches 
             <a id="btn-open-addupdate-modal" href="#" class="btn btn-success" 
         data-toggle="modal"><i class="material-icons">&#xE147;</i> <span></span></a></h1>
             
@@ -18,7 +18,7 @@
           <div class="col-sm-6">          
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Location  </li>
+              <li class="breadcrumb-item active">Branches </li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -37,8 +37,12 @@
                     <table class="table table-bordered table-striped" id="dataTable">
                         <thead>
                             <tr>
-                                <th>Id</th>
+                                <th>City</th>
+                                <th>Code</th>
                                 <th>Name</th>
+                                <th>Address</th>
+                                <th>Phone</th>
+                                <th>Mobile</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -51,14 +55,14 @@
     </section>
     <!-- /.content -->
   </div>  
-    @include('home.views.partials.cities.modal-form')
+    @include('home.views.partials.branches.modal-form')
     @include('home.views.partials.common.modal-delete')
 
 @endsection
 @section("scripts")
 <script>
-var _component = "cities";
+var _component = "branches";
 </script>
 <script type="text/javascript" src="{{asset('js/crud.js')}}"></script>
-<script type="text/javascript" src="{{asset('js/cities.js')}}"></script>
+<script type="text/javascript" src="{{asset('js/branches.js')}}"></script>
 @endsection

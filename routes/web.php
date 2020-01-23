@@ -55,3 +55,14 @@ Route::group(['prefix' => 'producttypes'], function () {
     Route::put('/{id}', [ 'uses' => 'ProductTypeController@update', 'as' => 'producttypes.update',]);
     Route::delete('/{id}', [ 'uses' => 'ProductTypeController@destroy', 'as'   => 'producttypes.destroy',]);
 });
+
+
+//Product Routes 
+Route::group(['prefix' => 'products'], function () {
+    Route::get('', [ 'uses' => 'ProductController@index', 'as' => 'products',]);
+    Route::get('/all', [ 'uses' => 'ProductController@list', 'as' => 'products.list',]);
+    Route::get('/{id}', [ 'uses' => 'ProductController@show', 'as' => 'products.show',]);
+    Route::post('/', [ 'uses' => 'ProductController@store', 'as' => 'products.store',]);
+    Route::put('/{id}', [ 'uses' => 'ProductController@update', 'as' => 'products.update',]);
+    Route::delete('/{id}', [ 'uses' => 'ProductController@destroy', 'as'   => 'products.destroy',]);
+});

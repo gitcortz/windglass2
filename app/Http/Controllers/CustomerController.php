@@ -14,8 +14,11 @@ class CustomerController extends Controller
     }
 
     public function list() {
-        $customers = Customer::query();
+        $customers = Customer::with('city')->select('customers.*');;
         return Datatables::of($customers)
+                ->addColumn('city', function (Customer $customer) {
+                    return $customer->city ? $customer->city->name : '';
+                })
                 ->addColumn("action_btns", function($customers) {
                     return '<a href="#" class="btn btn-info" action="edit" data-id="'.$customers->id.'">Edit</a>'
                     .'&nbsp;<a href="#" class="btn btn-danger" action="delete" data-id="'.$customers->id.'">Delete</a>';
@@ -76,6 +79,7 @@ class CustomerController extends Controller
         $customer->mobile = $request->input('mobile');
         $customer->notes = $request->input('notes');
         $customer->discount = $request->input('discount');
+        $customer->city_id = $request->input('city_id');
 
         $customer->save();
 

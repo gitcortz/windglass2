@@ -4,6 +4,7 @@ var Crud = (function ($) {
         var _columns;
         var _datatable;
         var _loadCallBack;
+        var _loadControlsCallBack;
         var _datatable_container = $('#dataTable');
         var _form = $('#form-addupdate');
         var _modal = $('#modal-addupdate');
@@ -79,6 +80,7 @@ var Crud = (function ($) {
             _form.trigger("reset");
             _modal.modal('show');
             _form.find("input[name=id]").val("");
+            
         }
 
         var showDeleteModal = function(id, text) {
@@ -124,6 +126,10 @@ var Crud = (function ($) {
             });
         };
 
+        var set_loadControls = function(loadControlsCallBack) {
+            _loadControlsCallBack = loadControlsCallBack;
+        };
+
         var init = function(component, columns, loadCallBack) {
             _component = component;
             _columns = columns;
@@ -134,7 +140,9 @@ var Crud = (function ($) {
 
         return {
             init: init,
-            form_control: _form      
+            form_control: _form,     
+            ajaxcall: ajaxcall,
+            set_loadControls : set_loadControls
         }
     }
 })(jQuery);

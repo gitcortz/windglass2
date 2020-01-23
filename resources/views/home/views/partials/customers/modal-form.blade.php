@@ -31,8 +31,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="city">City</label>
-                                <input type="text" class="form-control" id="city" name="city" 
-                                    placeholder="Enter city">
+                                <select class="form-control" id='city' name='city_id'></select>
                             </div>
                             <div class="form-group">
                                 <label for="notes">Landmark</label>

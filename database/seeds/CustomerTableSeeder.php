@@ -20,7 +20,7 @@ class CustomerTableSeeder extends Seeder
                'name' => $faker->name, 
                'email' => $faker->email,
                'address' => $faker->address,
-               'city' => $faker->city,
+               //'city' => $faker->city,
                'phone' => $faker->e164PhoneNumber,
                'mobile' => $faker->e164PhoneNumber,
            ]);

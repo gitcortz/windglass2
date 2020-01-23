@@ -4,7 +4,10 @@ $(document).ready(function() {
         [
             {data: "id", name : "id"},
             {data: "name", name : "name"},
+            {data: "address", name : "address"},
             {data: "city", name : "city"},
+            {data: "phone", name : "phone"},
+            {data: "mobile", name : "mobile"},
             {data: "action_btns", name : "action_btns"},
         ], function(data) {
             var form = crud.form_control;

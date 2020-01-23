@@ -39,7 +39,10 @@
                             <tr>
                                 <th>Id</th>
                                 <th>Name</th>
-                                <th>Email</th>
+                                <th>Address</th>
+                                <th>City</th>
+                                <th>Phone</th>
+                                <th>Mobile</th>
                                 <th>Action</th>
                             </tr>
                         </thead>

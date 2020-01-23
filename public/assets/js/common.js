@@ -1,17 +1,16 @@
-function initialize_datatable(id, url, columns){
-    if ($("#"+id).length > 0) {
-        $("#"+id).DataTable({
-            processing: true,
-            serverSide: true,
-            ajax : url,
-            columns : columns
-        });
-     }
-}
+(function ($) {
+    if (!$) {
+        return;
+    }
+    
+    $.fn.serializeFormToObject = function() {
+        var $form = $(this);
+        var fields = $form.find('[disabled]');
+        fields.prop('disabled', false);
+        var json = $form.serializeJSON();
+        fields.prop('disabled', true);
+        return json;
+    };
 
-function addTaskForm() {
-    $(document).ready(function() {
-        $("#add-error-bag").hide();
-        $('#editTaskModal').modal('show');
-    });
-}
+
+})(jQuery);

@@ -3,22 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\City;
+use App\Models\Brand;
 use Datatables;
 use Validator;
 
-class CityController extends Controller
+class BrandController extends Controller
 {
     public function index(){ 
-        return view("home.views.cities");
+        return view("home.views.brands");
     }
 
     public function list() {
-        $cities = City::query();
-        return Datatables::of($cities)
-                ->addColumn("action_btns", function($cities) {
-                    return '<a href="#" class="btn btn-info" action="edit" data-id="'.$cities->id.'">Edit</a>'
-                    .'&nbsp;<a href="#" class="btn btn-danger" action="delete" data-id="'.$cities->id.'">Delete</a>';
+        $brands = Brand::query();
+        return Datatables::of($brands)
+                ->addColumn("action_btns", function($brands) {
+                    return '<a href="#" class="btn btn-info" action="edit" data-id="'.$brands->id.'">Edit</a>'
+                    .'&nbsp;<a href="#" class="btn btn-danger" action="delete" data-id="'.$brands->id.'">Delete</a>';
                 })
                 ->rawColumns(["action_btns"])
                 ->make(true);
@@ -37,7 +37,7 @@ class CityController extends Controller
             ], 422);
         }
 
-        $data = City::create($request->all());
+        $data = Brand::create($request->all());
 
         return response()->json([
             'error' => false,
@@ -47,7 +47,7 @@ class CityController extends Controller
 
     public function show($id)
     {
-        $data = City::find($id);
+        $data = Brand::find($id);
 
         return response()->json([
             'error' => false,
@@ -68,7 +68,7 @@ class CityController extends Controller
             ], 422);
         }
 
-        $data = City::find($id);
+        $data = Brand::find($id);
         $data->name =  $request->input('name');
       
         $data->save();
@@ -81,7 +81,7 @@ class CityController extends Controller
 
     public function destroy($id)
     {
-        $task = City::destroy($id);
+        $task = Brand::destroy($id);
 
         return response()->json([
             'error' => false,

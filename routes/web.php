@@ -33,3 +33,14 @@ Route::group(['prefix' => 'branches'], function () {
     Route::put('/{id}', [ 'uses' => 'BranchController@update', 'as' => 'branches.update',]);
     Route::delete('/{id}', [ 'uses' => 'BranchController@destroy', 'as'   => 'branches.destroy',]);
 });
+
+
+//Brands Routes 
+Route::group(['prefix' => 'brands'], function () {
+    Route::get('', [ 'uses' => 'BrandController@index', 'as' => 'brands',]);
+    Route::get('/all', [ 'uses' => 'BrandController@list', 'as' => 'brands.list',]);
+    Route::get('/{id}', [ 'uses' => 'BrandController@show', 'as' => 'brands.show',]);
+    Route::post('/', [ 'uses' => 'BrandController@store', 'as' => 'brands.store',]);
+    Route::put('/{id}', [ 'uses' => 'BrandController@update', 'as' => 'brands.update',]);
+    Route::delete('/{id}', [ 'uses' => 'BrandController@destroy', 'as'   => 'brands.destroy',]);
+});

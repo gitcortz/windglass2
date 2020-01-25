@@ -66,3 +66,14 @@ Route::group(['prefix' => 'products'], function () {
     Route::put('/{id}', [ 'uses' => 'ProductController@update', 'as' => 'products.update',]);
     Route::delete('/{id}', [ 'uses' => 'ProductController@destroy', 'as'   => 'products.destroy',]);
 });
+
+
+//Stock Routes 
+Route::group(['prefix' => 'stocks'], function () {
+    Route::get('', [ 'uses' => 'StockController@index', 'as' => 'stocks',]);
+    Route::get('/all', [ 'uses' => 'StockController@list', 'as' => 'stocks.list',]);
+    Route::get('/{id}', [ 'uses' => 'StockController@show', 'as' => 'stocks.show',]);
+    Route::post('/', [ 'uses' => 'StockController@store', 'as' => 'stocks.store',]);
+    Route::put('/{id}', [ 'uses' => 'StockController@update', 'as' => 'stocks.update',]);
+    Route::delete('/{id}', [ 'uses' => 'StockController@destroy', 'as'   => 'stocks.destroy',]);
+});

@@ -4,6 +4,7 @@ var Crud = (function ($) {
         var _columns;
         var _datatable;
         var _loadCallBack;
+        var _saveCallBack;
         var _loadControlsCallBack;
         var _datatable_container = $('#dataTable');
         var _form = $('#form-addupdate');
@@ -45,6 +46,7 @@ var Crud = (function ($) {
         };
 
         var save = function() {  
+            alert('orig');
             var data = _form.serializeFormToObject();
             if (data.id == "")
                 ajaxcall("POST", "/"+_component, _form.serializeFormToObject(), updateSuccess, updateError);
@@ -98,7 +100,10 @@ var Crud = (function ($) {
                 if (!_form.valid()) {
                     return;
                 }
-                save();                
+                if (!_saveCallBack)
+                    save();
+                else 
+                    _saveCallBack();
             });
 
             $("#btn-delete").click(function() {
@@ -130,10 +135,15 @@ var Crud = (function ($) {
             _loadControlsCallBack = loadControlsCallBack;
         };
 
+        var set_saveCallBack = function(saveCallBack) {
+            _saveCallBack = saveCallBack;
+        };
+
         var init = function(component, columns, loadCallBack) {
             _component = component;
             _columns = columns;
             _loadCallBack = loadCallBack;
+            
             init_datatable();
             init_events();
         };
@@ -142,7 +152,8 @@ var Crud = (function ($) {
             init: init,
             form_control: _form,     
             ajaxcall: ajaxcall,
-            set_loadControls : set_loadControls
+            set_loadControls : set_loadControls,
+            set_saveCallBack : set_saveCallBack,
         }
     }
 })(jQuery);

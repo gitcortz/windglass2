@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Branch;
+use App\Models\Stock;
 use Datatables;
 use Validator;
 
@@ -98,5 +99,12 @@ class BranchController extends Controller
             'error' => false,
             'task'  => $task,
         ], 200);
+    }
+    
+    public function products(Request $request)
+    {
+        $branch_id = $request->id;
+        $products = Stock::with('product')->where('branch_id', $branch_id)->get();
+        return ($products);
     }
 }

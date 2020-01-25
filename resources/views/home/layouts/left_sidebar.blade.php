@@ -140,6 +140,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{ route('stocktransfers') }}"  class="nav-link">
+                <i class="nav-icon far fa-image"></i>
+                  <p>Stock Transfers</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="pages/layout/top-nav-sidebar.html" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Stock Movements</p>

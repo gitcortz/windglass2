@@ -32,6 +32,7 @@ Route::group(['prefix' => 'branches'], function () {
     Route::post('/', [ 'uses' => 'BranchController@store', 'as' => 'branches.store',]);
     Route::put('/{id}', [ 'uses' => 'BranchController@update', 'as' => 'branches.update',]);
     Route::delete('/{id}', [ 'uses' => 'BranchController@destroy', 'as'   => 'branches.destroy',]);
+    Route::get('/{id}/products', 'BranchController@products');
 });
 
 
@@ -76,4 +77,25 @@ Route::group(['prefix' => 'stocks'], function () {
     Route::post('/', [ 'uses' => 'StockController@store', 'as' => 'stocks.store',]);
     Route::put('/{id}', [ 'uses' => 'StockController@update', 'as' => 'stocks.update',]);
     Route::delete('/{id}', [ 'uses' => 'StockController@destroy', 'as'   => 'stocks.destroy',]);
+});
+
+
+//StockTransfer Routes 
+Route::group(['prefix' => 'stocktransfers'], function () {
+    Route::get('', [ 'uses' => 'StockTransferController@index', 'as' => 'stocktransfers',]);
+    Route::get('/all', [ 'uses' => 'StockTransferController@list', 'as' => 'stocktransfers.list',]);
+    Route::get('/{id}', [ 'uses' => 'StockTransferController@show', 'as' => 'stocktransfers.show',]);
+    Route::post('/', [ 'uses' => 'StockTransferController@store', 'as' => 'stocktransfers.store',]);
+    Route::put('/{id}', [ 'uses' => 'StockTransferController@update', 'as' => 'stocktransfers.update',]);
+    Route::delete('/{id}', [ 'uses' => 'StockTransferController@destroy', 'as'   => 'stocktransfers.destroy',]);
+});
+
+//StockTransfer Routes 
+Route::group(['prefix' => 'stocktransferitems'], function () {
+    Route::get('', [ 'uses' => 'StockTransferItemController@index', 'as' => 'stocktransferitems',]);
+    Route::get('/all', [ 'uses' => 'StockTransferItemController@list', 'as' => 'stocktransferitems.list',]);
+    Route::get('/{id}', [ 'uses' => 'StockTransferItemController@show', 'as' => 'stocktransferitems.show',]);
+    Route::post('/', [ 'uses' => 'StockTransferItemController@store', 'as' => 'stocktransferitems.store',]);
+    Route::put('/{id}', [ 'uses' => 'StockTransferItemController@update', 'as' => 'stocktransferitems.update',]);
+    Route::delete('/{id}', [ 'uses' => 'StockTransferItemController@destroy', 'as'   => 'stocktransferitems.destroy',]);
 });

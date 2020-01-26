@@ -1,16 +1,18 @@
-
-
 <!-- /.content-wrapper -->
 <footer class="main-footer">
-    <strong>Copyright &copy; 2014-2019 <a href="http://philgas.ph">philGas.PH</a>.</strong>
-    All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
-      <b>Version</b> 2.0.0
-    </div>
-  </footer>
+  <div class="pull-right hidden-xs">
+    <b>Version</b> 2.4.18
+  </div>
+  <strong>Copyright &copy; 2019-2020 <a href="https://adminlte.io">AdminLTE</a>.</strong> All rights
+  reserved.
+</footer>
 
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
-  <!-- /.control-sidebar -->
+
+<!-- Control Sidebar -->
+<aside class="control-sidebar control-sidebar-dark" style="display: none;">
+<!-- Control sidebar content goes here -->
+</aside>
+<!-- /.control-sidebar -->
+<!-- Add the sidebar's background. This div must be placed
+immediately after the control sidebar -->
+<div class="control-sidebar-bg"></div>

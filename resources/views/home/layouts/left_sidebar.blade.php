@@ -34,7 +34,7 @@
           </li>
           {{-- POS --}}
           <li class="nav-item">
-            <a href="pages/widgets.html" class="nav-link">
+            <a href="{{ route('pos') }}" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
                 POS

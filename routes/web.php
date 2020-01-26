@@ -100,3 +100,9 @@ Route::group(['prefix' => 'stocktransferitems'], function () {
     Route::put('/{id}', [ 'uses' => 'StockTransferItemController@update', 'as' => 'stocktransferitems.update',]);
     Route::delete('/{id}', [ 'uses' => 'StockTransferItemController@destroy', 'as'   => 'stocktransferitems.destroy',]);
 });
+
+//POS Routes 
+Route::group(['prefix' => 'pos'], function () {
+    Route::get('', [ 'uses' => 'PosController@index', 'as' => 'pos',]);
+});
+

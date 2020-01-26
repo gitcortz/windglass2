@@ -46,7 +46,6 @@ var Crud = (function ($) {
         };
 
         var save = function() {  
-            alert('orig');
             var data = _form.serializeFormToObject();
             if (data.id == "")
                 ajaxcall("POST", "/"+_component, _form.serializeFormToObject(), updateSuccess, updateError);
@@ -97,6 +96,7 @@ var Crud = (function ($) {
             });
             
             $("#btn-save").click(function() {
+                _error_bag.hide();
                 if (!_form.valid()) {
                     return;
                 }
@@ -138,6 +138,10 @@ var Crud = (function ($) {
         var set_saveCallBack = function(saveCallBack) {
             _saveCallBack = saveCallBack;
         };
+        
+        var get_form = function() {
+            return _form;
+        }
 
         var init = function(component, columns, loadCallBack) {
             _component = component;
@@ -154,6 +158,9 @@ var Crud = (function ($) {
             ajaxcall: ajaxcall,
             set_loadControls : set_loadControls,
             set_saveCallBack : set_saveCallBack,
+            get_form : get_form,
+            updateSuccess: updateSuccess,
+            updateError : updateError
         }
     }
 })(jQuery);

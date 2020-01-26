@@ -18,6 +18,6 @@ class StockTransfer extends Model
         return $this->belongsTo('App\Models\Branch');
     }
     public function stock_transfer_items(){
-        return $this->hasMany('App\Models\StockTransferItems');
+        return $this->hasMany('App\Models\StockTransferItem');
     }
 }

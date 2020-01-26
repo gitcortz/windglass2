@@ -13,7 +13,7 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="id" id="_id" />
-                    <div class="alert alert-danger d-none" id="error-bag">
+                    <div class="alert alert-danger" style="display:none" id="error-bag">
                         <ul id="error-list">
                         </ul>
                     </div>
@@ -58,7 +58,15 @@
                     <hr />
                     <div class="row">
                         <div class="col-md-12">
-                        <a href="#" id="addRow">Add new row</a>
+                            <div class="alert alert-danger" style="display:none" id="items-error-bag">
+                                <ul id="items-error-list">
+                                </ul>
+                            </div>
+                            <a href="#" id="addRow">Add new row</a>                                                
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
                         <table id="itemDataTable" class="table table-striped table-bordered" style="width:100%">
                             <thead>
                                 <tr>

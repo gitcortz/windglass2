@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\StockTransfer;
+use App\Models\StockTransferItem;
 use App\Models\Enums\TransferStatus;
 use Datatables;
 use Validator;
@@ -47,9 +48,25 @@ class StockTransferController extends Controller
                 'messages' => $validator->errors(),
             ], 422);
         }
-
-        $data = StockTransfer::create($request->all());
-
+          
+        $data = StockTransfer::create([
+            'from_branch_id' => $request->from_branch_id, 
+            'to_branch_id' => $request->to_branch_id,
+            'transfer_status_id' => $request->transfer_status_id,
+            'scheduled_date'=>$request->scheduled_date,
+            'received_date' => $request->received_date,
+            'remarks' => $request->remarks,
+          ]);
+          
+        $data_id = $data->id;
+        foreach ($request->items as $item) {
+            $transfer_item = StockTransferItem::create([
+                'stock_transfer_id' => $data->id,     
+                'stock_id' => $item['stock_id'],
+                'quantity' => $item['quantity'],
+            ]);  
+        }
+        
         return response()->json([
             'error' => false,
             'data'  => $data,
@@ -58,7 +75,7 @@ class StockTransferController extends Controller
 
     public function show($id)
     {
-        $data = StockTransfer::find($id);
+        $data = StockTransfer::with('stock_transfer_items.stock.product')->find($id);
 
         return response()->json([
             'error' => false,
@@ -103,6 +120,13 @@ class StockTransferController extends Controller
             'error' => false,
             'task'  => $task,
         ], 200);
+    }
+
+    public function items(Request $request)
+    {
+        $stock_transfer_id = $request->id;
+        $stock_transfers = StockTransferItem::where('stock_transfer_id', $stock_transfer_id)->get();
+        return ($stock_transfers);
     }
 }
 

@@ -88,6 +88,7 @@ Route::group(['prefix' => 'stocktransfers'], function () {
     Route::post('/', [ 'uses' => 'StockTransferController@store', 'as' => 'stocktransfers.store',]);
     Route::put('/{id}', [ 'uses' => 'StockTransferController@update', 'as' => 'stocktransfers.update',]);
     Route::delete('/{id}', [ 'uses' => 'StockTransferController@destroy', 'as'   => 'stocktransfers.destroy',]);
+    Route::get('/{id}/items', 'StockTransferController@items');
 });
 
 //StockTransfer Routes 

@@ -18,20 +18,63 @@ $(document).ready(function() {
             form.find("#from_branch").val(data.from_branch_id);
             form.find("#to_branch").val(data.to_branch_id);
             form.find("#status").val(data.transfer_status_id);
-            
+            var list = data.stock_transfer_items;
+            for(var i=0; i<list.length; i++){
+                _detail_datatable.row.add([
+                    list[i].id,
+                    list[i].stock.product.producttype_id,
+                    list[i].stock_id,
+                    list[i].quantity,
+                ]).draw( false );
+            }
+            if (data.id!='') {
+                $('#btn-save').hide();
+                $('#addRow').hide();                
+                
+                //var column = _detail_datatable.column(2).visible(false);
+
+            }
         }
     );
-    crud.set_saveCallBack(function() {
+
+    crud.set_saveCallBack(function() {        
+        var form = crud.get_form();
+        var transfer_items = [];
         var data = _detail_datatable.data().toArray();
-        // show data
+        console.log(data.length);
+
+        $('#items-error-list').empty;
+        if (data.length == 0) {
+            $('#items-error-bag').show();
+            $('#items-error-list').append('<li>please add an item</li>');
+            return;
+        }
+        else {
+            $('#items-error-bag').hide();           
+        }
+
         data.forEach(function(row, i) {
             console.log('row ' + data[i][0] + ", " + data[i][1] + ", " + data[i][2] + ", " + data[i][3]);
-            /*row.forEach(function(column, j) {
-                console.log('row ' + i + ' column ' + j + ' value ' + column);
-            });*/
-        });
-        
-        
+            transfer_items.push({
+                id : data[i][0], 
+                stock_id: data[i][2],
+                quantity: data[i][3],
+            })
+        });        
+
+        var transfer = {
+            id : form.find("input[name=id]").val(),
+            from_branch_id : form.find("#from_branch").val(),
+            to_branch_id : form.find("#to_branch").val(),
+            transfer_status_id : form.find("#status").val(),
+            scheduled_date : form.find("#scheduled_date").val(),
+            received_date : form.find("#received_date").val(),
+            remarks : form.find("#remarks").val(),
+            items: transfer_items
+        };
+
+        crud.ajaxcall("POST", "/stocktransfers", transfer, crud.updateSuccess, crud.updateError);
+        console.log(transfer);    
     });
     
     init_dropdown(crud);
@@ -67,6 +110,7 @@ function init_dropdown(crud) {
             console.log(e);
         }
     );
+
     crud.ajaxcall("GET", "/producttypes/all", null, 
         function(data) {
             _producttypes = data.data;
@@ -85,6 +129,8 @@ var _detail_datatable;
 var _detail_counter = 0;
 
 function init_detail() {
+    alert($('#form-addupdate').find("input[name=id]").val());
+
     if (_detail_datatable) {
         _detail_datatable.clear().draw();
         return;
@@ -125,7 +171,7 @@ function init_detail() {
                     }
                 },
                 {
-                    width: "6%",
+                    width: "60%",
                     render: function(data,t,row){
                         var $select = $("<select></select>", {
                             "id": row[0]+"_stockid",   
@@ -168,7 +214,7 @@ function init_detail() {
                 },
                 {
                     width: "10%",
-                    "defaultContent": '<a href="#" class="btn btn-danger" action="remove" data-id="">X</a>'
+                    defaultContent: '<a href="#" class="btn btn-danger" action="remove" data-id="">X</a>'
                 }
               ],
             drawCallback: function( settings ) {
@@ -212,11 +258,12 @@ function init_detail() {
                })
             }
         });
+
         _detail_datatable_container.on('click', 'tbody tr a[action="remove"]', function(event){
             var tr = $(this).closest('tr');
             var data = _detail_datatable.row(tr).data()
             _detail_datatable.row(tr).remove().draw();
-            console.log( "got the data" ); //This alert is never reached
+            //console.log( "got the data" ); //This alert is never reached
             console.log( data[0] +"'s salary is: "+ data[1] );
 
 
@@ -236,88 +283,14 @@ function init_detail() {
 
     $('#addRow').off('click');
     $('#addRow').on('click', function () {
-       
         _detail_datatable.row.add( [
             _detail_counter,
+            _products[0].id,
+            _producttypes[0].id,
             1,
-            _detail_counter +'.2',
-            _detail_counter +'.3',
         ] ).draw( false );
  
-        _detail_counter++;
     } );
 }
 
 
-
-
-    /*
-    var times = [
-        "12:00 am", 
-        "1:00 am", 
-        "2:00 am", 
-        "3:00 am", 
-        "4:00 am", 
-        "5:00 am", 
-        "6:00 am", 
-        "7:00 am", 
-        "8:00 am", 
-        "9:00 am", 
-        "10:00 am", 
-        "11:00 am", 
-        "12:00 pm", 
-        "1:00 pm", 
-        "2:00 pm", 
-        "3:00 pm", 
-        "4:00 pm", 
-        "5:00 pm", 
-        "6:00 pm", 
-        "7:00 pm", 
-        "8:00 pm", 
-        "9:00 pm", 
-        "10:00 pm", 
-        "11:00 pm"
-    ];
-    $('#items').DataTable( {
-        "paging":   false,
-        "ordering": false,
-        "info":     false,
-        "searching": false,
-        "processing": true,
-        "columns":[
-        	null,
-        	{
-            	"render": function(d,t,r){
-                	var $select = $("<select></select>", {
-                    	"id": r[0]+"start",
-                        "value": d
-                    });
-                	$.each(times, function(k,v){
-                    	var $option = $("<option></option>", {
-                        	"text": v,
-                            "value": v
-                        });
-                        if(d === v){
-                        	$option.attr("selected", "selected")
-                        }
-                    	$select.append($option);
-                    });
-                    return $select.prop("outerHTML");
-                }
-            },
-            
-        ]
-    });
-    */
-    /*
-    
-    ('#test').on('change', function () {
-    var optionSelected = $("option:selected", this);
-    var valueSelected = this.value;
-    var row = $(this).closest('tr');
- 
-        var cell = dataTable.cell(row, 6);
-        cell.data(valueSelected)
- 
-    })
-    */

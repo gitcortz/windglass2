@@ -9,8 +9,7 @@
     <h1>
       POS
       <small>
-      <a id="btn-open-addupdate-modal" href="#" class="btn btn-success" 
-              data-toggle="modal"><i class="fa fa-plus"></i> <span></span></a>
+     
       </small>
     </h1>
     <ol class="breadcrumb">

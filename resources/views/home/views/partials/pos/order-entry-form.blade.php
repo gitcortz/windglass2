@@ -1,4 +1,4 @@
-<div class="nav-tabs-custom">
+<div class="nav-tabs-custom ">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#1" data-toggle="tab" aria-expanded="true">1</a></li>
         <li class=""><a href="#2" data-toggle="tab" aria-expanded="false">2</a></li>

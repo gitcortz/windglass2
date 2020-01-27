@@ -4,38 +4,34 @@
 
 
 <div class="content-wrapper">
-    <!-- Content Header (Page header) --> 
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0 text-dark">POS
-          </div><!-- /.col -->
-          <div class="col-sm-6">          
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">POS  </li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
- 
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-5">
-                @include('home.views.partials.pos.product-list')
-            </div>
-            <div class="col-md-7">
-                @include('home.views.partials.pos.order-entry-form')
-            </div>            
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
+  <!-- Content Header (Page header) --> 
+  <section class="content-header">
+    <h1>
+      POS
+      <small>
+      <a id="btn-open-addupdate-modal" href="#" class="btn btn-success" 
+              data-toggle="modal"><i class="fa fa-plus"></i> <span></span></a>
+      </small>
+    </h1>
+    <ol class="breadcrumb">
+      <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+      <li class="active">POS</li>
+    </ol>
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="row">
+        <div class="col-md-5">
+            @include('home.views.partials.pos.product-list')
+        </div>
+        <div class="col-md-7">
+            @include('home.views.partials.pos.order-entry-form')
+        </div>            
+    </div><!-- /.row -->
     </section>
     <!-- /.content -->
+
   </div>  
     @include('home.views.partials.brands.modal-form')
     @include('home.views.partials.common.modal-delete')

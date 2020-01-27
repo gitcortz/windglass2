@@ -5,36 +5,31 @@
 
 <div class="content-wrapper">
     <!-- Content Header (Page header) --> 
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Branches 
-            <a id="btn-open-addupdate-modal" href="#" class="btn btn-success" 
-        data-toggle="modal"><i class="material-icons">&#xE147;</i> <span></span></a></h1>
-            
-        
-          </div><!-- /.col -->
-          <div class="col-sm-6">          
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Branches </li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
- 
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <!-- Small boxes (Stat box) -->
+    <section class="content-header">
+    <h1>
+      Branches
+      <small>
+      <a id="btn-open-addupdate-modal" href="#" class="btn btn-success" 
+              data-toggle="modal"><i class="fa fa-plus"></i> <span></span></a>
+      </small>
+    </h1>
+    <ol class="breadcrumb">
+      <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+      <li class="active">Branches</li>
+    </ol>
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
         <div class="row">
-            <div class="col-md-12">
-                <div class="box box-primary">
-                    <div class="box-header with-border"></div>
-                    <table class="table table-bordered table-striped" id="dataTable">
+            <div class="col-xs-12">
+            <div class="box">
+                <!--div class="box-header">
+                  <h3 class="box-title">Data Table With Full Features</h3>
+                </div-->
+                <!-- /.box-header -->
+                <div class="box-body">
+                  <table id="dataTable" class="table table-bordered table-striped dataTable" role="grid" >
                         <thead>
                             <tr>
                                 <th>City</th>
@@ -45,15 +40,16 @@
                                 <th>Mobile</th>
                                 <th>Action</th>
                             </tr>
-                        </thead>
-                    </table>
-                </div>
+                        </thead>                   
+                  </table>     
+                </div>           
             </div>
-        </div>
-        <!-- /.row (main row) -->
-      </div><!-- /.container-fluid -->
+            <!-- /.box-body -->
+            </div>
+        
     </section>
     <!-- /.content -->
+
   </div>  
     @include('home.views.partials.branches.modal-form')
     @include('home.views.partials.common.modal-delete')

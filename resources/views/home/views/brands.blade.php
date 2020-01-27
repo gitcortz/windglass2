@@ -3,13 +3,13 @@
 @section("content")
 
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
+    <!-- Content Header (Page header) --> 
     <section class="content-header">
       <h1>
         Brands
         <small>
         <a id="btn-open-addupdate-modal" href="#" class="btn btn-success" 
-                data-toggle="modal"><i class="material-icons">&#xE147;</i> <span></span></a>
+                data-toggle="modal"><i class="fa fa-plus"></i> <span></span></a>
         </small>
       </h1>
       <ol class="breadcrumb">

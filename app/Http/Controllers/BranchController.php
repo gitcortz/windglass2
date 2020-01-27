@@ -104,7 +104,7 @@ class BranchController extends Controller
     public function products(Request $request)
     {
         $branch_id = $request->id;
-        $products = Stock::with('product')->where('branch_id', $branch_id)->get();
+        $products = Stock::with('product.brand')->where('branch_id', $branch_id)->get();
         return ($products);
     }
 }

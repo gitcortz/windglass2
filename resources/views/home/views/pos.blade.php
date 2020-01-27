@@ -32,14 +32,12 @@
     <!-- /.content -->
 
   </div>  
-    @include('home.views.partials.brands.modal-form')
-    @include('home.views.partials.common.modal-delete')
-
+    
 @endsection
 @section("scripts")
 <script>
-var _component = "brands";
+var _component = "pos";
 </script>
-<script type="text/javascript" src="{{asset('js/crud.js')}}"></script>
-<script type="text/javascript" src="{{asset('js/brands.js')}}"></script>
+<script type="text/javascript" src="{{asset('js/pos_products.js')}}"></script>
+<script type="text/javascript" src="{{asset('js/pos.js')}}"></script>
 @endsection

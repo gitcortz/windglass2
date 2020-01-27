@@ -14,39 +14,44 @@
 }
 </style>
 <div class="nav-tabs-custom">
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs" id="pos_producttype_tabs">
         <li class="active"><a href="#activity" data-toggle="tab" aria-expanded="true">All</a></li>
         <li class=""><a href="#timeline" data-toggle="tab" aria-expanded="false">Cylinder</a></li>
         <li class=""><a href="#settings" data-toggle="tab" aria-expanded="false">Parts</a></li>
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
-                Empty Cylinder <span class="caret"></span>
-            </a>
-            <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 40px, 0px);">
-                <a class="dropdown-item" tabindex="-1" href="#">Action</a>
-                <a class="dropdown-item" tabindex="-1" href="#">Another action</a>
-                <a class="dropdown-item" tabindex="-1" href="#">Something else here</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" tabindex="-1" href="#">Separated link</a>
-            </div>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>               
+            </ul>
         </li>
     </ul>
     <div class="tab-content">
         <div class="input-group">
-            <input type="text" class="form-control">
+            <input id="pos_product_search" type="text" class="form-control">
             <span class="input-group-btn">
-                <button type="button" class="btn btn-primary btn-flat">
+                <button id="pos_product_search_button" type="button" class="btn btn-primary btn-flat">
                 <i class="fa fa-search"></i>
                 </button>
             </span>
         </div>
         <hr />
-        <div class="tab-pane active" id="activity">
+        <div class="tab-pane active" id="product_selection">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="list-group">
+                    <div class="list-group" id="pos_product_list" style="height:300px; overflow-x:hidden">
+                    </div>
+                </div>
+            </div>           
+                 
+        </div>
+        <div class="tab-pane " id="activity">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="list-group" id="" >
                     <a href="#" class="list-group-item d-flex justify-content-between align-items-center">
-                  ss
+                    ss
                     </a>                    
                     <a href="#" class="list-group-item">
                         ONE<span id="one"  class="img"></span>

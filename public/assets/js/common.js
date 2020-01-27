@@ -11,6 +11,20 @@
         fields.prop('disabled', true);
         return json;
     };
-
-
 })(jQuery);
+
+var ajaxcall = function(type, url, data, success, error) {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $.ajax({
+        type: type,
+        url: url,
+        data: data,
+        dataType: 'json',
+        success: success,
+        error: error
+    });
+};

@@ -27,13 +27,13 @@ $(document).ready(function() {
                     list[i].quantity,
                 ]).draw( false );
             }
-            if (data.id!='') {
+            /*if (data.id!='') {
                 $('#btn-save').hide();
                 $('#addRow').hide();                
                 
                 //var column = _detail_datatable.column(2).visible(false);
 
-            }
+            }*/
         }
     );
 
@@ -129,7 +129,7 @@ var _detail_datatable;
 var _detail_counter = 0;
 
 function init_detail() {
-    alert($('#form-addupdate').find("input[name=id]").val());
+    //alert($('#form-addupdate').find("input[name=id]").val());
 
     if (_detail_datatable) {
         _detail_datatable.clear().draw();

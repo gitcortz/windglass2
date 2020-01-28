@@ -1,24 +1,11 @@
 <div class="nav-tabs-custom ">
-    <ul class="nav nav-tabs">
-        <li class="active"><a href="#1" data-toggle="tab" aria-expanded="true">1</a></li>
-        <li class=""><a href="#2" data-toggle="tab" aria-expanded="false">2</a></li>
-        <li class=""><a href="#plus" data-toggle="tab" aria-expanded="false"><i class="fa fa-plus"></i></a></li>
-        <li class=""><a href="#minus" data-toggle="tab" aria-expanded="false"><i class="fa fa-minus"></i></a></li>
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
-            <ul class="dropdown-menu" role="menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li class="divider"></li>
-                <li><a href="#">Separated link</a></li>
-                <li class="divider"></li>
-                <li><a href="#">One more separated link</a></li>
-            </ul>
-        </li>
+    <ul id="pos_cart_tabs" class="nav nav-tabs">
+        <li class="active"><a href="#cart1" data-toggle="tab" aria-expanded="true">1</a></li>
+        <li><a href="#" id="pos_cart_tab_add"><i class="fa fa-plus"></i></a></li>
+        <li><a href="#" id="pos_cart_tab_remove"><i class="fa fa-minus"></i></a></li>        
     </ul>
-    <div class="tab-content">        
-        <div class="tab-pane active" id="1">
+    <div id="pos_carts" class="tab-content">        
+        <div class="tab-pane active" id="cart1">
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
@@ -53,7 +40,7 @@
                         <td></td>
                         <td>Mark</td>
                         <td>12.01</td>
-                        <td>1</td>
+                        <td><input class="form-control" style="width:70px;" type="number" value="1" min="1" /></td>
                         <td>12.01</td>
                         </tr>
                         <tr>
@@ -100,16 +87,7 @@
                     </table>
                 </div>               
             </div>           
-        </div>
-        <!-- /.tab-pane -->
-        <div class="tab-pane" id="plus">
-       timeline
-        </div>
-        <!-- /.tab-pane -->
-        <div class="tab-pane" id="minus">
-       form
-        </div>
-        <!-- /.tab-pane -->
+        </div>        
     </div>
     <!-- /.tab-content -->
     <div class="tab-footer">

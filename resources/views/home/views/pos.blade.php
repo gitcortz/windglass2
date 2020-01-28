@@ -25,7 +25,7 @@
             @include('home.views.partials.pos.product-list')
         </div>
         <div class="col-md-7">
-            @include('home.views.partials.pos.order-entry-form')
+            @include('home.views.partials.pos.cart')
         </div>            
     </div><!-- /.row -->
     </section>
@@ -38,6 +38,7 @@
 <script>
 var _component = "pos";
 </script>
+<script type="text/javascript" src="{{asset('js/pos_cart.js')}}"></script>
 <script type="text/javascript" src="{{asset('js/pos_products.js')}}"></script>
 <script type="text/javascript" src="{{asset('js/pos.js')}}"></script>
 @endsection

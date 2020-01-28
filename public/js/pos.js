@@ -4,8 +4,8 @@ $(document).ready(function() {
     }
 
     var posCart = PosCart();
-     
     var posProducts = new PosProducts();
-    posProducts.init(addItemToCart);
+    posProducts.init(posCart.addItemToCart);
+    posCart.init();
     
 });

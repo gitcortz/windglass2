@@ -7,7 +7,7 @@ var PosProducts = (function ($) {
         
         var _pos_product_list_item = "<a href='#' data-id='{id}' class='pos_product_item list-group-item d-flex justify-content-between align-items-center'>{name}</a>";
                                
-        var _producttypes_li="<li><a class='tab_producttype' href='#product_selection' data-toggle='tab' data-id='{id}'>{name}</a></li>";
+        var _producttypes_tab_li="<li><a class='tab_producttype' href='#product_selection' data-toggle='tab' data-id='{id}'>{name}</a></li>";
         var _producttypes_other = "<li class='dropdown'><a href='#' class='dropdown-toggle' data-toggle='dropdown'>more..<span class='caret'></span></a><ul class='dropdown-menu' role='menu'></ul></li>";
         var _producttypes_other_li="<li><a class='tab_producttype' href='#product_selection'  data-toggle='tab' data-id='{id}'>{name}</a></li>";
         var _products;
@@ -50,7 +50,7 @@ var PosProducts = (function ($) {
 
         var init_tabs = function(){
             _producttypes_tab.empty();
-            _producttypes_tab.append($(_producttypes_li.replace('{id}', '').replace('{name}', 'All')));
+            _producttypes_tab.append($(_producttypes_tab_li.replace('{id}', '').replace('{name}', 'All')));
         
             var other;
             var list = _producttypes.filter(function (entry) {
@@ -59,7 +59,7 @@ var PosProducts = (function ($) {
 
             $.each(list, function(i, item){
                 if (i < 2) {
-                    var $li = _producttypes_tab.append($(_producttypes_li.replace('{id}', item.id).replace('{name}', item.name)));
+                    var $li = _producttypes_tab.append($(_producttypes_tab_li.replace('{id}', item.id).replace('{name}', item.name)));
                     _producttypes_tab.append($li);
                 } else {
                     if (!other) {

@@ -8,7 +8,7 @@ var Crud = (function ($) {
         var _loadControlsCallBack;
         var _datatable_container = $('#dataTable');
         var _form = $('#form-addupdate');
-        var _modal = $('#modal-addupdate');
+        var _modal = $('.modal-addupdate');
         var _modal_delete = $('#modal-delete');
         var _form_delete = $('#form-delete');
         var _errors = $('#error-list');

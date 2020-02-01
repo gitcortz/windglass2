@@ -79,7 +79,7 @@ $(document).ready(function() {
     
     init_dropdown(crud);
     
-    $("#modal-addupdate").on('show.bs.modal', function (e){
+    $(".modal-addupdate").on('show.bs.modal', function (e){
         init_detail();
     });
 

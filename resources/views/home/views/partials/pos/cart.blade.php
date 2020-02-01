@@ -21,70 +21,14 @@
 </style>
 <div class="nav-tabs-custom ">
     <ul id="pos_cart_tabs" class="nav nav-tabs">
-        <li class="active"><a href="#cart1" data-toggle="tab" aria-expanded="true">1</a></li>
+        <!--li class="active"><a href="#cart1" data-toggle="tab" aria-expanded="true">1</a></li-->
         <li><a href="#" id="pos_cart_tab_add"><i class="fa fa-plus"></i></a></li>
         <li><a href="#" id="pos_cart_tab_remove"><i class="fa fa-minus"></i></a></li>        
     </ul>
     <div id="pos_carts" class="tab-content">        
-        <div class="tab-pane active" id="cart1">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="customer">Customer</label> <a href="">walk-in</a>
-                        <div class="input-group">
-                            <input type="hidden" id="customer_id_0" name="customer_id_0" />
-                            <input type="text" class="form-control" id='customer_0' name='customer_id' />
-                            <span class="input-group-btn">
-                                <button type="button" id="info_customer" class="btn btn-primary btn-flat">
-                                <i class="fa fa-info"></i>
-                                </button>
-                            </span>
-                            <span class="input-group-btn">
-                                <button type="button" id="add_customer" class="btn btn-primary btn-flat">
-                                <i class="fa fa-plus"></i>
-                                </button>
-                            </span>
-                        </div>                        
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                <table id="cart_table_0" class="table table-sm hover" style="width:100%">
-                    <thead>
-                        <tr>
-                        <th>x</th>
-                        <th scope="col">Product</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Qty</th>
-                        <th scope="col">Total</th>
-                        </tr>
-                    </thead>                    
-                </table>
-                </div>
-            </div>
-            <div class="row mt-5 cart-footer">
-                <div class="col-md-12">
-                    <div class="row cart_subtotal" style="margin-bottom:10px;">
-                        <div class="col-md-4"></div>
-                        <div class="col-md-4">Subtotal</div>
-                        <div class="col-md-4">20.00 PHP</div>
-                    </div>
-                    <div class="row cart_discount">
-                        <div class="col-md-4"></div>
-                        <div class="col-md-4">Discount</div>
-                        <div class="col-md-4" id="discount_0"></div>
-                    </div>
-                    <div class="row cart_total">
-                        <div class="col-md-4"></div>
-                        <div class="col-md-4"><h4>TOTAL</h4></div>
-                        <div class="col-md-4"><h4 id="cart_total">20.00 PHP</h4></div>
-                    </div>
-                </div>
-            </div>
-            
-        </div>        
+          
     </div>
+    
     <!-- /.tab-content -->
     <div class="tab-footer">
         <input class="btn btn-default" data-dismiss="modal" type="button" value="Cancel">

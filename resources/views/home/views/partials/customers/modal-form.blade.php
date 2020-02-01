@@ -48,7 +48,7 @@
             </div>
             <div class="form-group">
                 <label for="discount">Discount</label>
-                <input type="text" class="form-control" id="discount" name="discount" 
+                <input type="number" class="form-control" id="discount" name="discount" 
                     placeholder="Enter discount">
             </div>
             <div class="form-group">

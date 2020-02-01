@@ -12,7 +12,7 @@ var PosCustomer = (function ($) {
             _form.trigger("reset");
             _form.find(".close").click();
             if (_saveSucccessCallBack)
-                _saveSucccessCallBack(data.data.name);
+                _saveSucccessCallBack(data.data);
         }
 
         var updateError = function(data) {

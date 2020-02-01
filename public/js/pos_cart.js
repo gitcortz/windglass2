@@ -59,13 +59,13 @@ var PosCart = (function ($) {
             ] ).draw( false );
         }
 
-        var autocomplete_select_val = function(labelTextBox, Label) {
+        var autocomplete_select_text = function(labelTextBox, Label) {
             $("#" + labelTextBox + "").autocomplete("search", Label);
             var menu = $("#" + labelTextBox + "").autocomplete("widget");
             $(menu[0].children[0]).click();
         }
         
-        var init_customer_data = function() {
+        var init_customer_data = function(select_text) {
              ajaxcall("GET", "/customers/combo", null, 
                 function(data) {
                     _customers = data.data;
@@ -77,8 +77,9 @@ var PosCart = (function ($) {
                             return false;
                           },
                         select: function( event, ui ) {
-                            $( "#customer_0" ).val( ui.item.label );
-                            $( "#customer_id_0" ).val( ui.item.value );
+                            $("#customer_0").val( ui.item.label );
+                            $("#customer_id_0" ).val( ui.item.value );
+                            $('#cart_discount').html(ui.item.discount);
                             return false;
                         }
                       }).autocomplete("instance")._renderItem = function( ul, item ) {
@@ -88,7 +89,9 @@ var PosCart = (function ($) {
                           .append( "<div>" + item.label + span + "</div>" )
                           .appendTo( ul );
                       };
-                      autocomplete_select_val("customer_0" , "Walk-in");
+                      if (select_text == undefined)
+                        select_text = "Walk-in";
+                      autocomplete_select_text("customer_0" , select_text);
                 }, function(data) {
                     console.log(data);
             });
@@ -224,7 +227,8 @@ var PosCart = (function ($) {
 
         return {
             init: init,
-            addItemToCart : addItemToCart     
+            addItemToCart : addItemToCart, 
+            update_customer_data : init_customer_data   
         }
     }
 })(jQuery);

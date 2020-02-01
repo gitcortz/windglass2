@@ -11,10 +11,8 @@ class CustomerComboResource extends JsonResource
         return [
             'value' => $this->id,
             'label' => $this->name,
-            'address' => $this->address,
             'city' => $this->city['name'],
-            'phone' => $this->phone,
-            'mobile' => $this->mobile,
+            'discount' => $this->discount,
           ];
     }
 }

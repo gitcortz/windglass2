@@ -29,15 +29,17 @@
         </div>            
     </div><!-- /.row -->
     </section>
-    <!-- /.content -->
-
+    <!-- /.content -->  
   </div>  
-    
+  @include('home.views.partials.customers.modal-form')
+
+
 @endsection
 @section("scripts")
 <script>
 var _component = "pos";
 </script>
+<script type="text/javascript" src="{{asset('js/pos_customer.js')}}"></script>
 <script type="text/javascript" src="{{asset('js/pos_cart.js')}}"></script>
 <script type="text/javascript" src="{{asset('js/pos_products.js')}}"></script>
 <script type="text/javascript" src="{{asset('js/pos.js')}}"></script>

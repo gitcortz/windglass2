@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Customer;
+use App\Http\Resources\CustomerComboResource;
+use App\Http\Resources\CustomerComboCollection;
 use Datatables;
 use Validator;
 
@@ -27,6 +29,10 @@ class CustomerController extends Controller
                 ->make(true);
     }
 
+    public function combo_list() {
+        return new CustomerComboCollection(Customer::get());
+    }
+    
     public function store(Request $request)
     {
         $validator = Validator::make($request->input(), array(
@@ -98,4 +104,6 @@ class CustomerController extends Controller
             'task'  => $task,
         ], 200);
     }
+
+    
 }

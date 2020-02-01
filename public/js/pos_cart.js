@@ -24,8 +24,12 @@ var PosCart = (function ($) {
             +_pos_cart_customer_row+_pos_cart_table_row+_pos_cart_total_row
             +"</div>";
 
+        var _cart_datatables =[];
+        var _cart_totals =[];
         var _producttypes;
         var _itemClickCallBack;
+        var _customers = [];
+    
       
         var add_cart = function(cart_index) {
             var newtab = $(_pos_cart_tab_li.replace("{cart_id}","cart_"+cart_index)
@@ -46,11 +50,164 @@ var PosCart = (function ($) {
         }
         var addItemToCart = function(item) {
             console.log(item);
+            _cart_datatables[0].row.add( [
+                ,
+                (item.product.brand ? item.product.brand.name + " " : "") + item.product.name,
+                item.product.unit_price,
+                1,
+                item.product.unit_price
+            ] ).draw( false );
+        }
+
+        var autocomplete_select_val = function(labelTextBox, Label) {
+            $("#" + labelTextBox + "").autocomplete("search", Label);
+            var menu = $("#" + labelTextBox + "").autocomplete("widget");
+            $(menu[0].children[0]).click();
+        }
+        
+        var init_customer_data = function() {
+             ajaxcall("GET", "/customers/combo", null, 
+                function(data) {
+                    _customers = data.data;
+                    $( "#customer_0" ).autocomplete({
+                        minLength: 0,
+                        source: _customers,
+                        focus: function( event, ui ) {
+                            $( "#customer_0" ).val( ui.item.label );
+                            return false;
+                          },
+                        select: function( event, ui ) {
+                            $( "#customer_0" ).val( ui.item.label );
+                            $( "#customer_id_0" ).val( ui.item.value );
+                            return false;
+                        }
+                      }).autocomplete("instance")._renderItem = function( ul, item ) {
+                        var span = (item.city == null) ? "" : " <span>(" + item.city + ")</span>"; 
+
+                        return $( "<li>" )
+                          .append( "<div>" + item.label + span + "</div>" )
+                          .appendTo( ul );
+                      };
+                      autocomplete_select_val("customer_0" , "Walk-in");
+                }, function(data) {
+                    console.log(data);
+            });
+            
+            
+            
             
         }
 
+        
+        var init_datatable = function() {
+            //_cart_totals[0] = $('#cart_total_0').DataTable();
+            _cart_datatables[0] = $('#cart_table_0').DataTable({
+                processing: true,
+                paging: false,
+                ordering: false,
+                info: false,
+                searching: false,
+                columns: [
+                    {
+                        width: "5%",
+                        defaultContent: '<a href="#" class="btn btn-danger btn-xs" action="remove" data-id="">X</a>'
+                    },
+                    {
+                        width: "60%",
+                    },
+                    {
+                        width: "10%",
+                        render: function(data,t,row){
+                            var $input = $("<input></input>", {
+                                "id": row[0]+"_price",
+                                "value": data,
+                                "type": "number",
+                                "class" : "form-control col_unitprice",
+                                "required": "",
+                                "style": "width:90px"
+                            });
+                            return $input.prop("outerHTML");
+                        },
+                    },
+                    {
+                        width: "10%",
+                        render: function(data,t,row){
+                            var $input = $("<input></input>", {
+                                "id": row[0]+"_qty",
+                                "value": data,
+                                "type": "number",
+                                "class" : "form-control col_qty",
+                                "required": "",
+                                "style": "width:90px"
+                            });
+                            return $input.prop("outerHTML");
+                        },
+                    },
+                    {
+                        width: "15%",
+                        className: "dt-body-right"
+                    }
+                ],
+                drawCallback: function( settings ) {
+                    $(".col_unitprice").off("change");
+                    $(".col_unitprice").on("change",function(){
+                        var row = _cart_datatables[0].row ($(this).closest('tr'));
+                        var data = row.data();
+                        data[2] = Number($(this).val()).toFixed(2);
+                        data[4] = (data[2] * data[3]).toFixed(2)
+                        console.log(data[4]);
+                        row.invalidate().draw(false);
+                    });
+                    $(".col_qty").off("change");
+                    $(".col_qty").on("change",function(){
+                        var row = _cart_datatables[0].row ($(this).closest('tr'));
+                        var data = row.data();
+                        data[3] = $(this).val();
+                        data[4] = (data[2] * data[3]).toFixed(2);
+                        console.log(data[4]);
+                        row.invalidate().draw(false);
+                    });
+                },
+                footerCallback: function ( row, data, start, end, display ) { 
+                    var api = this.api();
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function ( i ) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '')*1 :
+                            typeof i === 'number' ?
+                                i : 0;
+                    };
+         
+                    // Total over all pages
+                    total = api.column(4).data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+                    
+                    var discount = 0;
+                    var gtotal = total - discount;
+                    $('.row.cart_subtotal div:nth-child(3)').html(total.toFixed(2));
+                    $('.row.cart_discount div:nth-child(3)').html(discount.toFixed(2));
+                    $('.row.cart_total div:nth-child(3)').html(gtotal.toFixed(2));
+                }
+            });
+
+            _cart_datatables[0].on('click', 'tbody tr a[action="remove"]', function(event){
+                var tr = $(this).closest('tr');
+                var data = _cart_datatables[0].row(tr).data()
+                _cart_datatables[0].row(tr).remove().draw();
+                
+            });
+        
+        }
+
         var init = function(itemClickCallBack) {
-            add_cart(cart_count);
+            //add_cart(cart_count);
+            init_datatable();
+            init_customer_data();
+            $("input[type='text']").on("click", function () {
+                $(this).select();
+             });
             pos_cart_tab_add.on('click', function() {
                 add_cart(cart_count);
             });

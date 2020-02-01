@@ -12,6 +12,9 @@ class CustomerTableSeeder extends Seeder
     public function run()
     {
        //\App\Customer::truncate();
+       \App\Models\Customer::create([
+        'name' => 'Walk-in', 
+        ]);
 
        $faker = \Faker\Factory::create();
 

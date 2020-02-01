@@ -7,6 +7,7 @@ Route::get("/", "HomeController@dashboard");
 Route::group(['prefix' => 'customers'], function () {
     Route::get('', [ 'uses' => 'CustomerController@index', 'as' => 'customers',]);
     Route::get('/all', [ 'uses' => 'CustomerController@list', 'as' => 'customers.list',]);
+    Route::get('/combo', [ 'uses' => 'CustomerController@combo_list', 'as' => 'customers.combolist',]);
     Route::get('/{id}', [ 'uses' => 'CustomerController@show', 'as' => 'customers.show',]);
     Route::post('/', [ 'uses' => 'CustomerController@store', 'as' => 'customers.store',]);
     Route::put('/{id}', [ 'uses' => 'CustomerController@update', 'as' => 'customers.update',]);

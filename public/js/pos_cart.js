@@ -10,9 +10,6 @@ var PosCart = (function ($) {
         var _current_cart_index = 0;
 
         var _cart_datatables =[];
-        var _cart_totals =[];
-        var _producttypes;
-        var _itemClickCallBack;
         var _customers = [];
     
       
@@ -25,7 +22,7 @@ var PosCart = (function ($) {
                 "<div class='row'>",
                     "<div class='col-md-12'>",
                         "<div class='form-group'>",
-                            "<label for='cart_customer_"+cart_index+"'>Customer</label> <a href=''>walk-in</a>",
+                            "<label for='cart_customer_"+cart_index+"'>Customer</label> <a href='#' class='select_walk_in'>(walk-in)</a>",
                             "<div class='input-group'>",
                                 "<input type='hidden' id='cart_customer_id_"+cart_index+"' name='customer_id_"+cart_index+"' />",
                                 "<input type='text' class='form-control' id='cart_customer_"+cart_index+"' name='cart_customer_"+cart_index+"' />",
@@ -50,6 +47,7 @@ var PosCart = (function ($) {
                         "<table id='cart_table_"+cart_index+"' class='table table-sm hover' style='width:100%'>",
                             "<thead>",
                             "<tr>",
+                            "<th>id</th>",
                             "<th>x</th>",
                             "<th scope='col'>Product</th>",
                             "<th scope='col'>Price</th>",
@@ -104,13 +102,29 @@ var PosCart = (function ($) {
 
         
         var addItemToCart = function(item) {
-            _cart_datatables[_cart_prefix+_current_cart_index].row.add( [
-                ,
-                (item.product.brand ? item.product.brand.name + " " : "") + item.product.name,
-                item.product.unit_price,
-                1,
-                item.product.unit_price
-            ] ).draw( false );
+            var datatable = _cart_datatables[_cart_prefix+_current_cart_index]
+            var form_data  = datatable.rows().data();
+            var exists = false;  
+            $.each( form_data, function( key, value ) {                
+                if (item.id == value[0])
+                {                
+                    var temp = datatable.row(key).data();
+                    temp[4] = parseFloat(temp[4])+1;
+                    datatable.row(key).data(temp).invalidate();
+                    exists = true;                    
+                }
+            });
+
+            if (!exists) {
+                _cart_datatables[_cart_prefix+_current_cart_index].row.add( [
+                    item.id,
+                    ,
+                    (item.product.brand ? item.product.brand.name + " " : "") + item.product.name,
+                    item.product.unit_price,
+                    1,
+                    item.product.unit_price
+                ] ).draw( false );
+            }
         }
 
         var autocomplete_select_text = function($labelTextBox, LabelText) {
@@ -181,15 +195,19 @@ var PosCart = (function ($) {
 
             $('.cart_add_customer').off('click');
             $('.cart_info_customer').off('click');
+            $('.select_walk_in').off('click');
             $('.cart_add_customer').on('click', function() { 
                 var id = $(this).data("id");
-                console.log("id " + id);
                 posCustomer.showAddModal();
             });
             $('.cart_info_customer').on('click', function() { 
                 var id = $(this).data("id");
                 var customer_id = $("#cart_customer_id_"+id).val();
                 posCustomer.showInfoModal(customer_id);
+            });
+            $('.select_walk_in').on('click', function() { 
+                var $customer_textbox = $("#cart_customer_"+_current_cart_index);
+                autocomplete_select_text($customer_textbox, "Walk-in");
             });
 
         }
@@ -204,6 +222,9 @@ var PosCart = (function ($) {
                 searching: false,
                 columns: [
                     {
+                        visible: false,
+                    },
+                    {
                         width: "5%",
                         defaultContent: '<a href="#" class="btn btn-danger btn-xs" action="remove" data-id="">X</a>'
                     },
@@ -211,7 +232,7 @@ var PosCart = (function ($) {
                         width: "60%",
                     },
                     {
-                        width: "10%",
+                        width: "13%",
                         render: function(data,t,row, meta){
                             var $input = $("<input></input>", {
                                 "id": "cart_row_"+meta.row+"_price",
@@ -219,14 +240,14 @@ var PosCart = (function ($) {
                                 "type": "number",
                                 "class" : "form-control col_unitprice",
                                 "required": "",
-                                "style": "width:90px",
+                                "style": "width:110px",
                                 "min":0,
                             });
                             return $input.prop("outerHTML");
                         },
                     },
                     {
-                        width: "10%",
+                        width: "7%",
                         render: function(data,t,row, meta){
                             var $input = $("<input></input>", {
                                 "id": "cart_row_"+meta.row+"_qty",
@@ -234,7 +255,7 @@ var PosCart = (function ($) {
                                 "type": "number",
                                 "class" : "form-control col_qty",
                                 "required": "",
-                                "style": "width:90px",
+                                "style": "width:70px",
                                 "min":1,
                             });
                             return $input.prop("outerHTML");
@@ -250,18 +271,16 @@ var PosCart = (function ($) {
                     $(".col_unitprice").on("change",function(){
                         var row =  _cart_datatables[_cart_prefix+cart_index].row ($(this).closest('tr'));
                         var data = row.data();
-                        data[2] = Number($(this).val()).toFixed(2);
-                        data[4] = (data[2] * data[3]).toFixed(2)
-                        console.log(data[4]);
+                        data[3] = Number($(this).val()).toFixed(2);
+                        data[5] = (data[3] * data[4]).toFixed(2)
                         row.invalidate().draw(false);
                     });
                     $(".col_qty").off("change");
                     $(".col_qty").on("change",function(){
                         var row =  _cart_datatables[_cart_prefix+cart_index].row ($(this).closest('tr'));
                         var data = row.data();
-                        data[3] = $(this).val();
-                        data[4] = (data[2] * data[3]).toFixed(2);
-                        console.log(data[4]);
+                        data[4] = $(this).val();
+                        data[5] = (data[3] * data[4]).toFixed(2);
                         row.invalidate().draw(false);
                     });
                 },
@@ -278,7 +297,7 @@ var PosCart = (function ($) {
                     };
          
                     // Total over all pages
-                    total = api.column(4).data()
+                    total = api.column(5).data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
@@ -287,10 +306,7 @@ var PosCart = (function ($) {
                     var $discount = $panel.find('.row.cart_discount div:nth-child(3)');
                     
                     var discount = parseFloat($discount.html()==""?0:$discount.html());
-                    console.log('discount ' + discount);
                     var gtotal = total - discount;
-                    console.log('#cart_panel_'+_current_cart_index);
-                    console.log('#cart_panel_total-'+total);
                     $panel.find('.row.cart_subtotal div:nth-child(3)').html(total.toFixed(2));
                     $discount.html(discount.toFixed(2));
                     $panel.find('.row.cart_total div:nth-child(3) h4').html(gtotal.toFixed(2));
@@ -316,13 +332,23 @@ var PosCart = (function ($) {
                 $(this).select();
              });
 
+             $("#btn-payment").on("click", function () {
+                var $panel = $('#cart_panel_'+_current_cart_index);
+                var $customer_id = $('#cart_customer_id_'+_current_cart_index);
+                var datatable = _cart_datatables[_cart_prefix+_current_cart_index]
+                var form_data  = datatable.rows().data();       
+                $.each( form_data, function( key, value ) {
+                    console.log( key + ": " + value );
+                });
+
+             });
+             
             pos_cart_tab_remove.on('click', function() {
                 var tab = _pos_cart_tabs.find("li.active");                
                 if (tab.next())
                     tab.next().find("a").trigger('click');
                 
                 var tab_id = tab.find("a").data("id");
-                    console.log();
                 $('#cart_' + tab_id).remove();
                 tab.remove();                
                 delete _cart_datatables[_cart_prefix+tab_id]; 
@@ -337,6 +363,7 @@ var PosCart = (function ($) {
                 init_customer_data(_current_cart_index, selected_data);
                 
             });
+            
         }
 
         return {

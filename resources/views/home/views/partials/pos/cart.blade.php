@@ -19,7 +19,7 @@
         margin-top:20px;
     }
 </style>
-<div class="nav-tabs-custom ">
+<div class="nav-tabs-custom" style="margin-bottom:0px">
     <ul id="pos_cart_tabs" class="nav nav-tabs">
         <!--li class="active"><a href="#cart1" data-toggle="tab" aria-expanded="true">1</a></li-->
         <li><a href="#" id="pos_cart_tab_add"><i class="fa fa-plus"></i></a></li>
@@ -28,11 +28,13 @@
     <div id="pos_carts" class="tab-content">        
           
     </div>
-    
-    <!-- /.tab-content -->
-    <div class="tab-footer">
-        <input class="btn btn-default" data-dismiss="modal" type="button" value="Cancel">
-        <button class="btn btn-info" id="btn-payment" type="button" value="save">Payment</button>
-    </div>
+
 </div>
 <!-- /.end -->
+
+<div class="box mt-0">
+  <div class="box-footer" style="text-align:right">
+    
+    <button class="btn btn-info" id="btn-payment" type="button" value="save">Payment</button>
+  </div>
+</div>

@@ -107,3 +107,11 @@ Route::group(['prefix' => 'pos'], function () {
     Route::get('', [ 'uses' => 'PosController@index', 'as' => 'pos',]);
 });
 
+
+//Order Routes 
+Route::group(['prefix' => 'orders'], function () {
+    Route::get('', [ 'uses' => 'OrderItemController@index', 'as' => 'orders',]);
+    Route::post('/', [ 'uses' => 'OrderItemController@store', 'as' => 'orders.store',]);
+    
+});
+

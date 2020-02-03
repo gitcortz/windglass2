@@ -32,7 +32,7 @@
     <!-- /.content -->  
   </div>  
   @include('home.views.partials.customers.modal-form')
-
+  @include('home.views.partials.pos.modal-payment')
 
 @endsection
 @section("scripts")

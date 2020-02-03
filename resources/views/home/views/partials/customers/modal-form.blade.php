@@ -2,11 +2,11 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content"> 
       <form id="form-addupdate">   
-      <div class="modal-header">
+      <div class="modal-header bg-primary">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">Customer</h4>
       </div>
-      <div class="modal-body">        
+      <div class="modal-body ">        
         <input type="hidden" name="id" id="_id" />
         <div class="row">
             <div class="alert alert-danger d-none" id="error-bag">

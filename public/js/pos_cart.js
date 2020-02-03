@@ -2,6 +2,7 @@ var PosCart = (function ($) {
     return function () {
         var posCustomer = new PosCustomer();
         var cart_count = 0;
+        var _payment_modal = $('.modal-payment');
         var _pos_carts = $("#pos_carts"); //cart panels
         var _pos_cart_tabs = $('#pos_cart_tabs'); //cart tabs
         var pos_cart_tab_add = $('#pos_cart_tab_add'); //add cart button
@@ -133,6 +134,11 @@ var PosCart = (function ($) {
             $(menu[0].children[0]).click();
         }
         
+        var show_payment_modal = function() {
+            _payment_modal.modal('show');            
+        }
+
+
         var init_customer_data = function(cart_index, selected_data) {
             if (_customers.length == 0) {
                 ajaxcall("GET", "/customers/combo", null, 
@@ -333,6 +339,8 @@ var PosCart = (function ($) {
              });
 
              $("#btn-payment").on("click", function () {
+                 console.log('payment');
+                show_payment_modal();
                 var $panel = $('#cart_panel_'+_current_cart_index);
                 var $customer_id = $('#cart_customer_id_'+_current_cart_index);
                 var datatable = _cart_datatables[_cart_prefix+_current_cart_index]
@@ -341,6 +349,7 @@ var PosCart = (function ($) {
                     console.log( key + ": " + value );
                 });
 
+           
              });
              
             pos_cart_tab_remove.on('click', function() {

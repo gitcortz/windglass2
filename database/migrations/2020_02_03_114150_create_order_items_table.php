@@ -22,7 +22,7 @@ class CreateOrderItemsTable extends Migration
             $table->foreign('stock_id')->references('id')->on('stocks');  
             $table->integer('quantity');
             $table->decimal('unit_price', 9, 2);
-            $table->decimal('discount', 9, 2);
+            $table->decimal('discount', 9, 2)->nullable();
             $table->timestamps();
         });
     }

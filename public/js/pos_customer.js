@@ -24,7 +24,9 @@ var PosCustomer = (function ($) {
             _error_bag.show();
         }
 
-        var ajaxcall = function(type, url, data, success, error) {
+        /*var ajaxcall = function(type, url, data, success, error) {
+            console.log("data");
+            console.log(data);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -38,7 +40,7 @@ var PosCustomer = (function ($) {
                 success: success,
                 error: error
             });
-        };
+        };*/
 
         var save = function() {  
             var data = _form.serializeFormToObject();

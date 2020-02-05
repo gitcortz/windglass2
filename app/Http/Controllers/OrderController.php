@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Orders;
-use App\Models\OrderItems;
+use App\Models\Order;
+use App\Models\OrderItem;
 use Datatables;
 use Validator;
+use Carbon\Carbon;
 
 class OrderController extends Controller
 {
@@ -21,8 +22,8 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->input(), array(
-            'from_branch_id' => 'required',
-            'to_branch_id' => 'required',     
+            'branch_id' => 'required',
+            'customer_id' => 'required',     
         ));
 
         if ($validator->fails()) {
@@ -35,16 +36,15 @@ class OrderController extends Controller
         $data = Order::create([
             'branch_id' => $request->branch_id, 
             'customer_id' => $request->customer_id,
-            'order_date' => $request->order_date,
+            'order_date' => Carbon::now('UTC'),
             'delivered_date'=>$request->delivered_date,
             'address'=>$request->address,
             'city'=>$request->city,
             'order_status_id'=>$request->order_status_id,
             'payment_status_id'=>$request->payment_status_id,
             'payment_method_id'=>$request->payment_method_id,
-            //discount
-            //total
-            //'received_date' => $request->received_date,
+            'discount'=>$request->discount,
+            'sub_total'=>$request->sub_total,
             
           ]);
           

@@ -26,7 +26,9 @@ class CreateOrdersTable extends Migration
             $table->biginteger('customer_id')->unsigned();  
             $table->foreign('customer_id')->references('id')->on('customers'); 
             $table->biginteger('branch_id')->nullable()->unsigned();  
-            $table->foreign('branch_id')->references('id')->on('branches');            
+            $table->foreign('branch_id')->references('id')->on('branches');      
+            $table->decimal('discount', 9, 2)->nullable();
+            $table->decimal('sub_total', 9, 2)->nullable();
 
             $table->timestamps();
         });

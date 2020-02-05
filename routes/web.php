@@ -110,8 +110,8 @@ Route::group(['prefix' => 'pos'], function () {
 
 //Order Routes 
 Route::group(['prefix' => 'orders'], function () {
-    Route::get('', [ 'uses' => 'OrderItemController@index', 'as' => 'orders',]);
-    Route::post('/', [ 'uses' => 'OrderItemController@store', 'as' => 'orders.store',]);
+    Route::get('', [ 'uses' => 'OrderController@index', 'as' => 'orders',]);
+    Route::post('/', [ 'uses' => 'OrderController@store', 'as' => 'orders.store',]);
     
 });
 

@@ -19,6 +19,8 @@
         margin-top:20px;
     }
 </style>
+
+
 <div class="nav-tabs-custom" style="margin-bottom:0px">
     <ul id="pos_cart_tabs" class="nav nav-tabs">
         <!--li class="active"><a href="#cart1" data-toggle="tab" aria-expanded="true">1</a></li-->

@@ -2,17 +2,18 @@
 @section("page_title", " Philgas.ph | Windglass Dashboard ")
 @section("content")
 
-
 <div class="content-wrapper">
   <!-- Content Header (Page header) --> 
   <section class="content-header">
-    <h1>
-      POS
-      <small>
-     
-      </small>
+    <h1 style="display:inline">
+      POS      
     </h1>
-    <ol class="breadcrumb">
+    <div class="btn-group" style="float:right">
+        <button type="button" class="btn btn-primary"><i class="fa fa-fw fa-calculator"></i> Register Details</button>
+        <button type="button" class="btn btn-primary"><i class="fa fa-fw fa-money"></i> Current Sales</button>
+        <button type="button" class="btn btn-primary"><i class="fa fa-fw fa-power-off"></i> Close Register</button>
+      </div>
+    <ol class="breadcrumb" style="display:none">
       <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
       <li class="active">POS</li>
     </ol>
@@ -30,6 +31,7 @@
     </div><!-- /.row -->
     </section>
     <!-- /.content -->  
+    
   </div>  
   @include('home.views.partials.customers.modal-form')
   @include('home.views.partials.pos.modal-payment')

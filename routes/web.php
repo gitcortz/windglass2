@@ -115,3 +115,24 @@ Route::group(['prefix' => 'orders'], function () {
     
 });
 
+
+//Employee Types Routes 
+Route::group(['prefix' => 'employeetypes'], function () {
+    Route::get('', [ 'uses' => 'EmployeeTypeController@index', 'as' => 'employeetypes',]);
+    Route::get('/all', [ 'uses' => 'EmployeeTypeController@list', 'as' => 'employeetypes.list',]);
+    Route::get('/{id}', [ 'uses' => 'EmployeeTypeController@show', 'as' => 'employeetypes.show',]);
+    Route::post('/', [ 'uses' => 'EmployeeTypeController@store', 'as' => 'employeetypes.store',]);
+    Route::put('/{id}', [ 'uses' => 'EmployeeTypeController@update', 'as' => 'employeetypes.update',]);
+    Route::delete('/{id}', [ 'uses' => 'EmployeeTypeController@destroy', 'as'   => 'employeetypes.destroy',]);
+});
+
+//Employee Routes 
+Route::group(['prefix' => 'employees'], function () {
+    Route::get('', [ 'uses' => 'EmployeeController@index', 'as' => 'employees',]);
+    Route::get('/all', [ 'uses' => 'EmployeeController@list', 'as' => 'employees.list',]);
+    Route::get('/combo', [ 'uses' => 'EmployeeController@combo_list', 'as' => 'employees.combolist',]);
+    Route::get('/{id}', [ 'uses' => 'EmployeeController@show', 'as' => 'employees.show',]);
+    Route::post('/', [ 'uses' => 'EmployeeController@store', 'as' => 'employees.store',]);
+    Route::put('/{id}', [ 'uses' => 'EmployeeController@update', 'as' => 'employees.update',]);
+    Route::delete('/{id}', [ 'uses' => 'EmployeeController@destroy', 'as'   => 'employees.destroy',]);
+});

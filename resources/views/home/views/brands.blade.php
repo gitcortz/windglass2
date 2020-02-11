@@ -8,8 +8,8 @@
       <h1>
         Brands
         <small>
-        <a id="btn-open-addupdate-modal" href="#" class="btn btn-success" 
-                data-toggle="modal"><i class="fa fa-plus"></i> <span></span></a>
+        <a id="btn-open-addupdate-modal" href="javascript:void(0)" class="btn btn-success btn-sm" 
+                data-toggle="modal"><i class="fa fa-plus"></i> <span>add</span></a>
         </small>
       </h1>
       <ol class="breadcrumb">

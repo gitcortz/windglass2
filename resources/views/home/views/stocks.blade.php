@@ -9,7 +9,7 @@
     <h1>
       Stocks
       <small>
-      <a id="btn-open-addupdate-modal" href="#" class="btn btn-success" 
+      <a id="btn-open-addupdate-modal" href="javascript:void(0)" class="btn btn-success" 
               data-toggle="modal"><i class="fa fa-plus"></i> <span></span></a>
       </small>
     </h1>

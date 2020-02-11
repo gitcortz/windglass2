@@ -9,9 +9,9 @@
       POS      
     </h1>
     <div class="btn-group" style="float:right">
-        <button type="button" class="btn btn-primary"><i class="fa fa-fw fa-calculator"></i> Register Details</button>
-        <button type="button" class="btn btn-primary"><i class="fa fa-fw fa-money"></i> Current Sales</button>
-        <button type="button" class="btn btn-primary"><i class="fa fa-fw fa-power-off"></i> Close Register</button>
+        <button type="button" class="btn btn-primary "><i class="fa fa-fw fa-calculator"></i> <span>Register Details</span></button>
+        <button type="button" class="btn btn-primary "><i class="fa fa-fw fa-money"></i> <span>Current Sales</span></button>
+        <button type="button" class="btn btn-primary "><i class="fa fa-fw fa-power-off"></i> <span>Close Register</span></button>
       </div>
     <ol class="breadcrumb" style="display:none">
       <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>

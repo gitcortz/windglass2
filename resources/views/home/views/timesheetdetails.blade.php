@@ -9,10 +9,10 @@
     <h1>
       Timesheet Detail
       <small>
-      <a id="btn-open-addupdate-modal" href="#" class="btn btn-success btn-sm" 
-              data-toggle="modal"><i class="fa fa-plus"></i> <span></span></a>
-      <a id="btn-upload-modal" href="#" class="btn btn-primary btn-sm" 
-              data-toggle="modal"><i class="fa fa-upload"></i> <span></span></a>
+      <a id="btn-open-addupdate-modal" href="javascript:void(0)" class="btn btn-success btn-sm" 
+              data-toggle="modal"><i class="fa fa-plus"></i> <span>add</span></a>
+      <a id="btn-upload-modal" href="javascript:void(0)" class="btn btn-primary btn-sm" 
+              data-toggle="modal"><i class="fa fa-upload"></i> <span>upload</span></a>
       </small>
     </h1>
     <ol class="breadcrumb">

@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Employee;
-use App\Http\Resources\CustomerComboResource;
-use App\Http\Resources\CustomerComboCollection;
+use App\Http\Resources\EmployeeComboResource;
+use App\Http\Resources\EmployeeComboCollection;
 use Datatables;
 use Validator;
 
@@ -30,7 +30,7 @@ class EmployeeController extends Controller
     }
 
     public function combo_list() {
-        return new CustomerComboCollection(Employee::get());
+        return new EmployeeComboCollection(Employee::get());
     }
     
     public function store(Request $request)

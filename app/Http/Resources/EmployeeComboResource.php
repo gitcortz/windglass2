@@ -10,8 +10,8 @@ class EmployeeComboResource extends JsonResource
     {
         return [
             'value' => $this->id,
-            'label' => $this->name,
-            'employeetype' => $this->employee_type['name'],
+            'label' => $this->first_name." ".$this->last_name,
+            'employeetype' => $this->employeetype['name'],
             'base_salary' => $this->base_salary,
           ];
     }

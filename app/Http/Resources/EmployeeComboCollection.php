@@ -9,7 +9,7 @@ class EmployeeComboCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'data' => CustomerComboResource::collection($this->collection),
+            'data' => EmployeeComboResource::collection($this->collection),
         ];
     }
 }

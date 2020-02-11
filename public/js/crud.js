@@ -70,6 +70,7 @@ var Crud = (function ($) {
                 function(data) {
                     var data = data.data;
                     _loadCallBack(data);
+                
                 }, function(data) {
                     console.log(data);
                 });

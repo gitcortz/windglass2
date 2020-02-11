@@ -28,3 +28,23 @@ var ajaxcall = function(type, url, data, success, error) {
         error: error
     });
 };
+
+
+var uploadcall = function(type, url, data, success, error) {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $.ajax({
+        type: type,
+        url: url,
+        data: data,
+        dataType: 'json',
+        processData: false,
+        contentType: false,
+        cache: false,
+        success: success,
+        error: error
+    });
+};

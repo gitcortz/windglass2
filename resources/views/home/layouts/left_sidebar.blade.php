@@ -66,7 +66,7 @@
           <li><a href="{{ route('employeetypes') }}"><i class="fa fa-circle-o"></i> Employee Types</a></li>
           <li><a href="{{ route('employees') }}"><i class="fa fa-circle-o"></i> Employees</a></li>
           <li><a href="{{ route('employeeloans') }}"><i class="fa fa-circle-o"></i> Loans</a></li>
-          <li><a href="{{ route('employees') }}"><i class="fa fa-circle-o"></i> Timesheets</a></li>
+          <li><a href="{{ route('timesheetdetails') }}"><i class="fa fa-circle-o"></i> Timesheets</a></li>
           <li><a href="{{ route('employees') }}"><i class="fa fa-circle-o"></i> Payrolls</a></li>
         </ul>
       </li>

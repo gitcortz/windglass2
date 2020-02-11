@@ -15,7 +15,7 @@ class EmployeeLoanController extends Controller
     }
 
     public function list() {
-        $employee_loans = EmployeeLoan::with('employee')->select('employee_loans.*');;
+        $employee_loans = EmployeeLoan::with('employee')->select('employee_loans.*');
         return Datatables::of($employee_loans)
                 ->addColumn('employeename', function (EmployeeLoan $loan) {
                     return $loan->employee ? $loan->employee->first_name." ".$loan->employee->last_name : '';

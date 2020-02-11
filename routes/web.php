@@ -147,3 +147,15 @@ Route::group(['prefix' => 'employeeloans'], function () {
     Route::put('/{id}', [ 'uses' => 'EmployeeLoanController@update', 'as' => 'employeeloans.update',]);
     Route::delete('/{id}', [ 'uses' => 'EmployeeLoanController@destroy', 'as'   => 'employeeloans.destroy',]);
 });
+
+
+//Timesheet Detail Routes 
+Route::group(['prefix' => 'timesheetdetails'], function () {
+    Route::get('', [ 'uses' => 'TimesheetDetailController@index', 'as' => 'timesheetdetails',]);
+    Route::get('/all', [ 'uses' => 'TimesheetDetailController@list', 'as' => 'timesheetdetails.list',]);
+    Route::get('/{id}', [ 'uses' => 'TimesheetDetailController@show', 'as' => 'timesheetdetails.show',]);
+    Route::post('/', [ 'uses' => 'TimesheetDetailController@store', 'as' => 'timesheetdetails.store',]);
+    Route::put('/{id}', [ 'uses' => 'TimesheetDetailController@update', 'as' => 'timesheetdetails.update',]);
+    Route::delete('/{id}', [ 'uses' => 'TimesheetDetailController@destroy', 'as'   => 'timesheetdetails.destroy',]);
+    Route::post('/upload', [ 'uses' => 'TimesheetDetailController@upload', 'as'   => 'timesheetdetails.upload',]);
+});

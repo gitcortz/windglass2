@@ -59,7 +59,8 @@ var Crud = (function ($) {
                     processing: true,
                     serverSide: true,
                     ajax : "/"+_component+"/all",
-                    columns : _columns,                    
+                    columns : _columns,
+                    order: [[ 0, "desc" ]],           
                 });
                 //$('#dataTable_filter input').addClass('form-control'); 
             }

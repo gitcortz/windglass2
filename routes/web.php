@@ -159,3 +159,14 @@ Route::group(['prefix' => 'timesheetdetails'], function () {
     Route::delete('/{id}', [ 'uses' => 'TimesheetDetailController@destroy', 'as'   => 'timesheetdetails.destroy',]);
     Route::post('/upload', [ 'uses' => 'TimesheetDetailController@upload', 'as'   => 'timesheetdetails.upload',]);
 });
+
+//Payroll Routes 
+Route::group(['prefix' => 'payrolls'], function () {
+    Route::get('', [ 'uses' => 'PayrollController@index', 'as' => 'payrolls',]);
+    Route::get('/all', [ 'uses' => 'PayrollController@list', 'as' => 'payrolls.list',]);
+    Route::get('/{id}', [ 'uses' => 'PayrollController@show', 'as' => 'payrolls.show',]);
+    Route::post('/', [ 'uses' => 'PayrollController@store', 'as' => 'payrolls.store',]);
+    Route::put('/{id}', [ 'uses' => 'PayrollController@update', 'as' => 'payrolls.update',]);
+    Route::delete('/{id}', [ 'uses' => 'PayrollController@destroy', 'as'   => 'payrolls.destroy',]);
+    Route::post('/upload', [ 'uses' => 'PayrollController@upload', 'as'   => 'payrolls.upload',]);
+});

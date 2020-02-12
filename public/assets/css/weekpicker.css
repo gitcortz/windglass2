@@ -1,0 +1,18 @@
+
+ul.weekpicker {
+    list-style-type: none;
+    list-style: none;    
+    float: left;
+    padding: 4px 0px;
+    border:1px solid #cccccc;
+}
+
+ul.weekpicker li {
+    float: left;
+    margin: 0px 10px;
+}
+
+ul.weekpicker li.__weekpicker_label {
+    width:180px;
+    text-align:center;
+}

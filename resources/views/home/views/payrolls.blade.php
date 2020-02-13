@@ -46,13 +46,14 @@
                               <th>Days</th>
                               <th>Rate</th>
                               <th>TOTAL</th>
+                              <th>OT HRS</th> 
+                              <th>OVERTIME</th> 
                               <th>LOAN</th>
                               <th>VALE/OTHERS</th>
-                              <th>Company/SSS Loan</th>
-                              <th>OVERTIME</th> 
+                              <th>Company/SSS Loan</th>                              
                               <th>LOAN BAL</th> 
                               <th>Grand TOTAL</th> 
-                              <th>OT</th> 
+                              
                           </tr>
                       </thead>                   
                 </table>     

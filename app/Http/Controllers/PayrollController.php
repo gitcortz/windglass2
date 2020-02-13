@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Library\Services\Payroll\PayrollServiceInterface;
 use App\Models\Payroll;
 use Datatables;
 use Validator;
@@ -95,4 +96,28 @@ class PayrollController extends Controller
         ], 200);
         */
     }
+
+    public function generate(Request $request, PayrollServiceInterface $payrollServiceInstance)
+    {
+       
+        $validator = Validator::make($request->input(), array(
+            'weekno' => 'required',
+            'year' => 'required',
+        ));
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error'    => true,
+                'messages' => $validator->errors(),
+            ], 422);
+        }
+
+        $data = $payrollServiceInstance->generatePayroll($request->query('year'), $request->query('weekno'));
+        
+        return response()->json([
+            'error' => false,
+            'data'  => $data,
+        ], 200);
+    }
+
 }

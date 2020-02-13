@@ -16,8 +16,8 @@ var Payroll = (function ($) {
         var _weekPicker;
 
         var updateSuccess = function(data) {
-            _form.trigger("reset");
-            _form.find(".close").click();
+            //_form.trigger("reset");
+            //_form.find(".close").click();
             _datatable_container.DataTable().ajax.reload();
         }
 
@@ -104,11 +104,16 @@ var Payroll = (function ($) {
         }
 
         var generate = function() {
-            console.log("generate");
+            console.log("generate " + _weekPicker.getSelectedValue().weekno);
+            var data =  _weekPicker.getSelectedValue();
+            ajaxcall("POST", "/"+_component+"/generate?weekno="+data.weekno+"&year="+data.year, _form.serializeFormToObject(), updateSuccess, updateError);
+
         };
 
         var init_events = function() {
             $('#btn-generate').click(function() {
+                if (_datatable_container.DataTable().page.info().recordsTotal > 0)
+                    confirm("Are you sure?");
                 generate();
             });
             
@@ -206,14 +211,15 @@ $(document).ready(function() {
             {data: "saturday", name : "saturday"},
             {data: "total_days", name : "total_days"},
             {data: "day_rate", name : "day_rate"},
+            {data: "total", name : "total"},
+            {data: "total_ot_hours", name : "total_ot_hours"},
+            {data: "total_ot_amount", name : "total_ot_amount"},
             {data: "total_loans", name : "total_loans"},
             {data: "loan_payment", name : "loan_payment"},
-            {data: "vale_payment", name : "vale_payment"},
-            {data: "vale_payment", name : "vale_payment"},
-            {data: "total_ot_amount", name : "total_ot_amount"},
+            {data: "vale_payment", name : "vale_payment"},            
             {data: "loan_balance", name : "loan_balance"},
             {data: "grand_total", name : "grand_total"},
-            {data: "total_ot_hours", name : "total_ot_hours"},
+            
         ], function(data) {
             
         }

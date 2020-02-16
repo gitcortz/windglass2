@@ -215,8 +215,9 @@ $(document).ready(function() {
             {data: "total_ot_hours", name : "total_ot_hours"},
             {data: "total_ot_amount", name : "total_ot_amount"},
             {data: "total_loans", name : "total_loans"},
-            {data: "loan_payment", name : "loan_payment"},
             {data: "vale_payment", name : "vale_payment"},            
+            {data: "loan_payment", name : "loan_payment"},            
+            {data: "sssloan_payment", name : "sssloan_payment"},            
             {data: "loan_balance", name : "loan_balance"},
             {data: "grand_total", name : "grand_total"},
             

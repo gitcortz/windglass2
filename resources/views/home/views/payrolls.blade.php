@@ -25,7 +25,7 @@
               <div class="box-header">
                 <div id="weekPicker" >
                 <a id="btn-generate" href="javascript:void(0)" class="btn btn-primary btn-sm" data-toggle="modal"><i class="fa fa-gear"></i> <span>generate</span></a>
-                <a id="btn-export" href="javascript:void(0)" class="btn bg-navy btn-sm" ><i class="fa fa-download"></i> <span>download</span></a>
+                <a id="btn-export" href="/payrolls/export?weekno=7&year=2020" class="btn bg-navy btn-sm" ><i class="fa fa-download"></i> <span>download</span></a>
               </div>
                
               </div>
@@ -50,7 +50,8 @@
                               <th>OVERTIME</th> 
                               <th>LOAN</th>
                               <th>VALE/OTHERS</th>
-                              <th>Company/SSS Loan</th>                              
+                              <th>Company Loan</th>
+                              <th>SSS Loan</th>
                               <th>LOAN BAL</th> 
                               <th>Grand TOTAL</th> 
                               

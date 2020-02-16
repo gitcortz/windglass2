@@ -5,6 +5,8 @@ use Carbon\Carbon;
 use Excel;
 use DateTime;
 use App\Models\Payroll;
+use App\Models\Enums\LoanStatus;
+use App\Models\Enums\LoanType;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
@@ -38,24 +40,25 @@ class PayrollService implements PayrollServiceInterface
             $payrollArray[] = ['Employee Timesheet'];
             $payrollArray[] = [];
             $payrollArray[] = ['NO', $title,'SUN','MON','TUE','WED','THU','FRI','SAT','Days'
-                            ,'Rate', 'TOTAL', 'LOAN', 'VALE/OTHERS','Company / SSS Loan', 'OTs', 'Overtime', 'Loan Balance', 'Grand Total'];
+                            ,'Rate', 'TOTAL', 'LOAN', 'VALE/OTHERS','Company Loan', 'SSS Loan', 'OTs', 'Overtime', 'Loan Balance', 'Grand Total'];
             $idx = 1;
             foreach ($payrolls as $payroll) {
                 $arr = array($idx,
                             $payroll->employee->first_name." ".$payroll->employee->last_name,
-                            $payroll->sunday,
-                            $payroll->monday,
-                            $payroll->tuesday,
-                            $payroll->wednesday,
-                            $payroll->thursday,
-                            $payroll->friday,
-                            $payroll->saturday,
+                            $this->getPayrollDayLabel($payroll, 0),
+                            $this->getPayrollDayLabel($payroll, 1),
+                            $this->getPayrollDayLabel($payroll, 2),
+                            $this->getPayrollDayLabel($payroll, 3),
+                            $this->getPayrollDayLabel($payroll, 4),
+                            $this->getPayrollDayLabel($payroll, 5),
+                            $this->getPayrollDayLabel($payroll, 6),
                             (double)$payroll->total_days,
                             (double)$payroll->day_rate,
                             (double)$payroll->total,
                             $payroll->total_loans,
                             (double)$payroll->vale_payment,
                             (double)$payroll->loan_payment,
+                            (double)$payroll->sssloan_payment,
                             (double)$payroll->total_ot_hours,
                             (double)$payroll->total_ot_amount,
                             (double)$payroll->loan_balance,
@@ -78,21 +81,64 @@ class PayrollService implements PayrollServiceInterface
                     '=SUM(Q'.$rowStart.':Q'.$rowEnd.')',
                     '=SUM(R'.$rowStart.':R'.$rowEnd.')',
                     '=SUM(S'.$rowStart.':S'.$rowEnd.')',
+                    '=SUM(T'.$rowStart.':T'.$rowEnd.')',
                 ];
             
 
             // Generate and return the spreadsheet
-            Excel::create('payments', function($excel) use ($payrollArray, $title) {
-            $excel->setTitle('Payroll '.$title);
-            $excel->setCreator('Laravel')->setCompany('Windglass Company');
-            $excel->setDescription('employee timesheet');
+            Excel::create('payments', function($excel) use ($payrollArray, $title, $rowStart, $rowEnd) {
+                $excel->setTitle('Payroll '.$title);
+                $excel->setCreator('Laravel')->setCompany('Windglass Company');
+                $excel->setDescription('employee timesheet');
 
-            // Build the spreadsheet, passing in the payments array
-            $excel->sheet('sheet1', function($sheet) use ($payrollArray) {
-                $sheet->fromArray($payrollArray, null, 'A1', false, false);
-                $sheet->mergeCells('A1:B1');
-                $sheet->mergeCells('A2:B2');
-            });
+                // Build the spreadsheet, passing in the payments array
+                $excel->sheet('sheet1', function($sheet) use ($payrollArray, $rowStart, $rowEnd) {
+                    $sheet->fromArray($payrollArray, null, 'A1', false, false);
+                    $sheet->mergeCells('A1:B1');
+                    $sheet->mergeCells('A2:B2');
+                    $sheet->getStyle('B4:T4')->applyFromArray(array(
+                        'font' => array(
+                            'name'      =>  'Calibri',
+                            'size'      =>  12,
+                            'bold'      =>  true,                        
+                        )
+                    ));
+                    $sheet->getStyle('J'.$rowStart.':J'.$rowEnd)->applyFromArray(array(
+                        'font' => array(
+                            'color' => array('rgb' => 'FF0000'),
+                            'bold'      =>  true,   
+                        )
+                    ));
+                    $sheet->getStyle('N'.$rowStart.':N'.$rowEnd)->applyFromArray(array(
+                        'font' => array(
+                            'color' => array('rgb' => 'FF0000'),
+                            'bold'      =>  true,   
+                        )
+                    ));
+                    $sheet->getStyle('O'.$rowStart.':O'.$rowEnd)->applyFromArray(array(
+                        'font' => array(
+                            'color' => array('rgb' => 'FF0000'),
+                            'bold'      =>  true,   
+                        )
+                    ));
+                    $sheet->getStyle('P'.$rowStart.':P'.$rowEnd)->applyFromArray(array(
+                        'font' => array(
+                            'color' => array('rgb' => 'FF0000'),
+                            'bold'      =>  true,   
+                        )
+                    ));                  
+                    $sheet->getStyle('S'.$rowStart.':S'.$rowEnd)->applyFromArray(array(
+                        'font' => array(
+                            'color' => array('rgb' => 'FF0000'),
+                            'bold'      =>  true,   
+                        )
+                    ));
+                    $sheet->getStyle('T'.$rowStart.':T'.$rowEnd)->applyFromArray(array(
+                        'font' => array(
+                            'bold'      =>  true,   
+                        )
+                    ));
+                });
 
             })->download('xlsx');
     }
@@ -103,6 +149,40 @@ class PayrollService implements PayrollServiceInterface
       return $dates;
     }
 
+    private function getPayrollDayLabel($payroll, $index) {
+        switch($index) {
+            case 0:
+                return $payroll->sunday == 0 ? "A" : 
+                        ($payroll->sunday < 4 ? "HD" : 
+                        ($payroll->sunday_late > 0 ? "L" :"x")); 
+            case 1:
+                return $payroll->monday == 0 ? "A" : 
+                        ($payroll->monday < 4 ? "HD" : 
+                        ($payroll->monday_late > 0 ? "L" :"x")); 
+            case 2:
+                return $payroll->tuesday == 0 ? "A" : 
+                        ($payroll->tuesday < 4 ? "HD" : 
+                        ($payroll->tuesday_late > 0 ? "L" :"x")); 
+            case 3:
+                return $payroll->wednesday == 0 ? "A" : 
+                        ($payroll->wednesday < 4 ? "HD" : 
+                        ($payroll->wednesday_late > 0 ? "L" :"x")); 
+            case 4:
+                return $payroll->thursday == 0 ? "A" : 
+                        ($payroll->thursday < 4 ? "HD" : 
+                        ($payroll->thursday_late > 0 ? "L" :"x")); 
+            case 5:
+                return $payroll->friday == 0 ? "A" : 
+                        ($payroll->friday < 4 ? "HD" : 
+                        ($payroll->friday_late > 0 ? "L" :"x")); 
+            case 6:
+                return $payroll->saturday == 0 ? "A" : 
+                        ($payroll->saturday < 4 ? "HD" : 
+                        ($payroll->saturday_late > 0 ? "L" :"x")); 
+            default:
+                return "";                            
+        }
+    }
     public function getStartAndEndTitle($year, $weekno) {
         $start = Carbon::parse(date("Y-m-d", strtotime($year.'W'.str_pad($weekno, 2, 0, STR_PAD_LEFT).' -1 days')));
         $end = Carbon::parse(date("Y-m-d", strtotime($year.'W'.str_pad($weekno, 2, 0, STR_PAD_LEFT).' +5 days')));
@@ -142,6 +222,11 @@ class PayrollService implements PayrollServiceInterface
             
         if ($timesheets_result->count() > 0) {
             $payroll_timesheets = $this->computePayroll($year, $weekno, $timesheets_result);
+            $payroll_timesheets = $this->computePayrollLoans($payroll_timesheets);
+            $payroll_timesheets = $this->computeGrandTotal($payroll_timesheets);
+
+            //var_dump($payroll_timesheets);
+            //return;
 
             if(!empty($payroll_timesheets)) {
                 if (!$this->existsPayrollDB($year, $weekno)) {
@@ -150,7 +235,7 @@ class PayrollService implements PayrollServiceInterface
                 }
                 else {
                     //update payroll
-                    var_dump($payroll_timesheets);
+                    //var_dump($payroll_timesheets);
                     foreach ($payroll_timesheets as $p) {
                         DB::table('payrolls')
                             ->updateOrInsert(
@@ -217,6 +302,66 @@ class PayrollService implements PayrollServiceInterface
         return $payroll_timesheets;
     }
 
+    private function computePayrollLoans($payroll_timesheets) {
+      
+        $loans_result = \DB::table('employee_loans')
+            ->select('employee_id', 'balance', 'loan_type_id')
+            ->where('loan_status_id', LoanStatus::Loaned)
+            ->where('balance', '>', 0)
+            ->orderBy('employee_id', 'ASC')
+            ->orderBy('loan_type_id', 'ASC')
+            ->get();
+
+    
+        if ($loans_result->count() > 0) {
+            foreach ($payroll_timesheets as &$pt) {
+                $loans = $loans_result->filter(function ($item) use ($pt) {
+                            return $item->employee_id == $pt["employee_id"];
+                        })->values();
+                        
+                if ($loans->count() > 0){
+                    $loan_total = 0;
+                    $loan_payment = 0;
+                    foreach ($loans as $loan) {
+                        if ($loan->loan_type_id == LoanType::Vale){
+                            $vale_payment = $loan->balance;
+                            $pt["vale_payment"] = $vale_payment;
+                            $loan_payment += $vale_payment;                            
+                        }
+                        else if ($loan->loan_type_id == LoanType::Salary) {
+                            $salaryloan_payment = $loan->balance;
+                            $pt["loan_payment"] = $salaryloan_payment;
+                            $loan_payment += $salaryloan_payment;                            
+                        }
+                        else if ($loan->loan_type_id == LoanType::SSS) {
+                            $sss_payment = $loan->balance;
+                            $pt["sssloan_payment"] = $sss_payment;    
+                            $loan_payment += $sss_payment;                            
+                        }                                    
+                        $loan_total = $loan_total + $loan->balance;
+                    }                    
+                    $pt["total_loans"] = $loan_total;
+                    $pt["loan_balance"] = $loan_total - $loan_payment; 
+                }
+            }
+        }
+                    
+        return $payroll_timesheets;
+    }
+
+    private function computeGrandTotal($payroll_timesheets) {
+      
+        foreach ($payroll_timesheets as &$pt) {
+            $vale_payment = !array_key_exists('vale_payment', $pt) ? 0 : $pt["vale_payment"];
+            $sss_payment = !array_key_exists('sssloan_payment', $pt) ? 0 : $pt["sssloan_payment"];
+            $salary_payment = !array_key_exists('loan_payment', $pt) ? 0 : $pt["loan_payment"];
+
+            $pt["grand_total"] = $pt["total"] + $pt["total_ot_amount"] - ($vale_payment + $sss_payment + $salary_payment);
+        }
+                    
+        return $payroll_timesheets;
+    }
+
     private function initializePayroll($payroll_timesheet) {
         $payroll_timesheet->sunday = 0;
         $payroll_timesheet->sunday_late = 0;
@@ -233,6 +378,10 @@ class PayrollService implements PayrollServiceInterface
         $payroll_timesheet->saturday = 0;
         $payroll_timesheet->saturday_late = 0;
         $payroll_timesheet->payroll_status = 1;
+        //$payroll_timesheet->total_loans = 0;
+        //$payroll_timesheet->vale_payment = 0;
+        //$payroll_timesheet->loan_payment = 0;
+        //$payroll_timesheet->sss_payment = 0;
     }
 
     private function computeDay($payroll_timesheet, $timesheet) {

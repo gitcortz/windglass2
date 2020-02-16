@@ -164,6 +164,7 @@ Route::group(['prefix' => 'timesheetdetails'], function () {
 Route::group(['prefix' => 'payrolls'], function () {
     Route::get('', [ 'uses' => 'PayrollController@index', 'as' => 'payrolls',]);
     Route::get('/all', [ 'uses' => 'PayrollController@list', 'as' => 'payrolls.list',]);
+    Route::get('/export', [ 'uses' => 'PayrollController@export', 'as' => 'payrolls.export',]);
     Route::get('/{id}', [ 'uses' => 'PayrollController@show', 'as' => 'payrolls.show',]);
     Route::post('/', [ 'uses' => 'PayrollController@store', 'as' => 'payrolls.store',]);
     Route::put('/{id}', [ 'uses' => 'PayrollController@update', 'as' => 'payrolls.update',]);

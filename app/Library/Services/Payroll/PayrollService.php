@@ -2,6 +2,8 @@
 
 namespace App\Library\Services\Payroll;
 use Carbon\Carbon;
+use Excel;
+use DateTime;
 use App\Models\Payroll;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -23,11 +25,101 @@ class PayrollService implements PayrollServiceInterface
         //return 'Output from Generate Payroll - '.$date->toDateTimeString().' - week #'.$week;
     }
 
-    private function getStartAndEndDate($year, $weekno) {
+    public function exportPayroll($year, $weekno)
+    {
+        $payrolls = Payroll::where('year', $year)
+        ->where('week_no', $weekno)
+        ->get();
+
+            $payrollArray = []; 
+
+            $title = $this->getStartAndEndTitle($year, $weekno);
+            $payrollArray[] = ['Windglass Company'];
+            $payrollArray[] = ['Employee Timesheet'];
+            $payrollArray[] = [];
+            $payrollArray[] = ['NO', $title,'SUN','MON','TUE','WED','THU','FRI','SAT','Days'
+                            ,'Rate', 'TOTAL', 'LOAN', 'VALE/OTHERS','Company / SSS Loan', 'OTs', 'Overtime', 'Loan Balance', 'Grand Total'];
+            $idx = 1;
+            foreach ($payrolls as $payroll) {
+                $arr = array($idx,
+                            $payroll->employee->first_name." ".$payroll->employee->last_name,
+                            $payroll->sunday,
+                            $payroll->monday,
+                            $payroll->tuesday,
+                            $payroll->wednesday,
+                            $payroll->thursday,
+                            $payroll->friday,
+                            $payroll->saturday,
+                            (double)$payroll->total_days,
+                            (double)$payroll->day_rate,
+                            (double)$payroll->total,
+                            $payroll->total_loans,
+                            (double)$payroll->vale_payment,
+                            (double)$payroll->loan_payment,
+                            (double)$payroll->total_ot_hours,
+                            (double)$payroll->total_ot_amount,
+                            (double)$payroll->loan_balance,
+                            (double)$payroll->grand_total,
+                        );
+                $payrollArray[] = $arr;
+                $idx++;
+            }
+
+            $payrollArray[] = [];
+            //Total
+            $rowStart = 5;
+            $rowEnd = $rowStart+$payrolls->count()-1;
+            $payrollArray[] = ['','','','','','','','','','','',
+                    '=SUM(L'.$rowStart.':L'.$rowEnd.')',
+                    '',
+                    '=SUM(N'.$rowStart.':N'.$rowEnd.')',
+                    '=SUM(O'.$rowStart.':O'.$rowEnd.')',
+                    '=SUM(P'.$rowStart.':P'.$rowEnd.')',
+                    '=SUM(Q'.$rowStart.':Q'.$rowEnd.')',
+                    '=SUM(R'.$rowStart.':R'.$rowEnd.')',
+                    '=SUM(S'.$rowStart.':S'.$rowEnd.')',
+                ];
+            
+
+            // Generate and return the spreadsheet
+            Excel::create('payments', function($excel) use ($payrollArray, $title) {
+            $excel->setTitle('Payroll '.$title);
+            $excel->setCreator('Laravel')->setCompany('Windglass Company');
+            $excel->setDescription('employee timesheet');
+
+            // Build the spreadsheet, passing in the payments array
+            $excel->sheet('sheet1', function($sheet) use ($payrollArray) {
+                $sheet->fromArray($payrollArray, null, 'A1', false, false);
+                $sheet->mergeCells('A1:B1');
+                $sheet->mergeCells('A2:B2');
+            });
+
+            })->download('xlsx');
+    }
+
+    public function getStartAndEndDate($year, $weekno) {
       $dates['start'] = date("Y-m-d", strtotime($year.'W'.str_pad($weekno, 2, 0, STR_PAD_LEFT).' -1 days'));
       $dates['end'] = date("Y-m-d", strtotime($year.'W'.str_pad($weekno, 2, 0, STR_PAD_LEFT).' +5 days'));
       return $dates;
     }
+
+    public function getStartAndEndTitle($year, $weekno) {
+        $start = Carbon::parse(date("Y-m-d", strtotime($year.'W'.str_pad($weekno, 2, 0, STR_PAD_LEFT).' -1 days')));
+        $end = Carbon::parse(date("Y-m-d", strtotime($year.'W'.str_pad($weekno, 2, 0, STR_PAD_LEFT).' +5 days')));
+        $title = $start->format('M d');
+
+        if ($start->month == $end->month && $start->year == $end->year ) {
+            $title = $title.'-'.$end->format('d Y');
+        } 
+        else if ($start->month != $end->month && $start->year == $end->year) {
+            $title = $title.'-'.$end->format('M d Y');
+        }
+        else {
+            $title = $title.' '.$start->format('Y').'-'.$end->format('M d Y');
+        }
+        
+        return $title;
+      }
 
     
     private function createPayrollTimeSheetsDB($year, $weekno, $offical_time_in) {

@@ -7,6 +7,7 @@ use App\Library\Services\Payroll\PayrollServiceInterface;
 use App\Models\Payroll;
 use Datatables;
 use Validator;
+use Excel;
 
 class PayrollController extends Controller
 {
@@ -118,6 +119,25 @@ class PayrollController extends Controller
             'error' => false,
             'data'  => $data,
         ], 200);
+    }
+
+    public function export(Request $request, PayrollServiceInterface $payrollServiceInstance)
+    {
+        $validator = Validator::make($request->input(), array(
+            'weekno' => 'required',
+            'year' => 'required',
+        ));
+        if ($validator->fails()) {
+            return response()->json([
+                'error'    => true,
+                'messages' => $validator->errors(),
+            ], 422);
+        }
+
+
+        $payrollServiceInstance->exportPayroll($request->query('year'), $request->query('weekno'));
+
+       
     }
 
 }

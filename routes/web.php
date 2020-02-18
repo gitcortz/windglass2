@@ -146,6 +146,7 @@ Route::group(['prefix' => 'employeeloans'], function () {
     Route::post('/', [ 'uses' => 'EmployeeLoanController@store', 'as' => 'employeeloans.store',]);
     Route::put('/{id}', [ 'uses' => 'EmployeeLoanController@update', 'as' => 'employeeloans.update',]);
     Route::delete('/{id}', [ 'uses' => 'EmployeeLoanController@destroy', 'as'   => 'employeeloans.destroy',]);
+    Route::post('/{id}/approve', [ 'uses' => 'EmployeeLoanController@approve', 'as'   => 'employeeloans.approve',]);
 });
 
 

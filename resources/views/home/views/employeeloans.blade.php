@@ -50,6 +50,7 @@
 </div>  
     @include('home.views.partials.employeeloans.modal-form')
     @include('home.views.partials.common.modal-delete')
+    @include('home.views.partials.employeeloans.modal-approve')
 
 @endsection
 @section("scripts")

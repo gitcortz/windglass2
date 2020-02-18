@@ -29,8 +29,13 @@ class EmployeeLoanController extends Controller
                     return $loan->loan_type();
                 })
                 ->addColumn("action_btns", function($employee_loans) {
-                    return '<a href="#" class="btn btn-info" action="edit" data-id="'.$employee_loans->id.'">Edit</a>'
-                    .'&nbsp;<a href="#" class="btn btn-danger" action="delete" data-id="'.$employee_loans->id.'">Delete</a>';
+                    return 
+                    ($employee_loans->loan_status_id != LoanStatus::ForApproval ? '' :
+                        '<a href="#" class="btn btn-success" action="approve" data-id="'.$employee_loans->id.'">Approve</a>')
+                    .($employee_loans->loan_status_id != LoanStatus::ForApproval ? '' :
+                        '&nbsp;<a href="#" class="btn btn-info" action="edit" data-id="'.$employee_loans->id.'">Edit</a>')
+                    .($employee_loans->loan_status_id != LoanStatus::ForApproval ? '' : 
+                        '&nbsp;<a href="#" class="btn btn-danger" action="delete" data-id="'.$employee_loans->id.'">Delete</a>');
                 })
                 ->rawColumns(["action_btns"])
                 ->make(true);
@@ -57,8 +62,6 @@ class EmployeeLoanController extends Controller
             'loan_type_id' => $request->loan_type_id,
             'loan_status_id' => LoanStatus::ForApproval
           ]);
-
-         
 
         return response()->json([
             'error' => false,
@@ -93,8 +96,8 @@ class EmployeeLoanController extends Controller
         $data = EmployeeLoan::find($id);
         $data->employee_id =  $request->input('employee_id');
         $data->loan_amount =  $request->input('loan_amount');
-        $data->loan_type_id = $request->input('loan_type_id');
-        $data->loan_status_id = $request->input('loan_status_id');
+        if ($data->loan_status_id == LoanStatus::ForApproval)
+            $data->balance = $data->loan_amount;
 
         $data->save();
 
@@ -114,6 +117,26 @@ class EmployeeLoanController extends Controller
         ], 200);
     }
 
-    
+    public function approve($id)
+    {
+        
+        $data = EmployeeLoan::find($id);
+        $data->loan_status_id = LoanStatus::Loaned;
+        $data->save();
+
+        EmployeeLoanTransaction::create([
+            'employee_loan_id' => $data->id, 
+            'employee_id' => $data->employee_id,            
+            'before_amount' => 0, 
+            'after_amount' => $data->balance,
+            'loan_status_id' => LoanTransactionType::NewLoan
+          ]);
+
+
+        return response()->json([
+            'error' => false,
+            'data'  => $data,
+        ], 200);
+    }
 }
 

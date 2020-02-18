@@ -5,6 +5,7 @@ var Crud = (function ($) {
         var _datatable;
         var _loadCallBack;
         var _saveCallBack;
+        var _addModalCallBack;
         var _loadControlsCallBack;
         var _datatable_container = $('#dataTable');
         var _form = $('#form-addupdate');
@@ -94,6 +95,8 @@ var Crud = (function ($) {
 
         var init_events = function() {
             $('#btn-open-addupdate-modal').click(function() {
+                if (!_addModalCallBack)
+                    _addModalCallBack();
                 showFormModal();
             });
             
@@ -110,6 +113,7 @@ var Crud = (function ($) {
 
             $("#btn-delete").click(function() {
                 var id = _form_delete.find("input[name=delete_id]").val();
+
                 ajaxcall("DELETE", "/"+_component+"/"+id, null, 
                     function(data){
                         _form_delete.find(".close").click();
@@ -140,9 +144,17 @@ var Crud = (function ($) {
         var set_saveCallBack = function(saveCallBack) {
             _saveCallBack = saveCallBack;
         };
+
+        var set_addModalCallBack = function(addModalCallBack) {
+            _addModalCallBack = addModalCallBack;
+        };
         
         var get_form = function() {
             return _form;
+        }
+
+        var get_datatable_container = function() {
+            return _datatable_container;
         }
 
         var init = function(component, columns, loadCallBack) {
@@ -161,8 +173,10 @@ var Crud = (function ($) {
             set_loadControls : set_loadControls,
             set_saveCallBack : set_saveCallBack,
             get_form : get_form,
+            get_datatable : get_datatable_container,
             updateSuccess: updateSuccess,
-            updateError : updateError
+            updateError : updateError,
+            set_addModalCallBack : set_addModalCallBack,
         }
     }
 })(jQuery);

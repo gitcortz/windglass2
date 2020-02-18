@@ -1,4 +1,7 @@
 $(document).ready(function() {
+    var _modal_approve = $('#modal-approve');
+    var _form_approve = $('#form-approve');
+
     var crud = new Crud();
     crud.init(_component, 
         [
@@ -9,13 +12,41 @@ $(document).ready(function() {
             {data: "loan_amount", name : "loan_amount"},
             {data: "action_btns", name : "action_btns"},
         ], function(data) {
+            console.log(data);
             var form = crud.form_control;
             form.find("input[name=id]").val(data.id);
-            form.find("input[name=employee_id]").val(data.employee_id);
+            form.find("input[name=employee_autocomplete]").val("sss"); 
+            form.find('#loan_type').val(data.loan_type_id);
+            form.find("input[name=loan_amount]").val(data.loan_amount);
+
+            form.find("input[name=employee_autocomplete]").attr('readonly', true); 
+            form.find('#loan_type').attr('disabled', true); 
         }
     );
     init_employees();
 
+    
+    crud.set_addModalCallBack(function() {    
+        form.find("input[name=employee_autocomplete]").attr('readonly', false); 
+        form.find('#loan_type').attr('disabled', false); 
+    });
+    crud.get_datatable().on('click', 'tbody tr a[action="approve"]', function(event){
+        console.log('sssssss');
+        var id = $(this).data("id");
+        _form_approve.find("input[name=approve_id]").val(id);
+        _modal_approve.modal('show');
+    });
+
+    $("#btn-approve-loan").click(function() {
+         var id = _form_approve.find("input[name=approve_id]").val();
+        ajaxcall("POST", "/"+_component+"/"+id+"/approve", null, 
+            function(data){
+                _form_approve.find(".close").click();
+                crud.get_datatable().DataTable().ajax.reload();
+            }, function(data){
+                console.log(data);   
+            });
+    });
    
 });
 

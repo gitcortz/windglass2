@@ -129,7 +129,7 @@ class EmployeeLoanController extends Controller
             'employee_id' => $data->employee_id,            
             'before_amount' => 0, 
             'after_amount' => $data->balance,
-            'loan_status_id' => LoanTransactionType::NewLoan
+            'loan_transaction_type' => LoanTransactionType::NewLoan
           ]);
 
 

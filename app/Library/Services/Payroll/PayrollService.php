@@ -7,10 +7,12 @@ use DateTime;
 use App\Models\Payroll;
 use App\Models\EmployeeLoan;
 use App\Models\EmployeeLoanTransaction;
+use App\Models\TimesheetDetail;
 use App\Models\Enums\LoanStatus;
 use App\Models\Enums\LoanType;
 use App\Models\Enums\PayrollStatus;
 use App\Models\Enums\LoanTransactionType;
+use App\Models\Enums\TimesheetStatus;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
@@ -34,29 +36,31 @@ class PayrollService implements PayrollServiceInterface
     private function updateEmployeeLoan($id, $loantype, $p) {
         $loan_payment = 0;        
         $loan_data = EmployeeLoan::find($id);
-        $loan_data->employee_id =  $p['employee_id'];
-        $initial_balance = $loan_data->balance; 
-        if ($loantype == LoanType::Salary){
-            $loan_payment = $p['loan_payment'];
-        } else if ($loantype == LoanType::SSS){
-            $loan_payment = $p['sssloan_payment'];
-        } else if ($loantype == LoanType::Vale){
-            $loan_payment = $p['vale_payment'];
-        } 
-        
-        $loan_data->balance = $loan_data->balance - $loan_payment;
-        if ($loan_data->balance == 0)
-            $loan_data->loan_status_id = LoanStatus::Paid;
-        
-            $loan_data->save();
+        if ($loan_data->loan_status_id != LoanStatus::Paid) {
+            $loan_data->employee_id =  $p['employee_id'];
+            $initial_balance = $loan_data->balance; 
+            if ($loantype == LoanType::Salary){
+                $loan_payment = $p['loan_payment'];
+            } else if ($loantype == LoanType::SSS){
+                $loan_payment = $p['sssloan_payment'];
+            } else if ($loantype == LoanType::Vale){
+                $loan_payment = $p['vale_payment'];
+            } 
+            
+            $loan_data->balance = $loan_data->balance - $loan_payment;
+            if ($loan_data->balance == 0)
+                $loan_data->loan_status_id = LoanStatus::Paid;
+            
+                $loan_data->save();
 
-        EmployeeLoanTransaction::create([
-            'employee_loan_id' => $id, 
-            'employee_id' => $p["employee_id"],            
-            'before_amount' => $initial_balance,
-            'after_amount' => $loan_data->balance,
-            'loan_status_id' => LoanTransactionType::Payroll
-        ]);
+            EmployeeLoanTransaction::create([
+                'employee_loan_id' => $id, 
+                'employee_id' => $p["employee_id"],            
+                'before_amount' => $initial_balance,
+                'after_amount' => $loan_data->balance,
+                'loan_transaction_type' => LoanTransactionType::Payroll
+            ]);
+        }
     }
 
     public function approvePayroll($year, $weekno)
@@ -65,6 +69,17 @@ class PayrollService implements PayrollServiceInterface
                 ->where('year', '=', $year)
                 ->update(['payroll_status' => PayrollStatus::Processed]);
         
+        $date_range = $this->getStartAndEndDate($year, $weekno);
+        $start = $date_range['start'];
+        $end = $date_range['end'];
+
+        $all = TimesheetDetail::
+                whereDate('time_in', '>=', $start)
+                ->whereDate('time_in', '<=', $end)
+                ->where('status_id', '=', TimesheetStatus::Pending)
+                ->update(['status_id' => TimesheetStatus::Approved]);
+ 
+
         $payrolls = Payroll::where('week_no', '=', $weekno)
                 ->where('year', '=', $year)
                 ->get();

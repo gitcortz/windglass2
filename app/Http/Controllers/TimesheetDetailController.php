@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use App\Models\TimesheetDetail;
 use App\Models\Employee;
+use App\Models\Enums\TimesheetStatus;
 use Datatables;
 use Validator;
 
@@ -25,8 +26,11 @@ class TimesheetDetailController extends Controller
                 return $timesheetDetail->total_hours();
             })
             ->addColumn("action_btns", function($timesheetDetails) {
-                return '<a href="#" class="btn btn-info" action="edit" data-id="'.$timesheetDetails->id.'">Edit</a>'
-                .'&nbsp;<a href="#" class="btn btn-danger" action="delete" data-id="'.$timesheetDetails->id.'">Delete</a>';
+                return 
+                    ($timesheetDetails->status_id == TimesheetStatus::Approved ? '' :
+                    '<a href="#" class="btn btn-info" action="edit" data-id="'.$timesheetDetails->id.'">Edit</a>')
+                    .($timesheetDetails->status_id == TimesheetStatus::Approved ? '' :
+                    '&nbsp;<a href="#" class="btn btn-danger" action="delete" data-id="'.$timesheetDetails->id.'">Delete</a>');
             })
             ->rawColumns(["action_btns"])
             ->make(true);
@@ -50,6 +54,7 @@ class TimesheetDetailController extends Controller
             'employee_id' => $request->employee_id,
             'time_in' => $request->time_in, 
             'time_out' => $request->time_out, 
+            'status_id' => TimesheetStatus::Pending
           ]);
 
         return response()->json([
@@ -168,4 +173,5 @@ class TimesheetDetailController extends Controller
         TimesheetDetail::insert($array_timesshet);
       
     }
+    
 }

@@ -9,8 +9,8 @@ var Payroll = (function ($) {
         var _datatable_container = $('#dataTable');
         var _form = $('#form-addupdate');
         var _modal = $('.modal-addupdate');
-        var _modal_delete = $('#modal-delete');
-        var _form_delete = $('#form-delete');
+        var _modal_process = $('#modal-process');
+        var _form_process = $('#form-process');
         var _errors = $('#error-list');
         var _error_bag = $('#error-bag');
         var _weekPicker;
@@ -55,7 +55,7 @@ var Payroll = (function ($) {
         };
 
         var init_datatable = function(data) {
-            //$('#btn-generate').hide();
+            $('#btn-process').hide();
             $('#btn-export').hide();
 
             if (_datatable_container.length > 0) {
@@ -70,8 +70,17 @@ var Payroll = (function ($) {
                     columns : _columns,
                     order: [[ 0, "desc" ]], 
                     initComplete : function(settings, json) {
-                        if (json.recordsTotal > 0)
-                            $('#btn-export').show();                
+                        if (json.recordsTotal > 0) {
+                            if (json.data[0].payroll_status == "2")
+                            {
+                                $('#btn-generate').hide();
+                                $('#btn-export').show();
+                            }
+                            else {                            
+                                $('#btn-export').show();
+                                $('#btn-process').show();
+                            }
+                        }                
                     }          
                 });                
             }
@@ -97,10 +106,8 @@ var Payroll = (function ($) {
             
         }
 
-        var showDeleteModal = function(id, text) {
-            _modal_delete.modal('show');
-            _form_delete.find("#delete-title").html("Delete '" + text + "' (" + id + ")?");
-            _form_delete.find("input[name=delete_id]").val(id);
+        var showProcessModal = function(id, text) {
+            _modal_process.modal('show');
         }
 
         var generate = function() {
@@ -116,6 +123,26 @@ var Payroll = (function ($) {
                     confirm("Are you sure?");
                 generate();
             });
+
+            $('#btn-export').click(function() {
+                var data =  _weekPicker.getSelectedValue();
+                window.open("/"+_component+"/export?weekno="+data.weekno+"&year="+data.year);
+            });
+            
+            $('#btn-process').click(function() {
+                showProcessModal("", "");
+            });
+
+            $('#btn-process-payroll').click(function() {
+                var data =  _weekPicker.getSelectedValue();
+                ajaxcall("POST", "/"+_component+"/approve?weekno="+data.weekno+"&year="+data.year, null, 
+                    function(data){
+                        _form_process.find(".close").click();
+                        location.reload();
+                    }, function(data){
+                        console.log(data);   
+                    });
+            });
             
             $("#btn-save").click(function() {
                 _error_bag.hide();
@@ -126,31 +153,7 @@ var Payroll = (function ($) {
                     save();
                 else 
                     _saveCallBack();
-            });
-
-            $("#btn-delete").click(function() {
-                var id = _form_delete.find("input[name=delete_id]").val();
-                ajaxcall("DELETE", "/"+_component+"/"+id, null, 
-                    function(data){
-                        _form_delete.find(".close").click();
-                        _datatable_container.DataTable().ajax.reload();
-                    }, function(data){
-                        console.log(data);   
-                    });
-            });
-
-            _datatable_container.on('click', 'tbody tr a[action="edit"]', function(event){
-                var id = $(this).data("id");
-                showFormModal(id);
-                loadForm(id);
-            });
-
-            _datatable_container.on('click', 'tbody tr a[action="delete"]', function(event){
-                var $row = $(this).closest("tr");
-                var data = _datatable.rows($row.index()).data();
-                
-                showDeleteModal(data[0].id, data[0].name);                
-            });
+            });            
 
             _weekPicker = new WeekPicker()
             _weekPicker.init($('#weekPicker'), function (data) {

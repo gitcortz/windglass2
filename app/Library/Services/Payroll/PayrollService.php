@@ -5,8 +5,12 @@ use Carbon\Carbon;
 use Excel;
 use DateTime;
 use App\Models\Payroll;
+use App\Models\EmployeeLoan;
+use App\Models\EmployeeLoanTransaction;
 use App\Models\Enums\LoanStatus;
 use App\Models\Enums\LoanType;
+use App\Models\Enums\PayrollStatus;
+use App\Models\Enums\LoanTransactionType;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
@@ -25,6 +29,60 @@ class PayrollService implements PayrollServiceInterface
         return 1;
 
         //return 'Output from Generate Payroll - '.$date->toDateTimeString().' - week #'.$week;
+    }
+
+    private function updateEmployeeLoan($id, $loantype, $p) {
+        $loan_payment = 0;        
+        $loan_data = EmployeeLoan::find($id);
+        $loan_data->employee_id =  $p['employee_id'];
+        $initial_balance = $loan_data->balance; 
+        if ($loantype == LoanType::Salary){
+            $loan_payment = $p['loan_payment'];
+        } else if ($loantype == LoanType::SSS){
+            $loan_payment = $p['sssloan_payment'];
+        } else if ($loantype == LoanType::Vale){
+            $loan_payment = $p['vale_payment'];
+        } 
+        
+        $loan_data->balance = $loan_data->balance - $loan_payment;
+        if ($loan_data->balance == 0)
+            $loan_data->loan_status_id = LoanStatus::Paid;
+        
+            $loan_data->save();
+
+        EmployeeLoanTransaction::create([
+            'employee_loan_id' => $id, 
+            'employee_id' => $p["employee_id"],            
+            'before_amount' => $initial_balance,
+            'after_amount' => $loan_data->balance,
+            'loan_status_id' => LoanTransactionType::Payroll
+        ]);
+    }
+
+    public function approvePayroll($year, $weekno)
+    {
+        Payroll::where('week_no', '=', $weekno)
+                ->where('year', '=', $year)
+                ->update(['payroll_status' => PayrollStatus::Processed]);
+        
+        $payrolls = Payroll::where('week_no', '=', $weekno)
+                ->where('year', '=', $year)
+                ->get();
+            
+        foreach ($payrolls as $p) {
+            if ($p["salary_loan_id"] != null) {
+                $this->updateEmployeeLoan($p["salary_loan_id"], LoanType::Salary, $p);
+            }
+            if ($p["vale_loan_id"] != null) {
+                $this->updateEmployeeLoan($p["vale_loan_id"], LoanType::Vale, $p);
+            }
+            if ($p["sss_loan_id"] != null) {
+                $this->updateEmployeeLoan($p["sss_loan_id"], LoanType::SSS, $p);
+            }
+        }
+
+        return;
+        
     }
 
     public function exportPayroll($year, $weekno)
@@ -305,7 +363,7 @@ class PayrollService implements PayrollServiceInterface
     private function computePayrollLoans($payroll_timesheets) {
       
         $loans_result = \DB::table('employee_loans')
-            ->select('employee_id', 'balance', 'loan_type_id')
+            ->select('id', 'employee_id', 'balance', 'loan_type_id')
             ->where('loan_status_id', LoanStatus::Loaned)
             ->where('balance', '>', 0)
             ->orderBy('employee_id', 'ASC')
@@ -325,16 +383,19 @@ class PayrollService implements PayrollServiceInterface
                     foreach ($loans as $loan) {
                         if ($loan->loan_type_id == LoanType::Vale){
                             $vale_payment = $loan->balance;
+                            $pt["vale_loan_id"] = $loan->id;
                             $pt["vale_payment"] = $vale_payment;
                             $loan_payment += $vale_payment;                            
                         }
                         else if ($loan->loan_type_id == LoanType::Salary) {
                             $salaryloan_payment = $loan->balance;
+                            $pt["salary_loan_id"] = $loan->id;
                             $pt["loan_payment"] = $salaryloan_payment;
                             $loan_payment += $salaryloan_payment;                            
                         }
                         else if ($loan->loan_type_id == LoanType::SSS) {
                             $sss_payment = $loan->balance;
+                            $pt["sss_loan_id"] = $loan->id;
                             $pt["sssloan_payment"] = $sss_payment;    
                             $loan_payment += $sss_payment;                            
                         }                                    

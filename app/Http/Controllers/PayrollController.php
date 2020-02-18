@@ -135,8 +135,29 @@ class PayrollController extends Controller
         }
 
 
-        $payrollServiceInstance->exportPayroll($request->query('year'), $request->query('weekno'));
+        $payrollServiceInstance->exportPayroll($request->query('year'), $request->query('weekno'));       
+    }
 
+    public function approve(Request $request, PayrollServiceInterface $payrollServiceInstance)
+    {
+        $validator = Validator::make($request->input(), array(
+            'weekno' => 'required',
+            'year' => 'required',
+        ));
+        if ($validator->fails()) {
+            return response()->json([
+                'error'    => true,
+                'messages' => $validator->errors(),
+            ], 422);
+        }
+
+
+        $payrollServiceInstance->approvePayroll($request->query('year'), $request->query('weekno'));
+
+        return response()->json([
+            'error' => false,
+            'data'  => "OK",
+        ], 200);
        
     }
 

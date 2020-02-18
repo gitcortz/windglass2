@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\EmployeeLoan;
+use App\Models\EmployeeLoanTransaction;
 use App\Models\Enums\LoanStatus;
+use App\Models\Enums\LoanTransactionType;
 use Datatables;
 use Validator;
 
@@ -56,6 +58,7 @@ class EmployeeLoanController extends Controller
             'loan_status_id' => LoanStatus::ForApproval
           ]);
 
+         
 
         return response()->json([
             'error' => false,

@@ -170,4 +170,5 @@ Route::group(['prefix' => 'payrolls'], function () {
     Route::put('/{id}', [ 'uses' => 'PayrollController@update', 'as' => 'payrolls.update',]);
     Route::delete('/{id}', [ 'uses' => 'PayrollController@destroy', 'as'   => 'payrolls.destroy',]);
     Route::post('/generate', [ 'uses' => 'PayrollController@generate', 'as'   => 'payrolls.generate',]);
+    Route::post('/approve', [ 'uses' => 'PayrollController@approve', 'as'   => 'payrolls.approve',]);
 });

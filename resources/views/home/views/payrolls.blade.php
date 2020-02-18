@@ -25,7 +25,8 @@
               <div class="box-header">
                 <div id="weekPicker" >
                 <a id="btn-generate" href="javascript:void(0)" class="btn btn-primary btn-sm" data-toggle="modal"><i class="fa fa-gear"></i> <span>generate</span></a>
-                <a id="btn-export" href="/payrolls/export?weekno=7&year=2020" class="btn bg-navy btn-sm" ><i class="fa fa-download"></i> <span>download</span></a>
+                <a id="btn-export" href="javascript:void(0)" style="display:none" class="btn bg-navy btn-sm" ><i class="fa fa-download"></i> <span>download</span></a>
+                <a id="btn-process" href="javascript:void(0)" class="btn btn-info btn-sm" style="display:none" data-toggle="modal"><i class="fa fa-gear"></i> <span>process payroll</span></a>
               </div>
                
               </div>
@@ -67,7 +68,7 @@
   </section>
   <!-- /.content -->
 </div>  
-    @include('home.views.partials.common.modal-delete')
+    @include('home.views.partials.payrolls.modal-process')
 
 @endsection
 @section("scripts")

@@ -25,7 +25,7 @@ $(document).ready(function() {
 });
 
 function init_dropdown(crud) {
-    crud.ajaxcall("GET", "/cities/all", null, 
+    crud.ajaxcall("GET", "/v2/cities/all", null, 
     function(data) {
         var cities = data.data;
         $("#city").append("<option value=''>-- Please select --</option>"); 

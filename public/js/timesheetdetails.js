@@ -29,7 +29,7 @@ $(document).ready(function() {
 var _employees_list = [];
 var init_employees = function(selected_data) {
     if (_employees_list.length == 0) {
-        ajaxcall("GET", "/employees/combo", null, 
+        ajaxcall("GET", "/v2/employees/combo", null, 
             function(data) {
                 _employees_list = data.data;
                 init_employee_autocomplete(selected_data);

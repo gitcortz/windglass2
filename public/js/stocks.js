@@ -26,7 +26,7 @@ $(document).ready(function() {
 });
 
 function init_dropdown(crud) {
-    crud.ajaxcall("GET", "/products/all", null, 
+    crud.ajaxcall("GET", "/v2/products/all", null, 
     function(data) {
         var products = data.data;
         $("#product").append("<option value=''>-- Select --</option>"); 
@@ -37,7 +37,7 @@ function init_dropdown(crud) {
     function(e) {
         console.log(e);
     });
-    crud.ajaxcall("GET", "/branches/all", null, 
+    crud.ajaxcall("GET", "/v2/branches/all", null, 
     function(data) {
         var branches = data.data;
         $("#branch").append("<option value=''>-- Select --</option>"); 

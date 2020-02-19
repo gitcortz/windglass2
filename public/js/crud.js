@@ -49,9 +49,9 @@ var Crud = (function ($) {
         var save = function() {  
             var data = _form.serializeFormToObject();
             if (data.id == "")
-                ajaxcall("POST", "/"+_component, _form.serializeFormToObject(), updateSuccess, updateError);
+                ajaxcall("POST", "/v2/"+_component, _form.serializeFormToObject(), updateSuccess, updateError);
             else
-                ajaxcall("PUT", "/"+_component+"/"+data.id, _form.serializeFormToObject(), updateSuccess, updateError);
+                ajaxcall("PUT", "/v2/"+_component+"/"+data.id, _form.serializeFormToObject(), updateSuccess, updateError);
         };
 
         var init_datatable = function() {
@@ -59,7 +59,7 @@ var Crud = (function ($) {
                 _datatable = _datatable_container.DataTable({
                     processing: true,
                     serverSide: true,
-                    ajax : "/"+_component+"/all",
+                    ajax : "/v2/"+_component+"/all",
                     columns : _columns,
                     order: [[ 0, "desc" ]],           
                 });
@@ -68,7 +68,7 @@ var Crud = (function ($) {
         };
 
         var loadForm = function(id) { 
-            ajaxcall("GET", "/"+_component+"/"+id, null, 
+            ajaxcall("GET", "/v2/"+_component+"/"+id, null, 
                 function(data) {
                     var data = data.data;
                     _loadCallBack(data);
@@ -114,7 +114,7 @@ var Crud = (function ($) {
             $("#btn-delete").click(function() {
                 var id = _form_delete.find("input[name=delete_id]").val();
 
-                ajaxcall("DELETE", "/"+_component+"/"+id, null, 
+                ajaxcall("DELETE", "/v2/"+_component+"/"+id, null, 
                     function(data){
                         _form_delete.find(".close").click();
                         _datatable_container.DataTable().ajax.reload();

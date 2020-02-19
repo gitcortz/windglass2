@@ -73,7 +73,7 @@ $(document).ready(function() {
             items: transfer_items
         };
 
-        crud.ajaxcall("POST", "/stocktransfers", transfer, crud.updateSuccess, crud.updateError);
+        crud.ajaxcall("POST", "/v2/stocktransfers", transfer, crud.updateSuccess, crud.updateError);
         console.log(transfer);    
     });
     
@@ -87,7 +87,7 @@ $(document).ready(function() {
 });
 
 function init_dropdown(crud) {
-    crud.ajaxcall("GET", "/branches/all", null, 
+    crud.ajaxcall("GET", "/v2/branches/all", null, 
         function(data) {
             var branches = data.data;
             $("#from_branch").append("<option value=''>-- Select --</option>"); 
@@ -102,7 +102,7 @@ function init_dropdown(crud) {
         }
     );
 
-    crud.ajaxcall("GET", "/branches/1/products", null, 
+    crud.ajaxcall("GET", "/v2/branches/1/products", null, 
         function(data) {
             _products = data;
         }, 
@@ -111,7 +111,7 @@ function init_dropdown(crud) {
         }
     );
 
-    crud.ajaxcall("GET", "/producttypes/all", null, 
+    crud.ajaxcall("GET", "/v2/producttypes/all", null, 
         function(data) {
             _producttypes = data.data;
         }, 

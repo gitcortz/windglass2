@@ -61,7 +61,7 @@ var PosCart = (function ($) {
             }
             //var jsonString = JSON.stringify(order_data);
             
-            ajaxcall("POST", "/orders", order_data, function() {
+            ajaxcall("POST", "/v2/orders", order_data, function() {
                 //success
                 show_payment_complete_modal();
             }, function() {
@@ -290,7 +290,7 @@ var PosCart = (function ($) {
 
         var init_customer_data = function(cart_index, selected_data) {
             if (_customers.length == 0) {
-                ajaxcall("GET", "/customers/combo", null, 
+                ajaxcall("GET", "/v2/customers/combo", null, 
                     function(data) {
                         _customers = data.data;
                         init_customer_autocomplete(cart_index, selected_data);

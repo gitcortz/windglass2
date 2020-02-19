@@ -77,7 +77,7 @@ var PosProducts = (function ($) {
           
         var init = function(itemClickCallBack) {
             _itemClickCallBack = itemClickCallBack;
-            ajaxcall("GET", "/producttypes/all", null, 
+            ajaxcall("GET", "/v2/producttypes/all", null, 
                 function(data) {
                     _producttypes = data.data;
                     init_tabs();
@@ -85,7 +85,7 @@ var PosProducts = (function ($) {
                     console.log(data);
             });
 
-            ajaxcall("GET", "/branches/1/products", null, 
+            ajaxcall("GET", "/v2/branches/1/products", null, 
                 function(data) {
                     _products = data;
                     show_products('');

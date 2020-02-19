@@ -39,7 +39,7 @@ $(document).ready(function() {
 
     $("#btn-approve-loan").click(function() {
          var id = _form_approve.find("input[name=approve_id]").val();
-        ajaxcall("POST", "/"+_component+"/"+id+"/approve", null, 
+        ajaxcall("POST", "/v2/"+_component+"/"+id+"/approve", null, 
             function(data){
                 _form_approve.find(".close").click();
                 crud.get_datatable().DataTable().ajax.reload();
@@ -54,7 +54,7 @@ $(document).ready(function() {
 var _employees_list = [];
 var init_employees = function(selected_data) {
     if (_employees_list.length == 0) {
-        ajaxcall("GET", "/employees/combo", null, 
+        ajaxcall("GET", "/v2/employees/combo", null, 
             function(data) {
                 _employees_list = data.data;
                 init_employee_autocomplete(selected_data);

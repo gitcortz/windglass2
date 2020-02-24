@@ -10,6 +10,7 @@ function fetch_data() {
         _datatable = _datatable_container.DataTable({
             processing: true,
             serverSide: true,
+            bFilter: false,
             ajax : {
                 url: "/"+_component+"/dailysalesreport",
                 "data": function(d){
@@ -45,6 +46,10 @@ function init() {
         autoclose: true,
         todayBtn: true,
         todayHighlight: true,  
+    });
+
+    $('#btn-pdf').click(function() {
+        window.open("/"+_component+"/dailysalesreport/pdf?date="+ $('#start_date').val());
     });
     
     $('#search').click(function(){

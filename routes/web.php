@@ -178,5 +178,6 @@ Route::group(['prefix' => 'payrolls'], function () {
 Route::group(['prefix' => 'reports'], function () {
     Route::get('', [ 'uses' => 'ReportController@index', 'as' => 'reports',]);
     Route::get('/dailysales', [ 'uses' => 'ReportController@dailysalesindex', 'as' => 'reportdailysales',]);    
-    Route::get('/dailysalesreport', [ 'uses' => 'ReportController@dailysalesreport', 'as' => 'reportdailyreport',]);    
+    Route::get('/dailysalesreport', [ 'uses' => 'ReportController@dailysalesreport', 'as' => 'dailysalesreport',]);    
+    Route::get('/dailysalesreport/pdf', [ 'uses' => 'ReportController@dailysalesreportpdf', 'as' => 'dailysalesreportpdf',]);    
 });

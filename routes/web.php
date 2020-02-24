@@ -173,3 +173,10 @@ Route::group(['prefix' => 'payrolls'], function () {
     Route::post('/generate', [ 'uses' => 'PayrollController@generate', 'as'   => 'payrolls.generate',]);
     Route::post('/approve', [ 'uses' => 'PayrollController@approve', 'as'   => 'payrolls.approve',]);
 });
+
+//daily sales Routes 
+Route::group(['prefix' => 'reports'], function () {
+    Route::get('', [ 'uses' => 'ReportController@index', 'as' => 'reports',]);
+    Route::get('/dailysales', [ 'uses' => 'ReportController@dailysalesindex', 'as' => 'reportdailysales',]);    
+    Route::get('/dailysalesreport', [ 'uses' => 'ReportController@dailysalesreport', 'as' => 'reportdailyreport',]);    
+});

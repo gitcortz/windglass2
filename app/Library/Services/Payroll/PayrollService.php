@@ -405,6 +405,8 @@ class PayrollService implements PayrollServiceInterface
                         else if ($loan->loan_type_id == LoanType::Salary) {
                             $salaryloan_payment = $loan->balance;
                             $pt["salary_loan_id"] = $loan->id;
+                            if ($salaryloan_payment > 500)
+                                $salaryloan_payment = 500;
                             $pt["loan_payment"] = $salaryloan_payment;
                             $loan_payment += $salaryloan_payment;                            
                         }

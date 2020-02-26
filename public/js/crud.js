@@ -95,7 +95,7 @@ var Crud = (function ($) {
 
         var init_events = function() {
             $('#btn-open-addupdate-modal').click(function() {
-                if (!_addModalCallBack)
+                if (_addModalCallBack != undefined)
                     _addModalCallBack();
                 showFormModal();
             });

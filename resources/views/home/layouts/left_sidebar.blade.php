@@ -83,7 +83,13 @@
         <a href="{{ route('branches') }}">
           <i class="fa fa-book"></i> <span>Branch</span>
         </a>
-      </li>    
+      </li>
+      {{-- Users --}}
+      <li>
+        <a href="{{ route('users') }}">
+          <i class="fa fa-user"></i> <span>User</span>
+        </a>
+      </li>
     </ul>
   </section>
   <!-- /.sidebar -->

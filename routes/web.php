@@ -188,3 +188,16 @@ Route::group(['prefix' => 'reports'], function () {
     Route::get('/dailysalesreport', [ 'uses' => 'ReportController@dailysalesreport', 'as' => 'dailysalesreport',]);    
     Route::get('/dailysalesreport/pdf', [ 'uses' => 'ReportController@dailysalesreportpdf', 'as' => 'dailysalesreportpdf',]);    
 });
+
+
+
+//Users Routes 
+Route::group(['prefix' => 'users'], function () {
+    Route::get('', [ 'uses' => 'UserController@index', 'as' => 'users',]);
+    Route::get('/all', [ 'uses' => 'UserController@list', 'as' => 'users.list',]);
+    Route::get('/{id}', [ 'uses' => 'UserController@show', 'as' => 'users.show',]);
+    Route::post('/', [ 'uses' => 'UserController@store', 'as' => 'users.store',]);
+    Route::put('/{id}', [ 'uses' => 'UserController@update', 'as' => 'users.update',]);
+    Route::delete('/{id}', [ 'uses' => 'UserController@destroy', 'as'   => 'users.destroy',]);
+    Route::get('/{id}/branches', 'UserController@branches');
+});

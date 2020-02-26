@@ -11,6 +11,8 @@
 <!-- Morris.js charts -->
 <script src="{{ asset('bower_components/raphael/raphael.min.js') }}"></script>
 <script src="{{ asset('bower_components/morris.js/morris.min.js') }}"></script>
+<!-- iCheck 1.0.1 -->
+<script src="{{ asset('plugins/iCheck/icheck.min.js') }}"></script>
 <!-- Sparkline -->
 <script src="{{ asset('bower_components/jquery-sparkline/dist/jquery.sparkline.min.js') }}"></script>
 <!-- jvectormap -->

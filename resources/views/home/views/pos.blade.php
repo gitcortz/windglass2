@@ -8,7 +8,7 @@
     <h1 style="display:inline">
       POS      
     </h1>
-    <div class="btn-group" style="float:right">
+    <div class="btn-group" style="float:right;display:none">
         <button type="button" class="btn btn-primary "><i class="fa fa-fw fa-calculator"></i> <span>Register Details</span></button>
         <button type="button" class="btn btn-primary "><i class="fa fa-fw fa-money"></i> <span>Current Sales</span></button>
         <button type="button" class="btn btn-primary "><i class="fa fa-fw fa-power-off"></i> <span>Close Register</span></button>

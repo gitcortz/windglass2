@@ -10,6 +10,10 @@ use Validator;
 
 class BranchController extends Controller
 {
+    public function __construct() {
+        $this->middleware('not.auth');
+    }
+
     public function index(){ 
         return view("home.views.branches");
     }

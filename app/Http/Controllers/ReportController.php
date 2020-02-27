@@ -24,7 +24,7 @@ class ReportController extends Controller
         $start = new Carbon(date('Y-m-d', strtotime($request->query('date'))));
         $end = $start->copy()->addDays(1);
         
-        $report = $this->get_customer_data($start, $end);
+        $report = $this->get_sales_data($start, $end);
        
         return Datatables::of($report)
                 ->addColumn('total', function ($report) {
@@ -44,14 +44,14 @@ class ReportController extends Controller
     {
         $start = new Carbon(date('Y-m-d', strtotime($request->query('date'))));
         $end = $start->copy()->addDays(1);
-        $report = $this->get_customer_data($start, $end);
+        $report = $this->get_sales_data($start, $end);
 
         $pdf = \App::make('dompdf.wrapper');
-        $pdf->loadHTML($this->convert_customer_data_to_html($report));
+        $pdf->loadHTML($this->convert_sales_data_to_html($report));
         return $pdf->stream();
     }
 
-    function get_customer_data($start, $end)
+    function get_sales_data($start, $end)
     {
 
         $report = DB::table('orders')
@@ -69,7 +69,7 @@ class ReportController extends Controller
     }
 
 
-    function convert_customer_data_to_html($report)
+    function convert_sales_data_to_html($report)
     {      
         $output = '
         <h3 align="center">Windglass Marketing</h3>

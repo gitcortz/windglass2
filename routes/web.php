@@ -112,6 +112,7 @@ Route::group(['prefix' => 'stocktransferitems'], function () {
 //POS Routes 
 Route::group(['prefix' => 'pos'], function () {
     Route::get('', [ 'uses' => 'PosController@index', 'as' => 'pos',]);
+    Route::get('/session', [ 'uses' => 'PosController@session', 'as' => 'pos.session',]);
 });
 
 

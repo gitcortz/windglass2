@@ -8,9 +8,9 @@
     <h1 style="display:inline">
       POS      
     </h1>
-    <div class="btn-group" style="float:right;display:none">
+    <div class="btn-group" style="float:right">
         <button type="button" class="btn btn-primary "><i class="fa fa-fw fa-calculator"></i> <span>Register Details</span></button>
-        <button type="button" class="btn btn-primary "><i class="fa fa-fw fa-money"></i> <span>Current Sales</span></button>
+        <button id="btn_sales" type="button" class="btn btn-primary "><i class="fa fa-fw fa-money"></i> <span>Current Sales</span></button>
         <button type="button" class="btn btn-primary "><i class="fa fa-fw fa-power-off"></i> <span>Close Register</span></button>
       </div>
     <ol class="breadcrumb" style="display:none">
@@ -35,6 +35,7 @@
   </div>  
   @include('home.views.partials.customers.modal-form')
   @include('home.views.partials.pos.modal-payment')
+  @include('home.views.partials.pos.modal-sales')
 
 @endsection
 @section("scripts")

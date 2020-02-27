@@ -4,7 +4,7 @@ namespace App\Models\Enums;
 
 use App\Models\Enums\BasicEnum;
 
-class StockStatus extends BasicEnum
+class OrderStatus extends BasicEnum
 {
     const Void = 0;
     const Open = 10;

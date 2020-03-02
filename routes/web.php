@@ -120,7 +120,7 @@ Route::group(['prefix' => 'pos'], function () {
 Route::group(['prefix' => 'orders'], function () {
     Route::get('', [ 'uses' => 'OrderController@index', 'as' => 'orders',]);
     Route::post('/', [ 'uses' => 'OrderController@store', 'as' => 'orders.store',]);
-    
+    Route::put('/{id}', [ 'uses' => 'OrderController@update', 'as' => 'orders.update',]);
 });
 
 

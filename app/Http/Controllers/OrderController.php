@@ -76,11 +76,23 @@ class OrderController extends Controller
 
     public function update(Request $request, $id)
     {
+        $data1 = json_decode($request->getContent());
         
+        $data = Order::find($id);
+        if ($data1->order_status_id) {
+            $data->order_status_id =  $data1->order_status_id;
+            $data->save();
+        }
+
+        return response()->json([
+            'error' => false,
+            'data'  => $data,
+        ], 200);
     }
 
     public function destroy($id)
     {
       
     }
+
 }

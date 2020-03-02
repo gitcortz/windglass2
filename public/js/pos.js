@@ -5,6 +5,8 @@ $(document).ready(function() {
 
     var posCart = new PosCart();
     var posProducts = new PosProducts();
+    var _updateModal = $('#modal-update');
+    var _riders = [];
     
     posProducts.init(posCart.addItemToCart);
     posCart.init();
@@ -18,12 +20,6 @@ $(document).ready(function() {
                 serverSide: true,
                 ajax : "/pos/session/",
                 columns :  [
-                    /*{
-                        "class":          "details-control",
-                        "orderable":      false,
-                        "data":           null,
-                        "defaultContent": ""
-                    },*/
                     {data: "id", name : "id"},
                     {data: "order_date", name : "order_date"},
                     {data: "customername", name : "customers.name"},
@@ -34,6 +30,16 @@ $(document).ready(function() {
                     {data: "action_btns", name : "action_btns"},
                 ],
                 order: [[ 0, "desc" ]],           
+                drawCallback: function( settings, json) {
+                    $('.order_action').on('change', function() {
+                        if ($(this).find(":selected").val() == "40"){
+                            init_rider();
+                            _updateModal.modal('show');
+                            return;
+                        }
+                        update_order_status($(this).data("id"), $(this).find(":selected").val());
+                    });
+                }
             });
 
             // Array to track the ids of the details displayed rows
@@ -43,12 +49,16 @@ $(document).ready(function() {
                 var tr = $(this).closest('tr');
                 var row = sales_dt.row( tr );
                 var idx = $.inArray( tr.attr('id'), detailRows );
-        
+                var td = $(this).closest('td');
+                if (td.html().indexOf('<select') > -1)
+                    return;
+                if (row.data() == undefined)
+                    return;
+
                 if ( row.child.isShown() ) {
                     tr.removeClass( 'details' );
                     row.child.hide();
         
-                    // Remove from the 'open' array
                     detailRows.splice( idx, 1 );
                 }
                 else {
@@ -67,10 +77,43 @@ $(document).ready(function() {
                 $.each( detailRows, function ( i, id ) {
                     $('#'+id+' td.details-control').trigger( 'click' );
                 } );
-            } );
+            });
+
+            
         }
     }
 
+    var update_order_status = function(id, value, rider = "") {
+
+        var data1 = JSON.stringify(
+                {"order_status_id": value, "rider": rider});
+        
+        ajaxcall("PUT", "/orders/"+id, data1, 
+            function(data){
+                console.log(data);
+                
+            }, function(data){
+                console.log(data);   
+        });
+    }
+
+
+    var init_rider = function() {
+        console.log('load rider');
+        if (_riders == []) {
+            ajaxcall("GET", "/cities/all", null, 
+            function(data) {
+                riders = data.data;
+                $("#select_riders").append("<option value=''>-- Please select --</option>"); 
+                for(var i=0; i<riders.length; i++){
+                    $("#select_riders").append("<option value='"+riders[i].id+"'>"+riders[i].name+"</option>"); 
+                }
+            }, 
+            function(e) {
+                console.log(e);
+            });
+        }
+    }
 
     var showCurentSalesModal = function(id) {
         $('.modal-sales').modal('show');     
@@ -80,10 +123,20 @@ $(document).ready(function() {
     $('#btn_sales').click(function() {        
         showCurentSalesModal();
     });
+
+    $('#btn-update-order').click(function() {        
+        alert('update');
+        _updateModal.modal('hide');
+    });
+
+    _updateModal.on('hidden.bs.modal', function () {
+        alert('close');
+    })
     
 });
 
 function format ( d ) {
+    console.log(d);
     return 'Full name: '+d.customer+' '+d.customer+'<br>'+
         'Salary: '+d.sub_total+'<br>'+
         'The child row can contain any data you wish, including links, images, inner tables etc.';

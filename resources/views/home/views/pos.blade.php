@@ -36,6 +36,7 @@
   @include('home.views.partials.customers.modal-form')
   @include('home.views.partials.pos.modal-payment')
   @include('home.views.partials.pos.modal-sales')
+  @include('home.views.partials.pos.modal-update')
 
 @endsection
 @section("scripts")

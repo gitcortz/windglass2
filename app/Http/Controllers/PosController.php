@@ -47,13 +47,19 @@ class PosController extends Controller
     }
 
     private function session_action_button($orders) {
-        if ($orders->order_status_id == OrderStatus::Processing) {
+        /*if ($orders->order_status_id == OrderStatus::Processing) {
             return '<a href="#" class="btn btn-danger" action="deliver" data-id="'.$orders->id.'">Deliver</a>';
         } else if ($orders->order_status_id == OrderStatus::Delivering) {
             return '<a href="#" class="btn btn-danger" action="complete" data-id="'.$orders->id.'">Complete</a>';
         } else {
             return '';
-        }
+        }*/
+        return '<select class="order_action"  data-id="'.$orders->id.'">'
+                .'<option value="'.OrderStatus::Void.'" '.($orders->order_status_id == OrderStatus::Void ? "selected" : "").' >Void</option>'
+                .'<option value="'.OrderStatus::Processing.'" '.($orders->order_status_id == OrderStatus::Processing ? "selected" : "").' >Processing</option>'
+                .'<option value="'.OrderStatus::Delivering.'" '.($orders->order_status_id == OrderStatus::Delivering ? "selected" : "").' >Delivering</option>'
+                .'<option value="'.OrderStatus::Completed.'" '.($orders->order_status_id == OrderStatus::Completed ? "selected" : "").' >Completed</option>'
+                .'</select>';
         
     }
 }

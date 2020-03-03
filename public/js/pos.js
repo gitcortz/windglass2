@@ -7,12 +7,12 @@ $(document).ready(function() {
     var posProducts = new PosProducts();
     var _updateModal = $('#modal-update');
     var _riders = [];
-    
+    var sales_dt_container = $("#sales_dataTable");
+
     posProducts.init(posCart.addItemToCart);
     posCart.init();
    
-    var init_sales_table = function() {
-        var sales_dt_container = $("#sales_dataTable");
+    var init_sales_table = function() { 
         if (sales_dt_container.length > 0) {
             sales_dt = sales_dt_container.DataTable().destroy();
             sales_dt = sales_dt_container.DataTable({
@@ -25,7 +25,7 @@ $(document).ready(function() {
                     {data: "customername", name : "customers.name"},
                     {data: "sub_total", name : "sub_total"},
                     {data: "rider", name : "rider"},
-                    {data: "order_status", name : "order_status"},
+                    //{data: "order_status", name : "order_status"},
                     {data: "payment_status", name : "payment_status"},
                     {data: "action_btns", name : "action_btns"},
                 ],
@@ -34,6 +34,8 @@ $(document).ready(function() {
                     $('.order_action').on('change', function() {
                         if ($(this).find(":selected").val() == "40"){
                             init_rider();
+                            $('#order_update_id').val($(this).data("id"));
+                            $('#order_update_status_id').val($(this).find(":selected").val());
                             _updateModal.modal('show');
                             return;
                         }
@@ -83,15 +85,16 @@ $(document).ready(function() {
         }
     }
 
-    var update_order_status = function(id, value, rider = "") {
+    var update_order_status = function(id, value, rider = "", success) {
 
         var data1 = JSON.stringify(
-                {"order_status_id": value, "rider": rider});
+                {"order_status_id": value, "rider_id": rider});
         
         ajaxcall("PUT", "/orders/"+id, data1, 
             function(data){
-                console.log(data);
-                
+                if (success)
+                    success();
+                _updateModal.modal('hide');
             }, function(data){
                 console.log(data);   
         });
@@ -99,14 +102,13 @@ $(document).ready(function() {
 
 
     var init_rider = function() {
-        console.log('load rider');
-        if (_riders == []) {
-            ajaxcall("GET", "/cities/all", null, 
+        if (_riders.length == 0) {
+            ajaxcall("GET", "/employees/riders", null, 
             function(data) {
-                riders = data.data;
+                _riders = data.data;
                 $("#select_riders").append("<option value=''>-- Please select --</option>"); 
-                for(var i=0; i<riders.length; i++){
-                    $("#select_riders").append("<option value='"+riders[i].id+"'>"+riders[i].name+"</option>"); 
+                for(var i=0; i<_riders.length; i++){
+                    $("#select_riders").append("<option value='"+_riders[i].value+"'>"+_riders[i].label+"</option>"); 
                 }
             }, 
             function(e) {
@@ -125,19 +127,28 @@ $(document).ready(function() {
     });
 
     $('#btn-update-order').click(function() {        
-        alert('update');
-        _updateModal.modal('hide');
+        var id = $('#order_update_id').val();
+        var status_id = $('#order_update_status_id').val();
+        var rider = $('#select_riders').val();
+        if (rider != "")
+            update_order_status(id, status_id, rider);
+        else {
+            $('#order_update_text').html("please select a rider");
+        }
+    
     });
 
     _updateModal.on('hidden.bs.modal', function () {
-        alert('close');
+        sales_dt_container.DataTable().ajax.reload();
     })
     
 });
 
 function format ( d ) {
-    console.log(d);
-    return 'Full name: '+d.customer+' '+d.customer+'<br>'+
+    var div = '<div class="row"><div class="col-md-3">One of three columns</div><div class="col-md-3">One of three columns</div><div class="col-md-6">One of three columns</div></div>';
+    /*return 'Full name: '+d.customer+' '+d.customer+'<br>'+
         'Salary: '+d.sub_total+'<br>'+
         'The child row can contain any data you wish, including links, images, inner tables etc.';
+        */
+       return div;
 }

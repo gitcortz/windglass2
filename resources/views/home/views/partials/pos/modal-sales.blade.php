@@ -28,7 +28,6 @@ tr.details td.details-control {
                               <th>Customer</th>
                               <th>Total</th>
                               <th>Rider</th>
-                              <th>Order<br/>Status</th>
                               <th>Payment<br/>Status</th>
                               <th>Action</th>
                           </tr>

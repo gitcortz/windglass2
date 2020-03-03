@@ -18,7 +18,9 @@ class PosController extends Controller
         
         //$sales = Order::with('customer')->select('orders.*, customers.name as customer');
         $sales = Order::join('customers', 'orders.customer_id', '=', 'customers.id')
-            ->select(['orders.*', 'customers.name as customername']);
+            ->leftJoin('employees', 'orders.rider_id', '=', 'employees.id')
+            ->select(['orders.*', 'customers.name as customername', 'employees.first_name as rider_firstname', 
+                    'employees.last_name as rider_lastname']);
 
         //return Datatables::of($sales)
         return Datatables::of($sales)
@@ -30,7 +32,7 @@ class PosController extends Controller
                     return $order->customer ? $order->customer : '';
                 })*/
                 ->addColumn('rider', function (Order $order) {
-                    return 'rider';
+                    return $order->rider_firstname." ".$order->rider_lastname;
                 })
                 ->addColumn('order_status', function (Order $order) {
                     return OrderStatus::getName($order->order_status_id);
@@ -47,19 +49,17 @@ class PosController extends Controller
     }
 
     private function session_action_button($orders) {
-        /*if ($orders->order_status_id == OrderStatus::Processing) {
-            return '<a href="#" class="btn btn-danger" action="deliver" data-id="'.$orders->id.'">Deliver</a>';
-        } else if ($orders->order_status_id == OrderStatus::Delivering) {
-            return '<a href="#" class="btn btn-danger" action="complete" data-id="'.$orders->id.'">Complete</a>';
-        } else {
-            return '';
-        }*/
+        
+        if ($orders->order_status_id == OrderStatus::Completed) {
+            return '<div>Complete</div>';
+        }
+        else {
         return '<select class="order_action"  data-id="'.$orders->id.'">'
                 .'<option value="'.OrderStatus::Void.'" '.($orders->order_status_id == OrderStatus::Void ? "selected" : "").' >Void</option>'
                 .'<option value="'.OrderStatus::Processing.'" '.($orders->order_status_id == OrderStatus::Processing ? "selected" : "").' >Processing</option>'
                 .'<option value="'.OrderStatus::Delivering.'" '.($orders->order_status_id == OrderStatus::Delivering ? "selected" : "").' >Delivering</option>'
                 .'<option value="'.OrderStatus::Completed.'" '.($orders->order_status_id == OrderStatus::Completed ? "selected" : "").' >Completed</option>'
                 .'</select>';
-        
+        }
     }
 }

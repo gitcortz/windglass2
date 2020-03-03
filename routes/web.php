@@ -139,6 +139,7 @@ Route::group(['prefix' => 'employees'], function () {
     Route::get('', [ 'uses' => 'EmployeeController@index', 'as' => 'employees',]);
     Route::get('/all', [ 'uses' => 'EmployeeController@list', 'as' => 'employees.list',]);
     Route::get('/combo', [ 'uses' => 'EmployeeController@combo_list', 'as' => 'employees.combolist',]);
+    Route::get('/riders', [ 'uses' => 'EmployeeController@riders', 'as' => 'employees.riders',]);
     Route::get('/{id}', [ 'uses' => 'EmployeeController@show', 'as' => 'employees.show',]);
     Route::post('/', [ 'uses' => 'EmployeeController@store', 'as' => 'employees.store',]);
     Route::put('/{id}', [ 'uses' => 'EmployeeController@update', 'as' => 'employees.update',]);

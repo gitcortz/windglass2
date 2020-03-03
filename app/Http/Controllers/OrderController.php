@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Library\Services\Stocks\StocksServiceInterface;
 use Datatables;
 use Validator;
 use Carbon\Carbon;
@@ -74,15 +75,21 @@ class OrderController extends Controller
         ], 200);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, StocksServiceInterface $stocksServiceInstance)
     {
-        $data1 = json_decode($request->getContent());
+        $data1 = json_decode($request->getContent(), true);
         
         $data = Order::find($id);
-        if ($data1->order_status_id) {
-            $data->order_status_id =  $data1->order_status_id;
+        if ($data1["order_status_id"]) {
+            $data->order_status_id = $data1["order_status_id"];
+            
+            if ($data1["rider_id"] != '')
+                $data->rider_id = $data1['rider_id'];
+
             $data->save();
         }
+
+         $stocksServiceInstance->completedOrder($id);
 
         return response()->json([
             'error' => false,

@@ -2,6 +2,8 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
     <form id="form-update">
+      <input type="hidden" id="order_update_id" value=""/>
+      <input type="hidden" id="order_update_status_id" value=""/>
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="update-title" name="title">Order Complete</h4>
@@ -9,15 +11,10 @@
       <div class="modal-body">
         <p>
             Please select rider : 
-            <select id="select_rider">
-                <option>Select rider</option>
-                <option>mike</option>
-                <option>joe</option>
-                <option>randy</option>
-            </select>
+            <select id="select_riders"></select>
         </p>
         <p class="text-warning">
-            <small>
+            <small id="order_update_text">
                 
             </small>
         </p>

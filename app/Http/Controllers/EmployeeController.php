@@ -16,7 +16,7 @@ class EmployeeController extends Controller
     }
 
     public function list() {
-        $employees = Employee::with('employeetype')->select('employees.*');;
+        $employees = Employee::with('employeetype')->select('employees.*');
         return Datatables::of($employees)
                 ->addColumn('employeetype', function (Employee $employee) {
                     return $employee->employeetype ? $employee->employeetype->name : '';
@@ -31,6 +31,15 @@ class EmployeeController extends Controller
 
     public function combo_list() {
         return new EmployeeComboCollection(Employee::get());
+    }
+
+    public function riders() {
+        $riders = Employee::with('employeetype')
+        ->whereHas('employeetype', function($query) {
+            $query->where('name', 'rider');
+        })->get();
+        
+        return new EmployeeComboCollection($riders);
     }
     
     public function store(Request $request)

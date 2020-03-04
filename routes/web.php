@@ -41,6 +41,7 @@ Route::group(['prefix' => 'branches'], function () {
     Route::put('/{id}', [ 'uses' => 'BranchController@update', 'as' => 'branches.update',]);
     Route::delete('/{id}', [ 'uses' => 'BranchController@destroy', 'as'   => 'branches.destroy',]);
     Route::get('/{id}/products', 'BranchController@products');
+    Route::get('/{id}/emptycylinders', 'BranchController@empty_cylinders');
 });
 
 

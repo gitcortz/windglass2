@@ -11,11 +11,15 @@ class Order extends Model
             , 'payment_status_id', 'payment_method_id', 'discount', 'sub_total', 'rider_id'];
 
     public function order_items(){
-        return $this->hasMany('App\Models\OrderItems');
+        return $this->hasMany('App\Models\OrderItem');
+    }
+
+    public function order_bringins(){
+        return $this->hasMany('App\Models\OrderBringIn');
     }
 
     public function branch(){
-        return $this->belongsTo('App\Models\Branches');
+        return $this->belongsTo('App\Models\Branch');
     }
 
     public function customer(){

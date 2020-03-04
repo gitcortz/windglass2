@@ -78,7 +78,6 @@ class OrderController extends Controller
     public function update(Request $request, $id, StocksServiceInterface $stocksServiceInstance)
     {
         $data1 = json_decode($request->getContent(), true);
-        
         $data = Order::find($id);
         if ($data1["order_status_id"]) {
             $data->order_status_id = $data1["order_status_id"];
@@ -87,6 +86,16 @@ class OrderController extends Controller
                 $data->rider_id = $data1['rider_id'];
 
             $data->save();
+        }
+
+        if ($data1["cylinders"]) {
+            foreach ($data1["cylinders"] as $item) {
+                \App\Models\OrderBringIn::create([
+                    'order_id' => $id,
+                    'stock_id' => $item["id"],
+                    'quantity' => $item["quantity"],
+                ]);
+            }
         }
 
          $stocksServiceInstance->completedOrder($id);

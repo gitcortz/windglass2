@@ -17,7 +17,9 @@ class PosController extends Controller
     public function session(){ 
         
         //$sales = Order::with('customer')->select('orders.*, customers.name as customer');
-        $sales = Order::join('customers', 'orders.customer_id', '=', 'customers.id')
+        $sales = Order::with('order_items')->with('order_items.stock')->with('order_items.stock.product')
+            ->with('order_bringins')->with('order_bringins.stock')->with('order_bringins.stock.product')
+            ->join('customers', 'orders.customer_id', '=', 'customers.id')
             ->leftJoin('employees', 'orders.rider_id', '=', 'employees.id')
             ->select(['orders.*', 'customers.name as customername', 'employees.first_name as rider_firstname', 
                     'employees.last_name as rider_lastname']);
@@ -62,4 +64,5 @@ class PosController extends Controller
                 .'</select>';
         }
     }
+
 }

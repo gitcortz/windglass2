@@ -111,4 +111,16 @@ class BranchController extends Controller
         $products = Stock::with('product.brand')->where('branch_id', $branch_id)->get();
         return ($products);
     }
+
+    public function empty_cylinders(Request $request) {
+        $branch_id = $request->id;
+    
+        $products = Stock::with('product.brand')
+                    ->join('products', 'stocks.product_id', '=', 'products.id')
+                    ->join('product_types', 'products.producttype_id', '=', 'product_types.id')
+                    ->where('branch_id', $branch_id)
+                    ->where('product_types.name', 'Empty Cylinders')
+                    ->get(['stocks.*']);
+        return ($products);
+    }
 }

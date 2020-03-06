@@ -27,26 +27,40 @@
           <i class="fa fa-th"></i> <span>POS</span>
         </a>
       </li>      
-      <li class="treeview">
+      <li class="treeview 
+          {{ (request()->is('reports/dailysales')) 
+              ? 'menu-open ' : '' }}">
         <a href="#">
           <i class="fa fa-edit"></i> <span>Sales</span>
           <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>
           </span>
         </a>
-        <ul class="treeview-menu">
+        <ul class="treeview-menu 
+            {{ (request()->is('reports/dailysales')) ? 
+                  'block' : '' }}" >
           <li><a href="{{ route('reportdailysales') }}"><i class="fa fa-circle-o"></i> Daily Sales</a></li>
           <li><a href="{{ route('reports') }}"><i class="fa fa-circle-o"></i> Pending Sales</a></li>
         </ul>
       </li>
-      <li class="treeview">
+      <li class="treeview {{ (request()->is('brands')) 
+                            || (request()->is('producttypes')) 
+                            || (request()->is('products')) 
+                            || (request()->is('stocks')) 
+                            || (request()->is('stocktransfers')) 
+                              ? 'menu-open ' : '' }}">
         <a href="#">
           <i class="fa fa-table"></i> <span>Inventory</span>
           <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>
           </span>
         </a>
-        <ul class="treeview-menu">
+        <ul class="treeview-menu {{ (request()->is('brands')) 
+                            || (request()->is('producttypes')) 
+                            || (request()->is('products')) 
+                            || (request()->is('stocks')) 
+                            || (request()->is('stocktransfers')) 
+                              ? 'block ' : '' }}">
           <li><a href="{{ route('brands') }}"><i class="fa fa-circle-o"></i> Brands</a></li>
           <li><a href="{{ route('producttypes') }}"><i class="fa fa-circle-o"></i> Product Types</a></li>
           <li><a href="{{ route('products') }}"><i class="fa fa-circle-o"></i> Products</a></li>
@@ -55,14 +69,24 @@
           <li><a href="pages/tables/data.html"><i class="fa fa-circle-o"></i> Stock Movement</a></li>
         </ul>
       </li>
-      <li class="treeview">
+      <li class="treeview {{ (request()->is('employeetypes')) 
+                            || (request()->is('employees')) 
+                            || (request()->is('employeeloans')) 
+                            || (request()->is('timesheetdetails')) 
+                            || (request()->is('payrolls')) 
+                              ? 'menu-open ' : '' }}">
         <a href="#">
           <i class="fa fa-table"></i> <span>HR Management</span>
           <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>
           </span>
         </a>
-        <ul class="treeview-menu">
+        <ul class="treeview-menu {{ (request()->is('employeetypes')) 
+                            || (request()->is('employees')) 
+                            || (request()->is('employeeloans')) 
+                            || (request()->is('timesheetdetails')) 
+                            || (request()->is('payrolls')) 
+                              ? 'block ' : '' }}">
           <li><a href="{{ route('employeetypes') }}"><i class="fa fa-circle-o"></i> Employee Types</a></li>
           <li><a href="{{ route('employees') }}"><i class="fa fa-circle-o"></i> Employees</a></li>
           <li><a href="{{ route('employeeloans') }}"><i class="fa fa-circle-o"></i> Loans</a></li>

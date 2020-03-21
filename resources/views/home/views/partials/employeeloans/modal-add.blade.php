@@ -3,24 +3,18 @@
   z-index:2147483647;
 }
 </style>
-<div class="modal fade loanmodal-addupdate" tabindex="-1" role="dialog">
+<div class="modal fade loanmodal-add" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content"> 
-      <form id="loanform-addupdate">   
+      <form id="loanform-add">   
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">Employee Loan</h4>
       </div>
       <div class="modal-body">        
-        <input type="hidden" name="id" id="_id" />
-        <div class="alert alert-danger d-none error-bag" id="error-bag">
+        <input type="hidden" name="employee_id" id="add_employee_id" />
+        <div class="alert alert-danger d-none error-bag-add" id="error-bag">
             <ul id="error-list" class="error-list"></ul>
-        </div>
-        <div class="form-group">
-            <input type="hidden" id="employee_id" name="employee_id" />
-            <label for="employee_autocomplete">Employee</label>
-            <input type="text" class="form-control" id="employee_autocomplete" name="employee_autocomplete" 
-                placeholder="Enter employee">
         </div>
         <div class="form-group">
             <label for="loan_type">Loan Type</label>
@@ -38,7 +32,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" id="btn-loan-save">Save</button>
+        <button type="button" class="btn btn-primary" id="btn-loan-add">Save</button>
       </div>
       </form>
     </div><!-- /.modal-content -->

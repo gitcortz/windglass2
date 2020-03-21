@@ -80,7 +80,9 @@
                 </div>
               </div>
             </div>
-            <div class="tab-pane" id="tab_2">
+            <div class="tab-pane" id="tab_2">            
+              <a id="btn-open-new-loan" href="javascript:void(0)" class="btn btn-success btn-sm" 
+                    data-toggle="modal" style="position:absolute; right:25px;z-index:10"><i class="fa fa-plus"></i> <span>add loan</span></a>
               <table id="dataTableLoan" class="table table-bordered table-striped dataTable" role="grid" style="width:100%">
                       <thead>
                           <tr>

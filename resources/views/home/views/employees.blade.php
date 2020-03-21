@@ -56,6 +56,7 @@
     @include('home.views.partials.employees.modal-form')
     @include('home.views.partials.common.modal-delete')
     @include('home.views.partials.employeeloans.modal-form')
+    @include('home.views.partials.employeeloans.modal-add')
     @include('home.views.partials.employeeloans.modal-delete')
     @include('home.views.partials.employeeloans.modal-approve')
 @endsection

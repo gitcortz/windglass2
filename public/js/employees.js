@@ -1,5 +1,7 @@
 var _loan_container = $('#dataTableLoan');
 var _loan_datatable;
+var _loanform_add = $('#loanform-add');
+var _loanmodal_add = $('.loanmodal-add');
 var _loanform = $('#loanform-addupdate');
 var _loanmodal = $('.loanmodal-addupdate');
 var _loanmodal_delete = $('#loanmodal-delete');
@@ -8,6 +10,7 @@ var _loan_errors = $('.error-list');
 var _loan_error_bag = $('.error-bag');
 var _modal_approve = $('#modal-approve');
 var _form_approve = $('#form-approve');
+var _employee_id = 0;
 
 $(document).ready(function() {
     var crud = new Crud();
@@ -36,6 +39,7 @@ $(document).ready(function() {
             form.find("input[name=hire_date]").val(data.hire_date);
             form.find("#employeetype").val(data.employeetype_id);
             init_loans(data.id);
+            _employee_id = data.id;
         }
     );
     crud.set_addModalCallBack(function() {    
@@ -47,6 +51,12 @@ $(document).ready(function() {
     var loan_updateSuccess = function(data) {
         _loanform.trigger("reset");
         _loanform.find(".close").click();
+        _loan_container.DataTable().ajax.reload();
+    }
+
+    var loan_addSuccess = function(data) {
+        _loanform_add.trigger("reset");
+        _loanform_add.find(".close").click();
         _loan_container.DataTable().ajax.reload();
     }
 
@@ -62,10 +72,20 @@ $(document).ready(function() {
     $("#btn-loan-save").click(function() {
         //_error_bag.hide();
         var data = _loanform.serializeFormToObject();
-        if (data.id == "")
-            ajaxcall("POST", "/employeeloans", _loanform.serializeFormToObject(), loan_updateSuccess, updateError);
-        else
-            ajaxcall("PUT", "/employeeloans/"+data.id, _loanform.serializeFormToObject(), loan_updateSuccess, updateError);
+        ajaxcall("PUT", "/employeeloans/"+data.id, _loanform.serializeFormToObject(), loan_updateSuccess, updateError);
+    });
+
+    $("#btn-open-new-loan").click(function() {
+        $(".error-bag-add").hide();                
+        $('.form-group').find('label.error').remove();
+        _loanform_add.trigger("reset");
+        _loanmodal_add.modal('show');
+        _loanform_add.find("input[name=employee_id]").val(_employee_id);
+    });
+    
+    $('#btn-loan-add').click(function() {
+        var data = _loanform_add.serializeFormToObject();
+        ajaxcall("POST", "/employeeloans", _loanform_add.serializeFormToObject(), loan_addSuccess, updateError);
     });
 
     $("#btn-delete-loan").click(function() {

@@ -38,10 +38,13 @@ $(document).ready(function() {
     );
 
     crud.set_saveCallBack(function() {        
+        var data = $('#form-addupdate').serializeFormToObject();
+        
+
         var form = crud.get_form();
         var transfer_items = [];
         var data = _detail_datatable.data().toArray();
-        console.log(data.length);
+        console.log(form);
 
         $('#items-error-list').empty;
         if (data.length == 0) {
@@ -73,7 +76,11 @@ $(document).ready(function() {
             items: transfer_items
         };
 
-        crud.ajaxcall("POST", "/stocktransfers", transfer, crud.updateSuccess, crud.updateError);
+        if (transfer.id == "") {        
+            crud.ajaxcall("POST", "/stocktransfers", transfer, crud.updateSuccess, crud.updateError);
+        } else {
+            crud.ajaxcall("PUT", "/stocktransfers"+"/"+transfer.id, transfer, crud.updateSuccess, crud.updateError);
+        }
         console.log(transfer);    
     });
     

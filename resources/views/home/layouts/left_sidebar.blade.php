@@ -66,7 +66,7 @@
           <li><a href="{{ route('products') }}"><i class="fa fa-circle-o"></i> Products</a></li>
           <li><a href="{{ route('stocks') }}"><i class="fa fa-circle-o"></i> Stocks</a></li>
           <li><a href="{{ route('stocktransfers') }}"><i class="fa fa-circle-o"></i> Stock Transfers</a></li>
-          <li><a href="pages/tables/data.html"><i class="fa fa-circle-o"></i> Stock Movement</a></li>
+          <li style="display:none"><a href="pages/tables/data.html"><i class="fa fa-circle-o"></i> Stock Movement</a></li>
         </ul>
       </li>
       <li class="treeview {{ (request()->is('employeetypes')) 

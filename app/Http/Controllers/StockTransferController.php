@@ -97,6 +97,7 @@ class StockTransferController extends Controller
             ], 422);
         }
 
+       
         $data = StockTransfer::find($id);
         $data->from_branch_id =  $request->input('from_branch_id');
         $data->to_branch_id = $request->input('to_branch_id');
@@ -105,6 +106,15 @@ class StockTransferController extends Controller
         $data->transfer_status_id = $request->input('transfer_status_id');
         $data->remarks = $request->input('remarks');
         $data->save();
+
+        $data_id = $data->id;
+        foreach ($request->items as $item) {
+            $transfer_item = StockTransferItem::create([
+                'stock_transfer_id' => $data->id,     
+                'stock_id' => $item['stock_id'],
+                'quantity' => $item['quantity'],
+            ]);  
+        }
 
         return response()->json([
             'error' => false,

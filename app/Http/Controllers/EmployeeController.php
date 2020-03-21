@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Employee;
+use App\Models\EmployeeLoan;
+use App\Models\EmployeeLoanTransaction;
+use App\Models\Enums\LoanStatus;
+use App\Models\Enums\LoanTransactionType;
 use App\Http\Resources\EmployeeComboResource;
 use App\Http\Resources\EmployeeComboCollection;
 use Datatables;
@@ -118,6 +122,36 @@ class EmployeeController extends Controller
             'error' => false,
             'employee'  => $data,
         ], 200);
+    }
+
+    public function loans(Request $request)
+    {
+        $employee_id = $request->id;
+        //$loans = EmployeeLoan::with('employee')->where('employee_id', $employee_id)->get();
+        //return ($loans);
+        
+        $employee_loans = EmployeeLoan::with('employee')->where('employee_id', $employee_id)->select('employee_loans.*');
+        return Datatables::of($employee_loans)
+                ->addColumn('employeename', function (EmployeeLoan $loan) {
+                    return $loan->employee ? $loan->employee->first_name." ".$loan->employee->last_name : '';
+                })
+                ->addColumn('loanstatus', function (EmployeeLoan $loan) {
+                    return $loan->loan_status();
+                })
+                ->addColumn('loantype', function (EmployeeLoan $loan) {
+                    return $loan->loan_type();
+                })
+                ->addColumn("action_btns", function($employee_loans) {
+                    return 
+                    ($employee_loans->loan_status_id != LoanStatus::ForApproval ? '' :
+                        '<a href="#" class="btn btn-success" action="approve" data-id="'.$employee_loans->id.'">Approve</a>')
+                    .($employee_loans->loan_status_id != LoanStatus::ForApproval ? '' :
+                        '&nbsp;<a href="#" class="btn btn-info" action="edit" data-id="'.$employee_loans->id.'">Edit</a>')
+                    .($employee_loans->loan_status_id != LoanStatus::ForApproval ? '' : 
+                        '&nbsp;<a href="#" class="btn btn-danger" action="delete" data-id="'.$employee_loans->id.'">Delete</a>');
+                })
+                ->rawColumns(["action_btns"])
+                ->make(true);
     }
 
     

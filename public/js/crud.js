@@ -7,6 +7,7 @@ var Crud = (function ($) {
         var _saveCallBack;
         var _addModalCallBack;
         var _loadControlsCallBack;
+        var _save_button = $("#btn-save");
         var _datatable_container = $('#dataTable');
         var _form = $('#form-addupdate');
         var _modal = $('.modal-addupdate');
@@ -100,7 +101,7 @@ var Crud = (function ($) {
                 showFormModal();
             });
             
-            $("#btn-save").click(function() {
+            _save_button.click(function() {
                 _error_bag.hide();
                 if (!_form.valid()) {
                     return;
@@ -148,7 +149,19 @@ var Crud = (function ($) {
         var set_addModalCallBack = function(addModalCallBack) {
             _addModalCallBack = addModalCallBack;
         };
-        
+
+        var set_btnSave = function(obj) {
+            _save_button = obj;
+        };
+
+        var set_modalAddUpdate = function(obj) {
+            _modal = obj;
+        };
+
+        var set_formAddUpdate = function(obj) {
+            _form = obj;
+        };
+
         var get_form = function() {
             return _form;
         }
@@ -177,6 +190,9 @@ var Crud = (function ($) {
             updateSuccess: updateSuccess,
             updateError : updateError,
             set_addModalCallBack : set_addModalCallBack,
+            set_btnSave : set_btnSave,
+            set_modalAddUpdate : set_modalAddUpdate,
+            set_formAddUpdate : set_formAddUpdate
         }
     }
 })(jQuery);

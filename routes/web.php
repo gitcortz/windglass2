@@ -139,6 +139,7 @@ Route::group(['middleware' => 'not.auth'], function () {
         Route::post('/', [ 'uses' => 'EmployeeController@store', 'as' => 'employees.store',]);
         Route::put('/{id}', [ 'uses' => 'EmployeeController@update', 'as' => 'employees.update',]);
         Route::delete('/{id}', [ 'uses' => 'EmployeeController@destroy', 'as'   => 'employees.destroy',]);
+        Route::get('/{id}/loans', 'EmployeeController@loans');
     });
 
 

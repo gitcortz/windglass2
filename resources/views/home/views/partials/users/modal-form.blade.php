@@ -14,7 +14,7 @@
           <ul class="nav nav-tabs">
             <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">User</a></li>
             <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">Branches</a></li>
-            <li><a href="#tab_3" data-toggle="tab">Permissions</a></li>
+            <li><a href="#tab_3" data-toggle="tab">Role</a></li>
           </ul>
           <div class="tab-content">
             <div class="tab-pane active" id="tab_1">
@@ -56,7 +56,7 @@
             </div>
             <!-- /.tab-pane -->
             <div class="tab-pane" id="tab_3">
-              Permissions
+              Role
             </div>
             <!-- /.tab-pane -->
           </div>

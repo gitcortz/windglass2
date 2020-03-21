@@ -3,6 +3,10 @@ $(document).ready(function() {
     var _form_approve = $('#form-approve');
 
     var crud = new Crud();
+    crud.set_btnSave($("#btn-loan-save"));
+    crud.set_modalAddUpdate($('.loanmodal-addupdate'));
+    crud.set_formAddUpdate($('#loanform-addupdate'));
+    
     crud.init(_component, 
         [
             {data: "id", name : "id"},
@@ -12,7 +16,6 @@ $(document).ready(function() {
             {data: "loan_amount", name : "loan_amount"},
             {data: "action_btns", name : "action_btns"},
         ], function(data) {
-            console.log(data);
             var form = crud.form_control;
             form.find("input[name=id]").val(data.id);
             form.find("input[name=employee_autocomplete]").val("sss"); 
@@ -27,11 +30,10 @@ $(document).ready(function() {
 
     
     crud.set_addModalCallBack(function() {    
-        form.find("input[name=employee_autocomplete]").attr('readonly', false); 
-        form.find('#loan_type').attr('disabled', false); 
+        //form.find("input[name=employee_autocomplete]").attr('readonly', false); 
+        //form.find('#loan_type').attr('disabled', false); 
     });
     crud.get_datatable().on('click', 'tbody tr a[action="approve"]', function(event){
-        console.log('sssssss');
         var id = $(this).data("id");
         _form_approve.find("input[name=approve_id]").val(id);
         _modal_approve.modal('show');
@@ -98,7 +100,6 @@ var init_employee_autocomplete = function(selected_data){
       autocomplete_select_text($employee_textbox, select_text);
 
 
-    console.log("auto complete")
 }
 
 var autocomplete_select_text = function($labelTextBox, LabelText) {

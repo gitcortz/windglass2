@@ -8,9 +8,19 @@ use App\Models\UserBranches;
 use Datatables;
 use Validator;
 use Hash;
+use DB;
 
 class UserController extends Controller
 {
+    /*
+        public function __construct() {
+            $this->middleware(['auth', 'clearance']);//->except('index', 'show');
+        }
+    
+      public function __construct() {
+            $this->middleware(['auth', 'isAdmin']); //isAdmin middleware lets only users with a //specific permission permission to access these resources
+        }
+    */
     public function index(){ 
         return view("home.views.users");
     }
@@ -87,7 +97,10 @@ class UserController extends Controller
         if ($request->input('password'))
             $data->password =Hash::make($request->input('password'));
 
-        $data->save();        
+        //$data->save();
+
+        DB::table('model_has_roles')->where('model_id',$id)->delete();
+        $data->assignRole($request->role);
 
         if ($request->branch) {
             UserBranches::where('user_id', $id)->delete();
@@ -100,7 +113,7 @@ class UserController extends Controller
                 $userbranch->updated_at = date('Y-m-d H:i:s');
                 $userbranches[] = $userbranch->attributesToArray();
             }
-            UserBranches::insert($userbranches);
+          //  UserBranches::insert($userbranches);
         }
 
 

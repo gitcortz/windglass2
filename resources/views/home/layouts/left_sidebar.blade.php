@@ -22,11 +22,14 @@
         </a>
       </li>
       {{-- POS --}}
+      @can('pos.list')
       <li>
         <a href="{{ route('pos') }}">
           <i class="fa fa-th"></i> <span>POS</span>
         </a>
-      </li>      
+      </li>
+      @endcan
+      @can('sales.list')
       <li class="treeview 
           {{ (request()->is('reports/dailysales')) 
               ? 'menu-open ' : '' }}">
@@ -43,6 +46,8 @@
           <li><a href="{{ route('reports') }}"><i class="fa fa-circle-o"></i> Pending Sales</a></li>
         </ul>
       </li>
+      @endcan
+      @can('inventory.list')
       <li class="treeview {{ (request()->is('brands')) 
                             || (request()->is('producttypes')) 
                             || (request()->is('products')) 
@@ -69,6 +74,8 @@
           <li style="display:none"><a href="pages/tables/data.html"><i class="fa fa-circle-o"></i> Stock Movement</a></li>
         </ul>
       </li>
+      @endcan
+      @can('hr.list')
       <li class="treeview {{ (request()->is('employeetypes')) 
                             || (request()->is('employees')) 
                             || (request()->is('employeeloans')) 
@@ -94,26 +101,31 @@
           <li><a href="{{ route('payrolls') }}"><i class="fa fa-circle-o"></i> Payrolls</a></li>
         </ul>
       </li>
-    
-      <li class="header">Administration</li>
-      {{-- POS --}}
-      <li>
-        <a href="{{ route('cities') }}">
-          <i class="fa fa-book"></i> <span>Location</span>
-        </a>
-      </li>
-      {{-- Branches --}}
-      <li>
-        <a href="{{ route('branches') }}">
-          <i class="fa fa-book"></i> <span>Branch</span>
-        </a>
-      </li>
-      {{-- Users --}}
-      <li>
-        <a href="{{ route('users') }}">
-          <i class="fa fa-user"></i> <span>User</span>
-        </a>
-      </li>
+      @endcan
+      @can('admin.list')
+        <li class="header">Administration</li>
+        {{-- POS --}}
+        <li>
+          <a href="{{ route('cities') }}">
+            <i class="fa fa-book"></i> <span>Location</span>
+          </a>
+        </li>
+        {{-- Branches --}}
+        <li>
+          <a href="{{ route('branches') }}">
+            <i class="fa fa-book"></i> <span>Branch</span>
+          </a>
+        </li>
+        {{-- Users --}}
+        
+        @can('user.list')
+        <li>
+          <a href="{{ route('users') }}">
+            <i class="fa fa-user"></i> <span>User</span>
+          </a>
+        </li>
+        @endcan
+      @endcan
     </ul>
   </section>
   <!-- /.sidebar -->

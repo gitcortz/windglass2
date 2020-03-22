@@ -16,11 +16,11 @@ class UserController extends Controller
         public function __construct() {
             $this->middleware(['auth', 'clearance']);//->except('index', 'show');
         }
-    
-      public function __construct() {
-            $this->middleware(['auth', 'isAdmin']); //isAdmin middleware lets only users with a //specific permission permission to access these resources
-        }
     */
+    public function __construct() {
+        $this->middleware(['auth', 'isAdmin']);
+    }
+
     public function index(){ 
         return view("home.views.users");
     }

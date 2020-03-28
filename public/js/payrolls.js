@@ -203,7 +203,7 @@ $(document).ready(function() {
     var crud = new Payroll();
     crud.init(_component, 
         [
-            {data: "id", name : "id"},
+            //{data: "id", name : "id"},
             {data: "employeename", name : "employeename"},
             {data: "sunday", name : "sunday"},
             {data: "monday", name : "monday"},

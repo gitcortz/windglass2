@@ -35,7 +35,6 @@
                 <table id="dataTable" class="table table-bordered table-striped dataTable" role="grid" >
                       <thead>
                           <tr>
-                              <th>Id</th>
                               <th>Name</th>
                               <th>SUN</th>
                               <th>MON</th>

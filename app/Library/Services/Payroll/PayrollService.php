@@ -285,7 +285,7 @@ class PayrollService implements PayrollServiceInterface
             ->join('employees', 'employees.id', '=', 'timesheet_details.employee_id')
             ->select('employee_id', 'time_in', 'time_out', 'base_salary',
             DB::raw('TIME_TO_SEC(TIMEDIFF(CONCAT_WS(\' \', DATE(time_in),\''.$offical_time_in.'\'), time_in))/60 AS late_mins'),
-            DB::raw('TIME_TO_SEC(TIMEDIFF(time_out, time_in))/3600 as total_hours'))
+            DB::raw('TIME_TO_SEC(TIMEDIFF(CASE WHEN HOUR(time_out) > 20 THEN DATE_FORMAT(time_out, \'%Y-%m-%d 20:0:0\') ELSE time_out END, time_in))/3600 as total_hours'))
             ->whereDate('time_in', '>=', $start)
             ->whereDate('time_in', '<=', $end)
             ->orderBy('employee_id', 'ASC')
@@ -378,7 +378,7 @@ class PayrollService implements PayrollServiceInterface
     private function computePayrollLoans($payroll_timesheets) {
       
         $loans_result = \DB::table('employee_loans')
-            ->select('id', 'employee_id', 'balance', 'loan_type_id')
+            ->select('id', 'employee_id', 'loan_amount', 'balance', 'loan_type_id')
             ->where('loan_status_id', LoanStatus::Loaned)
             ->where('balance', '>', 0)
             ->orderBy('employee_id', 'ASC')
@@ -411,10 +411,10 @@ class PayrollService implements PayrollServiceInterface
                             $loan_payment += $salaryloan_payment;                            
                         }
                         else if ($loan->loan_type_id == LoanType::SSS) {
-                            $sss_payment = $loan->balance;
+                            $sss_payment = $loan->loan_amount / 24;
                             $pt["sss_loan_id"] = $loan->id;
                             $pt["sssloan_payment"] = $sss_payment;    
-                            $loan_payment += $sss_payment;                            
+                            $loan_payment += $sss_payment;
                         }                                    
                         $loan_total = $loan_total + $loan->balance;
                     }                    

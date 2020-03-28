@@ -134,6 +134,7 @@ var init_mv = function(id) {
                 //{data: "id", name : "id"},
                 {data: "created_at", name : "created_at"},
                 {data: "from", name : "from"},
+                {data: "to", name : "to"},
                 {data: "movement_type_name", name : "movement_type_id", width:"50px"},
                 {data: "quantity_before", name : "quantity_before"},
                 {data: "quantity", name : "quantity"},

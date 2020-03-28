@@ -51,7 +51,7 @@
 </div>  
     @include('home.views.partials.stocktransfers.modal-form')
     @include('home.views.partials.common.modal-delete')
-
+    @include('home.views.partials.stocktransfers.modal-status')
 @endsection
 @section("scripts")
 <script>

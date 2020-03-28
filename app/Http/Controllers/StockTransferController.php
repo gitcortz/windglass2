@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Stock;
 use App\Models\StockTransfer;
 use App\Models\StockTransferItem;
 use App\Models\Enums\TransferStatus;
+use App\Models\Enums\MovementType;
+use App\Library\Services\Stocks\StocksServiceInterface;
 use Datatables;
 use Validator;
 
@@ -32,11 +35,15 @@ class StockTransferController extends Controller
                     ($stocktransfers->transfer_status_id != TransferStatus::IsDraft ? '' :
                         '<a href="#" class="btn btn-success" action="transfer" data-id="'.$stocktransfers->id.'">Transfer</a>')
                     .($stocktransfers->transfer_status_id != TransferStatus::Transfer ? '' :
-                        '<a href="#" class="btn btn-success" action="receive" data-id="'.$stocktransfers->id.'">Received</a>')
+                        '<a href="#" class="btn btn-success" action="receive" data-id="'.$stocktransfers->id.'">Received</a>'
+                    )
+                    .($stocktransfers->transfer_status_id == TransferStatus::Transfer || 
+                        $stocktransfers->transfer_status_id == TransferStatus::Receive ? 
+                        '&nbsp;<a href="#" class="btn btn-info" action="view" data-id="'.$stocktransfers->id.'">View</a>' : ''                        
+                    )
                     .($stocktransfers->transfer_status_id != TransferStatus::IsDraft ? '' :
-                            '&nbsp;<a href="#" class="btn btn-info" action="edit" data-id="'.$stocktransfers->id.'">Edit</a>')
-                    .($stocktransfers->transfer_status_id != TransferStatus::IsDraft ? '' :                                       
-                        '&nbsp;<a href="#" class="btn btn-danger" action="delete" data-id="'.$stocktransfers->id.'">Delete</a>');
+                            '&nbsp;<a href="#" class="btn btn-info" action="edit" data-id="'.$stocktransfers->id.'">Edit</a>'
+                            .'&nbsp;<a href="#" class="btn btn-danger" action="delete" data-id="'.$stocktransfers->id.'">Delete</a>');
                 })
                 ->rawColumns(["action_btns"])
                 ->make(true);        
@@ -115,13 +122,37 @@ class StockTransferController extends Controller
         $data->save();
 
         $data_id = $data->id;
+        
+        //remove
+        $remove_ids = array();
+        $stock_transfers = StockTransferItem::where('stock_transfer_id', $id)->get();
+        $item_ids = array_column($request->items, 'id');
+        foreach ($stock_transfers as $transfer) {
+            if (!in_array($transfer->id, ($item_ids))) {
+                $deletethis = StockTransferItem::find($transfer->id);
+                $deletethis->delete();
+            }            
+        }        
+
         foreach ($request->items as $item) {
-            $transfer_item = StockTransferItem::create([
-                'stock_transfer_id' => $data->id,     
-                'stock_id' => $item['stock_id'],
-                'quantity' => $item['quantity'],
-            ]);  
+            if ($item['id'] == 0) {
+                $transfer_item = StockTransferItem::create([
+                    'stock_transfer_id' => $data->id,     
+                    'stock_id' => $item['stock_id'],
+                    'quantity' => $item['quantity'],
+                ]);  
+            }
+            else {
+                $itemdb = StockTransferItem::find($item['id']);
+                $itemdb->stock_transfer_id = $data->id;
+                $itemdb->stock_id = $item['stock_id'];
+                $itemdb->quantity = $item['quantity'];
+                $itemdb->save();
+            }
         }
+
+      
+
 
         return response()->json([
             'error' => false,
@@ -144,6 +175,65 @@ class StockTransferController extends Controller
         $stock_transfer_id = $request->id;
         $stock_transfers = StockTransferItem::where('stock_transfer_id', $stock_transfer_id)->get();
         return ($stock_transfers);
+    }
+    
+    public function transfer(Request $request, StocksServiceInterface $stocksServiceInstance)
+    {
+        $id = $request->id;
+        $data = StockTransfer::find($id);
+        $data->transfer_status_id = TransferStatus::Transfer;
+        $data->save();
+
+        
+        $stock_transfers = StockTransferItem::where('stock_transfer_id', $id)->get();
+        foreach ($stock_transfers as $transfer) {
+            $stocksServiceInstance->moveStocks(
+                $transfer->stock_id,
+                $data->from_branch_id,
+                $data->to_branch_id,
+                null,
+                $transfer->quantity,
+                MovementType::Transfer
+            );
+                
+        } 
+        
+       
+        return response()->json([
+            'error' => false,
+            'data'  => $data,
+        ], 200);
+    }
+
+    public function receive(Request $request, StocksServiceInterface $stocksServiceInstance)
+    {
+        $id = $request->id;
+        $data = StockTransfer::find($id);
+        $data->transfer_status_id = TransferStatus::Receive;
+        $data->save();
+
+        //get To stock Id
+              
+        $stock_transfers = StockTransferItem::where('stock_transfer_id', $id)->get();
+        foreach ($stock_transfers as $transfer) {
+            $stock = Stock::find($transfer->stock_id);
+            if ($stock) {
+                $recipientStock = $stocksServiceInstance->getBranchStock($data->to_branch_id, $stock->product_id);
+                $stocksServiceInstance->moveStocks(
+                    $recipientStock->id,
+                    $data->from_branch_id,
+                    $data->to_branch_id,
+                    null,
+                    $transfer->quantity,
+                    MovementType::Received
+                );
+            }     
+        } 
+               
+        return response()->json([
+            'error' => false,
+            'data'  => $data,
+        ], 200);
     }
 }
 

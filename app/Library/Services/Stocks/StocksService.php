@@ -27,16 +27,17 @@ class StocksService implements StocksServiceInterface
     }
 
     public function moveStocks($stock_id, $from_id, $to_id, $qty_current, $qty_change, $type) {
-        if ($to_id == 0) {
-            if ($qty_current == null) {
-                $stock = Stock::find($stock_id);
-                $qty_current = $stock->current_stock;
-            }
+            
             if ($type == MovementType::Sold || $type == MovementType::Transfer
                     || $type == MovementType::Lost || $type == MovementType::Destroyed) {
                 $qty_change = $qty_change * -1;
             }
 
+            $stock = Stock::find($stock_id);
+             
+            if ($qty_current == null) {
+                $qty_current = $stock->current_stock;
+            }
 
             $computed_stock = $qty_current + $qty_change;
             
@@ -49,11 +50,32 @@ class StocksService implements StocksServiceInterface
                 'quantity_before' => $qty_current,
             ]);
 
-            $stock = Stock::find($stock_id);
+            
             $stock->current_stock = $computed_stock;
             $stock->save();
-        
+                
+    }
+
+    public function getBranchStock($branch_id, $product_id) {
+        $stock = Stock::where('branch_id', $branch_id)
+                ->where('product_id', $product_id)
+                ->get();
+
+        if ($stock->count() > 0){
+            return $stock[0];
+        } else {
+           //stock not found, create stock
+           $data = Stock::create([
+            'branch_id' => $branch_id, 
+            'product_id' => $product_id,
+            'initial_stock' => 0,
+            'current_stock' => 0,
+            'stock_status_id' => 1,
+            ]);
+
+            return $data;
         }
+
     }
     
 }

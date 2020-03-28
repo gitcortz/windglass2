@@ -8,6 +8,8 @@
       </div>
       <div class="modal-body">        
         <input type="hidden" name="id" id="_id" />
+        <input type="hidden" name="formtype" id="formtype" />
+        
         <div class="row">
             <div class="alert alert-danger d-none" id="error-bag">
                 <ul id="error-list"></ul>

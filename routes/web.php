@@ -94,6 +94,8 @@ Route::group(['middleware' => 'not.auth'], function () {
         Route::put('/{id}', [ 'uses' => 'StockTransferController@update', 'as' => 'stocktransfers.update',]);
         Route::delete('/{id}', [ 'uses' => 'StockTransferController@destroy', 'as'   => 'stocktransfers.destroy',]);
         Route::get('/{id}/items', 'StockTransferController@items');
+        Route::post('/{id}/transfer', 'StockTransferController@transfer');
+        Route::post('/{id}/receive', 'StockTransferController@receive');
     });
 
     //StockTransfer Routes 

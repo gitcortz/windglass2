@@ -1,3 +1,5 @@
+var _modal_status = $('#modal-status');
+var _form_status = $('#form-status');
 $(document).ready(function() {
     var crud = new Crud();
     crud.init(_component, 
@@ -18,6 +20,7 @@ $(document).ready(function() {
             form.find("#from_branch").val(data.from_branch_id);
             form.find("#to_branch").val(data.to_branch_id);
             form.find("#status").val(data.transfer_status_id);
+          
             var list = data.stock_transfer_items;
             for(var i=0; i<list.length; i++){
                 _detail_datatable.row.add([
@@ -26,16 +29,69 @@ $(document).ready(function() {
                     list[i].stock_id,
                     list[i].quantity,
                 ]).draw( false );
+                $('#'+list[i].id+'_producttypeid').val(list[i].stock.product.producttype_id);
+                $('#'+list[i].id+'_producttypeid').trigger('change');
+                $('#'+list[i].id+'_stockid').val(list[i].stock_id);
+                $('#'+list[i].id+'_stockid').trigger('change');
             }
-            /*if (data.id!='') {
-                $('#btn-save').hide();
-                $('#addRow').hide();                
-                
-                //var column = _detail_datatable.column(2).visible(false);
 
-            }*/
+            if (form.find("#formtype").val() == "view") {
+                form.find(".form-control").prop( "disabled", true );
+                $('#addRow').hide();        
+                $('.transfer_item_remove').hide();
+                form.find(".modal-footer").hide();
+            } else {
+                form.find("#from_branch").prop( "disabled", true );
+                form.find("#to_branch").prop( "disabled", true );
+                $('#addRow').show();        
+                $('.transfer_item_remove').show();
+                form.find(".modal-footer").show();
+            }
+ 
         }
     );
+    crud.set_addModalCallBack(function() {    
+        var form = crud.form_control;
+        $('#addRow').show();        
+        $('.transfer_item_remove').show();
+        form.find(".modal-footer").show();
+    });
+
+    crud.get_datatable().on('click', 'tbody tr a[action="transfer"]', function(event){
+        var id = $(this).data("id");
+        _form_status.find("input[name=transfer_status_id]").val(id);
+        _form_status.find(".transfer_status").html("Transfer");        
+        _modal_status.modal('show');
+    });
+    crud.get_datatable().on('click', 'tbody tr a[action="receive"]', function(event){
+        var id = $(this).data("id");
+        _form_status.find("input[name=transfer_status_id]").val(id);
+        _form_status.find(".transfer_status").html("Receive");        
+        _modal_status.modal('show');
+    });
+    crud.get_datatable().on('click', 'tbody tr a[action="view"]', function(event){
+        var id = $(this).data("id");
+        var form = crud.form_control;
+        form.find("#formtype").val("view");
+        crud.showFormModal(id);
+        crud.loadForm(id);
+     
+    });
+
+
+    $("#btn-stock_transfer_status").click(function() {
+        var id = _form_status.find("input[name=transfer_status_id]").val();
+        var status = _form_status.find(".transfer_status").html().toLowerCase();                
+
+        ajaxcall("POST", "/stocktransfers/"+id+"/"+status, null, 
+           function(data){
+                _form_status.find(".close").click();
+               crud.get_datatable().DataTable().ajax.reload();
+           }, function(data){
+               alert(data.responseText.messages);   
+           });
+        //alert('status');
+   });
 
     crud.set_saveCallBack(function() {        
         var data = $('#form-addupdate').serializeFormToObject();
@@ -221,7 +277,7 @@ function init_detail() {
                 },
                 {
                     width: "10%",
-                    defaultContent: '<a href="#" class="btn btn-danger" action="remove" data-id="">X</a>'
+                    defaultContent: '<a href="#" class="btn btn-danger transfer_item_remove" action="remove" data-id="">X</a>'
                 }
               ],
             drawCallback: function( settings ) {
@@ -249,6 +305,7 @@ function init_detail() {
                         }
                         dll_product.append($option);
                     });
+                    dll_product.trigger("change");
                 })
                 $(".col_product").off("change");
                 $(".col_product").on("change",function(){
@@ -270,21 +327,6 @@ function init_detail() {
             var tr = $(this).closest('tr');
             var data = _detail_datatable.row(tr).data()
             _detail_datatable.row(tr).remove().draw();
-            //console.log( "got the data" ); //This alert is never reached
-            console.log( data[0] +"'s salary is: "+ data[1] );
-
-
-            //var id = $(this).data("id");
-            //$(this).addClass('selected_toremove');
-            //_detail_datatable.row('.selected_toremove').delete();
-           
-            //console.log(_detail_datatable.data.row[0]);
-            //alert("id");
-
-            //remove all
-            //_detail_datatable.clear().draw();
-            //_detail_datatable.rows().remove().draw();
-            
         });
     }
 

@@ -1,5 +1,5 @@
 <div class="modal fade modal-addupdate" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content"> 
       <form id="form-addupdate">   
       <div class="modal-header">
@@ -52,6 +52,7 @@
                           <tr>
                               <th>Date</th>
                               <th>From</th>
+                              <th>To</th>
                               <th>Type</th>
                               <th>Before Qty</th>
                               <th>After Qty</th>

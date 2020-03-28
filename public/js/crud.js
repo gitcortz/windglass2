@@ -101,6 +101,7 @@ var Crud = (function ($) {
             $("#error-bag").hide();                
             $('.form-group').find('label.error').remove();
             _form.trigger("reset");
+            _form.find(".form-control").prop( "disabled", false );
             _modal.modal('show');
             _form.find("input[name=id]").val("");
             
@@ -144,6 +145,7 @@ var Crud = (function ($) {
 
             _datatable_container.on('click', 'tbody tr a[action="edit"]', function(event){
                 var id = $(this).data("id");
+                _form.find("#formtype").val("edit");
                 showFormModal(id);
                 loadForm(id);
             });
@@ -215,7 +217,9 @@ var Crud = (function ($) {
             set_btnSave : set_btnSave,
             set_modalAddUpdate : set_modalAddUpdate,
             set_formAddUpdate : set_formAddUpdate,
-            fetch_data: fetch_data
+            fetch_data: fetch_data,
+            showFormModal : showFormModal,
+            loadForm: loadForm
         }
     }
 })(jQuery);

@@ -9,6 +9,6 @@ class TransferStatus extends BasicEnum
     const IsVoid = 0;
     const IsDraft = 1;
     const Transfer = 10;
-    const Received = 20;
+    const Receive = 20;
     
 }

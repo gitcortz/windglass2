@@ -121,6 +121,20 @@ class EmployeeLoanController extends Controller
     {
         
         $data = EmployeeLoan::find($id);
+        //check if loan existing already
+        $existing = EmployeeLoan::where('loan_type_id', '=', $data->loan_type_id)
+                                ->where('loan_status_id', '=', LoanStatus::Loaned)
+                                ->where('employee_id', '=', $data->employee_id)
+                                ->get();
+
+        if ($existing) {
+            return response()->json([
+                'error'    => true,
+                'messages' => "loan already exists",
+            ], 422);
+        }
+
+        
         $data->loan_status_id = LoanStatus::Loaned;
         $data->save();
 

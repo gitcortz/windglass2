@@ -90,7 +90,6 @@ $(document).ready(function() {
 
     $("#btn-delete-loan").click(function() {
         var id = _loanform_delete.find("input[name=delete_id]").val();
-        alert(id);
         ajaxcall("DELETE", "/employeeloans/"+id, null, 
             function(data){
                 _loanform_delete.find(".close").click();
@@ -107,7 +106,8 @@ $(document).ready(function() {
                _form_approve.find(".close").click();
                _loan_container.DataTable().ajax.reload();
            }, function(data){
-               console.log(data);   
+             
+            alert(JSON.parse(data.responseText).messages);  
            });
    });
 });

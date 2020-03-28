@@ -46,7 +46,7 @@ $(document).ready(function() {
                 _form_approve.find(".close").click();
                 crud.get_datatable().DataTable().ajax.reload();
             }, function(data){
-                console.log(data);   
+                alert(data.responseText.messages);   
             });
     });
    

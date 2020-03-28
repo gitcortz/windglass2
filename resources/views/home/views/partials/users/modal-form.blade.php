@@ -14,7 +14,7 @@
           <ul class="nav nav-tabs">
             <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">User</a></li>
             <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">Branches</a></li>
-            <li><a href="#tab_3" data-toggle="tab">Role</a></li>
+            <li><a href="#tab_3" data-toggle="tab" style="display:none">Roles</a></li>
           </ul>
           <div class="tab-content">
             <div class="tab-pane active" id="tab_1">
@@ -38,6 +38,13 @@
                         placeholder="Enter password">
                 </div>
                 <div class="form-group">
+                    <label for="role">Role</label>
+                    <select class="form-control" id="role" name="role" >
+                      <option value="user">User</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
                   <label>
                     <div class="icheckbox_flat-green" aria-checked="true" aria-disabled="false" style="position: relative;">
                       <input type="checkbox" id="active" name="active" checked="" style="position: absolute; opacity: 0;">
@@ -56,7 +63,7 @@
             </div>
             <!-- /.tab-pane -->
             <div class="tab-pane" id="tab_3">
-              Role
+              Roles
             </div>
             <!-- /.tab-pane -->
           </div>

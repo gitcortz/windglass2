@@ -15,6 +15,7 @@ var Crud = (function ($) {
         var _form_delete = $('#form-delete');
         var _errors = $('#error-list');
         var _error_bag = $('#error-bag');
+        var _datatable_data = {};
 
         var updateSuccess = function(data) {
             _form.trigger("reset");
@@ -62,11 +63,28 @@ var Crud = (function ($) {
                     serverSide: true,
                     ajax : "/"+_component+"/all",
                     columns : _columns,
-                    order: [[ 0, "desc" ]],           
+                    data: _datatable_data,
+                    order: [[ 0, "desc" ]],    
+                    dom: '<"top">rt<"bottom"lip><"clear">'       
                 });
                 //$('#dataTable_filter input').addClass('form-control'); 
             }
         };
+
+        var fetch_data = function(data) {
+            _datatable_container.DataTable().destroy();       
+            _datatable = _datatable_container.DataTable({
+                processing: true,
+                serverSide: true,
+                ajax :  {
+                    url: "/"+_component+"/all",
+                    data : data               
+                },
+                columns : _columns,
+                order: [[ 0, "desc" ]],    
+                dom: '<"top">rt<"bottom"lip><"clear">'       
+            });
+        }
 
         var loadForm = function(id) { 
             ajaxcall("GET", "/"+_component+"/"+id, null, 
@@ -162,6 +180,10 @@ var Crud = (function ($) {
             _form = obj;
         };
 
+        var set_datatableData = function(data) {
+            _datatable_data = data;
+        };
+
         var get_form = function() {
             return _form;
         }
@@ -192,7 +214,8 @@ var Crud = (function ($) {
             set_addModalCallBack : set_addModalCallBack,
             set_btnSave : set_btnSave,
             set_modalAddUpdate : set_modalAddUpdate,
-            set_formAddUpdate : set_formAddUpdate
+            set_formAddUpdate : set_formAddUpdate,
+            fetch_data: fetch_data
         }
     }
 })(jQuery);

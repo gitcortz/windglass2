@@ -14,8 +14,15 @@ class StockController extends Controller
         return view("home.views.stocks");
     }
 
-    public function list() {
-        $stocks = Stock::with('product', 'branch')->select('stocks.*');;
+    public function list(Request $request) {
+        
+        $matchThese = [];
+        if($request->branch_id)
+            $matchThese['branch_id'] = $request->branch_id;
+
+        $stocks = Stock::where($matchThese)->with('product', 'branch')->select('stocks.*');;
+
+        
         return Datatables::of($stocks)
                 ->addColumn('product', function (Stock $stock) {
                     return $stock->product ? $stock->product->name : '';
@@ -35,6 +42,7 @@ class StockController extends Controller
                 })
                 ->rawColumns(["action_btns"])
                 ->make(true);
+
     }
 
     public function store(Request $request)

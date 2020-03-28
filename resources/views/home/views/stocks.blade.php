@@ -24,7 +24,9 @@
         <div class="row">
             <div class="col-xs-12">
             <div class="box">
-          
+                <div class="box-header with-border">
+                  <h3 class="box-title"> Branch <select id="branches"  class="form-control"></select></h3>
+                </div>
                 <!-- /.box-header -->
                 <div class="box-body">
                   <table id="dataTable" class="table table-bordered table-striped dataTable" role="grid" >

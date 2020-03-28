@@ -28,11 +28,18 @@ class StockTransferController extends Controller
                     return TransferStatus::getName($stocktransfer->transfer_status_id);
                 })
                 ->addColumn("action_btns", function($stocktransfers) {
-                    return '<a href="#" class="btn btn-info" action="edit" data-id="'.$stocktransfers->id.'">Edit</a>'
-                    .'&nbsp;<a href="#" class="btn btn-danger" action="delete" data-id="'.$stocktransfers->id.'">Delete</a>';
+                    return
+                    ($stocktransfers->transfer_status_id != TransferStatus::IsDraft ? '' :
+                        '<a href="#" class="btn btn-success" action="transfer" data-id="'.$stocktransfers->id.'">Transfer</a>')
+                    .($stocktransfers->transfer_status_id != TransferStatus::Transfer ? '' :
+                        '<a href="#" class="btn btn-success" action="receive" data-id="'.$stocktransfers->id.'">Received</a>')
+                    .($stocktransfers->transfer_status_id != TransferStatus::IsDraft ? '' :
+                            '&nbsp;<a href="#" class="btn btn-info" action="edit" data-id="'.$stocktransfers->id.'">Edit</a>')
+                    .($stocktransfers->transfer_status_id != TransferStatus::IsDraft ? '' :                                       
+                        '&nbsp;<a href="#" class="btn btn-danger" action="delete" data-id="'.$stocktransfers->id.'">Delete</a>');
                 })
                 ->rawColumns(["action_btns"])
-                ->make(true);
+                ->make(true);        
     }
 
     public function store(Request $request)

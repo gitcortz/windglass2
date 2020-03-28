@@ -1,5 +1,5 @@
+var crud = new Crud();
 $(document).ready(function() {
-    var crud = new Crud();
     crud.init(_component, 
         [
             {data: "id", name : "id"},
@@ -20,12 +20,34 @@ $(document).ready(function() {
             form.find("input[name=stock_status_id]").val(data.stock_status_id);
             form.find("#branch").val(data.branch_id);
             form.find("#product").val(data.product_id);
+            form.find("#branch").prop( "disabled", true );
+            form.find("#product").prop( "disabled", true );
+            form.find("input[name=initial_stock]").prop( "disabled", true );
+            form.find("input[name=current_stock]").prop( "disabled", true );
         }
     );
+    //init_datatable
     init_dropdown(crud);
 });
 
 function init_dropdown(crud) {
+    crud.ajaxcall("GET", "/branches/all", null, 
+    function(data) {
+        var branches = data.data;
+        $("#branches").append("<option value=''>-- All --</option>"); 
+        for(var i=0; i<branches.length; i++){
+            $("#branches").append("<option value='"+branches[i].id+"'>"+branches[i].name+"</option>"); 
+        }
+    }, 
+    function(e) {
+        console.log(e);
+    });
+
+    $('#branches').change(function(){
+        var branch_id = $('#branches').val();   
+        crud.fetch_data({branch_id : branch_id});
+    });
+
     crud.ajaxcall("GET", "/products/all", null, 
     function(data) {
         var products = data.data;

@@ -20,7 +20,7 @@
                 <select required class="form-control" id='from_branch' name='from_branch_id'></select>
             </div>
             <div class="form-group">
-                <label for="to_branch">From Branch</label>
+                <label for="to_branch">To Branch</label>
                 <select required class="form-control" id='to_branch' name='to_branch_id'></select>
             </div>
             <div class="form-group">
@@ -40,7 +40,7 @@
                 <input type="date" class="form-control" id="received_date" name="received_date" 
                     placeholder="Enter received date">
             </div>
-            <div class="form-group">
+            <div class="form-group" style="display:none">
                 <label for="status">Status</label>
                 <select class="form-control" id='status' name='transfer_status_id'>
                     <option value="1">Draft</option>

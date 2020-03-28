@@ -69,7 +69,7 @@ $(document).ready(function() {
             id : form.find("input[name=id]").val(),
             from_branch_id : form.find("#from_branch").val(),
             to_branch_id : form.find("#to_branch").val(),
-            transfer_status_id : form.find("#status").val(),
+            transfer_status_id : 1, //draft
             scheduled_date : form.find("#scheduled_date").val(),
             received_date : form.find("#received_date").val(),
             remarks : form.find("#remarks").val(),

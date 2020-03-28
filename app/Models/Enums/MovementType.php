@@ -6,6 +6,7 @@ use App\Models\Enums\BasicEnum;
 
 class MovementType extends BasicEnum
 {
+    const NewStock = 1;
     const Received = 10;
     const Transfer = 20;
     const Sold = 30;

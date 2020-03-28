@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Stock;
+use App\Models\StockMovement;
 use App\Models\Enums\StockStatus;
+use App\Models\Enums\MovementType;
+use App\Library\Services\Stocks\StocksServiceInterface;
+use Illuminate\Support\Facades\DB;
 use Datatables;
 use Validator;
 
@@ -115,5 +119,58 @@ class StockController extends Controller
             'task'  => $task,
         ], 200);
     }
+
+    public function movements(Request $request)
+    {
+        $stock_id = $request->id;
+        
+        $stock_mv = DB::table('stock_movements')
+            ->leftJoin('branches as from_branch', 'from_branch.id', '=', 'stock_movements.from_id')
+            ->leftJoin('branches as to_branch', 'to_branch.id', '=', 'stock_movements.to_id')
+            ->where('stock_id', $stock_id)
+            ->select('stock_movements.*','from_branch.name as from','to_branch.name as to')
+            ->orderBy('created_at', 'desc');
+
+        //$stock_mv = StockMovement::with('branch')->where('stock_id', $stock_id)->select('stock_movements.*');
+        return Datatables::of($stock_mv)
+                ->addColumn('movement_type_name', function ($row) {
+                    return MovementType::getName($row->movement_type);
+                })
+                ->make(true);
+    }
+
+    public function add_movement(Request $request, StocksServiceInterface $stocksServiceInstance)
+    {
+        $validator = Validator::make($request->input(), array(
+            'from_id' => 'required',
+            'stock_id' => 'required',     
+        ));
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error'    => true,
+                'messages' => $validator->errors(),
+            ], 422);
+        }
+
+        $stocksServiceInstance->moveStocks(
+                        $request->input('stock_id'),
+                        $request->input('from_id'),
+                        0,
+                        null,
+                        $request->input('quantity'),
+                        $request->input('movement_type')
+                    );
+        
+        //$data = StockMovement::create($request->all());
+        //print_r($request->all());
+        
+        
+        return response()->json([
+            'error' => false,
+            'data'  => "OK",
+        ], 200);
+    }
+
 }
 

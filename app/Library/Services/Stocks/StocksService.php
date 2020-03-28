@@ -21,13 +21,23 @@ class StocksService implements StocksServiceInterface
 
         foreach ($orderItems as $item) {
             $this->moveStocks($item->stock_id, $item->stock->branch_id, 0, 
-            $item->stock->current_stock ,$item->quantity * -1, MovementType::Sold);
+            $item->stock->current_stock ,$item->quantity, MovementType::Sold);
         }
 
     }
 
     public function moveStocks($stock_id, $from_id, $to_id, $qty_current, $qty_change, $type) {
         if ($to_id == 0) {
+            if ($qty_current == null) {
+                $stock = Stock::find($stock_id);
+                $qty_current = $stock->current_stock;
+            }
+            if ($type == MovementType::Sold || $type == MovementType::Transfer
+                    || $type == MovementType::Lost || $type == MovementType::Destroyed) {
+                $qty_change = $qty_change * -1;
+            }
+
+
             $computed_stock = $qty_current + $qty_change;
             
             \App\Models\StockMovement::create([

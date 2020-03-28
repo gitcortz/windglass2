@@ -54,8 +54,8 @@
  
   </div>  
     @include('home.views.partials.stocks.modal-form')
-    @include('home.views.partials.common.modal-delete')
-
+    @include('home.views.partials.stocks.modal-movement')
+    @include('home.views.partials.common.modal-delete')    
 @endsection
 @section("scripts")
 <script>

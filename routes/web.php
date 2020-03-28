@@ -80,6 +80,8 @@ Route::group(['middleware' => 'not.auth'], function () {
         Route::post('/', [ 'uses' => 'StockController@store', 'as' => 'stocks.store',]);
         Route::put('/{id}', [ 'uses' => 'StockController@update', 'as' => 'stocks.update',]);
         Route::delete('/{id}', [ 'uses' => 'StockController@destroy', 'as'   => 'stocks.destroy',]);
+        Route::get('/{id}/movements', 'StockController@movements');
+        Route::post('/add_movement', 'StockController@add_movement');
     });
 
 

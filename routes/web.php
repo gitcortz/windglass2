@@ -16,11 +16,12 @@ Route::group(['middleware' => 'not.auth'], function () {
     Route::group(['prefix' => 'customers'], function () {
         Route::get('', [ 'uses' => 'CustomerController@index', 'as' => 'customers',]);
         Route::get('/all', [ 'uses' => 'CustomerController@list', 'as' => 'customers.list',]);
+        Route::get('/search', [ 'uses' => 'CustomerController@search', 'as' => 'customers.search',]);
         Route::get('/combo', [ 'uses' => 'CustomerController@combo_list', 'as' => 'customers.combolist',]);
         Route::get('/{id}', [ 'uses' => 'CustomerController@show', 'as' => 'customers.show',]);
         Route::post('/', [ 'uses' => 'CustomerController@store', 'as' => 'customers.store',]);
         Route::put('/{id}', [ 'uses' => 'CustomerController@update', 'as' => 'customers.update',]);
-        Route::delete('/{id}', [ 'uses' => 'CustomerController@destroy', 'as'   => 'customers.destroy',]);
+        Route::delete('/{id}', [ 'uses' => 'CustomerController@destroy', 'as'   => 'customers.destroy',]);        
     });
 
 
@@ -111,6 +112,7 @@ Route::group(['middleware' => 'not.auth'], function () {
     //POS Routes 
     Route::group(['prefix' => 'pos'], function () {
         Route::get('', [ 'uses' => 'PosController@index', 'as' => 'pos',]);
+        Route::get('/v2', [ 'uses' => 'PosController@index_v2', 'as' => 'pos-v2',]);
         Route::get('/session', [ 'uses' => 'PosController@session', 'as' => 'pos.session',]);
     });
 

@@ -14,6 +14,10 @@ class PosController extends Controller
         return view("home.views.pos");
     }
 
+    public function index_v2(){ 
+        return view("home.views.pos-v2");
+    }
+
     public function session(){ 
         
         //$sales = Order::with('customer')->select('orders.*, customers.name as customer');

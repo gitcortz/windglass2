@@ -44,6 +44,7 @@
                   'block' : '' }}" >
           <li><a href="{{ route('reportdailysales') }}"><i class="fa fa-circle-o"></i> Daily Sales</a></li>
           <li><a href="{{ route('reports') }}"><i class="fa fa-circle-o"></i> Pending Sales</a></li>
+          <li><a href="{{ route('customers') }}"><i class="fa fa-circle-o"></i> Customers</a></li>
         </ul>
       </li>
       @endcan

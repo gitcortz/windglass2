@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Customer;
 use App\Http\Resources\CustomerComboResource;
 use App\Http\Resources\CustomerComboCollection;
+use Illuminate\Support\Facades\DB;
 use Datatables;
 use Validator;
 
@@ -27,6 +28,35 @@ class CustomerController extends Controller
                 })
                 ->rawColumns(["action_btns"])
                 ->make(true);
+    }
+
+    public function search(Request $request) {
+
+        if($request->keyword != "") {
+            $customers = DB::table('customers')
+                ->leftJoin('cities', 'customers.city_id', '=', 'cities.id')
+                -> where('customers.name', 'LIKE', '%'.$request->keyword.'%')
+                -> orWhere('address', 'LIKE', '%'.$request->keyword.'%')
+                -> orWhere('cities.name', 'LIKE', '%'.$request->keyword.'%')
+                ->select('customers.*', 'cities.name as city');
+        }
+        else { 
+            $customers = DB::table('customers')
+                ->leftJoin('cities', 'customers.city_id', '=', 'cities.id')
+                ->select('customers.*', 'cities.name as city');
+        }
+
+
+        return Datatables::of($customers)
+                ->addColumn('contact', function ($customer) {
+                    return ($customer->phone ? $customer->phone.' / ' : '').$customer->mobile;
+                })               
+                ->addColumn("action_btns", function($customers) {
+                    return '<a href="#" class="btn btn-info btn-sm" action="select" data-id="'.$customers->id.'">Select</a>';
+                })
+                ->rawColumns(["action_btns"])
+                ->make(true);             
+  
     }
 
     public function combo_list() {

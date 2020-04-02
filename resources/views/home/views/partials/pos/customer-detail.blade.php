@@ -2,7 +2,7 @@
     #form_customerDetail label { margin-top:5px; margin-bottom:0px; }
 </style>
 
-<div class="box box-default" id="customer-detail-box">
+<div class="box box-default collapsed-box" id="customer-detail-box">
     <div class="box-header with-border">
         <h3 class="box-title">Customer Detail</h3>
         <div class="box-tools pull-right">
@@ -26,7 +26,7 @@
         </div>
         <div class="form-group-sm">
             <label for="city">City</label>
-            <select class="form-control" id='pos_customer_city' name='city_id'></select>
+            <select class="form-control" id='customer_city' name='city_id'></select>
         </div>
         <div class="form-group-sm">
             <label for="notes">Landmark</label>

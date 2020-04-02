@@ -19,6 +19,7 @@
     <div class="row">
         <div class="col-md-6">
             @include('home.views.partials.pos.customer-search')
+            @include('home.views.partials.pos.customer-orderdetail')
         </div>
         <div class="col-md-6">
             @include('home.views.partials.pos.customer-detail')

@@ -1,4 +1,4 @@
-<div class="box box-primary">
+<div class="box box-primary" id="customer-search-box">
     <div class="box-header with-border">
         <h3 class="box-title">Customer</h3>
         <div class="box-tools pull-right">

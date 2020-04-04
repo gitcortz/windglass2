@@ -6,15 +6,24 @@
 </style>
 <div class="box box-info collapsed-box"  id="order-detail-box">
 <div class="box-header with-border">
-    <h3 class="box-title">Order Details</h3>
-    <div class="box-tools pull-right" style="display:none">
-        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>            
+    <h3 class="box-title">Order Details</h3>      
+    <div class="box-tools pull-right" >
+        <a id="btn-reset-order" href="javascript:void(0)" class="btn btn-primary btn-sm" 
+              data-toggle="modal"><span>new order</span></a>
+        <button type="button" style="display:none" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>            
     </div>
 </div>
 <!-- /.box-header -->
 <!-- form start -->
     <div class="box-body sm" >
         <form class="form-horizontal" id="form_orderDetail">
+        <input type="hidden" id="orderdetail_id" name="orderdetail_id">
+        <div class="form-group" style="background: #aaa; padding:2px 0px">
+            <label class="col-sm-5">Order Id : <span id="order_detail_id_label"></span></label>
+            <div class="col-sm-7 form-group-sm " style="text-align:right; font-weight:bold">
+                    Order Date : <span id="order_detail_date_label"></span>
+            </div>
+        </div>
         <div class="form-group" style="background: #aaa; padding:2px 0px">
             <label for="inputEmail3" class="col-sm-3 control-label">Order Status :</label>
             <div class="col-sm-5 form-group-sm ">
@@ -50,7 +59,7 @@
         <div class="form-group" style="background: #aaa; padding:2px 0px">
             <label for="orderdetail_branch" class="col-sm-3 control-label"> Location :</label>
             <div class="col-sm-5 form-group-sm">
-                <select class="form-control" id="orderdetail_branch" name="branch">                  
+                <select class="form-control" id="orderdetail_branch" name="branch_id">                  
                 </select>
             </div>
             <div class="col-sm-2">

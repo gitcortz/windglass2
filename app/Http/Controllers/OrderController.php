@@ -16,8 +16,35 @@ class OrderController extends Controller
         return view("home.views.orders");
     }
 
-    public function list() {
-      
+    public function list(Request $request) {
+        
+        $matchThese = [];
+        if($request->branch_id)
+            $matchThese['branch_id'] = $request->branch_id;
+
+        $stocks = Stock::where($matchThese)->with('product', 'branch')->select('stocks.*');;
+
+        
+        return Datatables::of($stocks)
+                ->addColumn('product', function (Stock $stock) {
+                    return $stock->product ? $stock->product->name : '';
+                })
+                ->addColumn('producttype', function (Stock $stock) {
+                    return $stock->product ? $stock->product->producttype->name : '';
+                })
+                ->addColumn('branch', function (Stock $stock) {
+                    return $stock->branch ? $stock->branch->name : '';
+                })
+                ->addColumn('status', function (Stock $stock) {
+                    return StockStatus::getName($stock->stock_status_id);
+                })
+                ->addColumn("action_btns", function($stocks) {
+                    return '<a href="#" class="btn btn-info" action="edit" data-id="'.$stocks->id.'">Edit</a>'
+                    .'&nbsp;<a href="#" class="btn btn-danger" action="delete" data-id="'.$stocks->id.'">Delete</a>';
+                })
+                ->rawColumns(["action_btns"])
+                ->make(true);
+
     }
 
     public function store(Request $request)
@@ -33,30 +60,41 @@ class OrderController extends Controller
                 'messages' => $validator->errors(),
             ], 422);
         }
-          
-        $data = Order::create([
-            'branch_id' => $request->branch_id, 
-            'customer_id' => $request->customer_id,
-            'order_date' => Carbon::now('UTC'),
-            'delivered_date'=>$request->delivered_date,
-            'address'=>$request->address,
-            'city'=>$request->city,
-            'order_status_id'=>$request->order_status_id,
-            'payment_status_id'=>$request->payment_status_id,
-            'payment_method_id'=>$request->payment_method_id,
-            'discount'=>$request->discount,
-            'sub_total'=>$request->sub_total,
-            
-          ]);
-          
-        $data_id = $data->id;
-        foreach ($request->items as $item) {
-            $transfer_item = OrderItem::create([
-                'order_id' => $data->id,     
-                'stock_id' => $item['stock_id'],
-                'quantity' => $item['quantity'],
-                'unit_price' => $item['unit_price'],
-            ]);  
+
+        if ($request->id == 0) {          
+                $data = Order::create([
+                    'branch_id' => $request->branch_id, 
+                    'customer_id' => $request->customer_id,
+                    'order_date' => Carbon::now('UTC'),
+                    'delivered_date'=>$request->delivered_date,
+                    'address'=>$request->address,
+                    'city'=>$request->city,
+                    'order_status_id'=>$request->order_status_id,
+                    'payment_status_id'=>$request->payment_status_id,
+                    'payment_method_id'=>$request->payment_method_id,
+                    'discount'=>$request->discount,
+                    'sub_total'=>$request->sub_total,
+                    
+                ]);
+                
+                $data_id = $data->id;
+                foreach ($request->items as $item) {
+                    $transfer_item = OrderItem::create([
+                        'order_id' => $data->id,     
+                        'stock_id' => $item['stock_id'],
+                        'quantity' => $item['quantity'],
+                        'unit_price' => $item['unit_price'],
+                    ]);  
+                }
+        }
+        else {
+            $data = Order::find($request->id);
+            /*$data->employee_id =  $request->input('employee_id');
+            $data->loan_amount =  $request->input('loan_amount');
+            if ($data->loan_status_id == LoanStatus::ForApproval)
+                $data->balance = $data->loan_amount;
+            */
+
         }
         
         return response()->json([

@@ -23,6 +23,7 @@
         </div>
         <div class="col-md-6">
             @include('home.views.partials.pos.customer-detail')
+            @include('home.views.partials.pos.customer-order')
         </div>            
     </div><!-- /.row -->
     </section>

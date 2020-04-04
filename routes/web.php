@@ -113,6 +113,7 @@ Route::group(['middleware' => 'not.auth'], function () {
     Route::group(['prefix' => 'pos'], function () {
         Route::get('', [ 'uses' => 'PosController@index', 'as' => 'pos',]);
         Route::get('/v2', [ 'uses' => 'PosController@index_v2', 'as' => 'pos-v2',]);
+        Route::get('/list', [ 'uses' => 'PosController@list', 'as' => 'pos.list',]);
         Route::get('/session', [ 'uses' => 'PosController@session', 'as' => 'pos.session',]);
     });
 

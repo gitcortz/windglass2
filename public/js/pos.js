@@ -1,6 +1,8 @@
 var _customerDt;
 var _customerContainer = $('#datatable-customer');
 var _formOrderDetail = $("#form_orderDetail"); 
+var _orderDt;
+var _orderContainer = $('#order_dataTable');
 var _orderdetails;
 var _customerdetail;
 var _products;
@@ -22,32 +24,19 @@ $(document).ready(function() {
     $('#customer_btnsave').click(function() {
         save_customer();
     });
+    $('#btn-reset-order').click(function() {
+        reset_order();
+    });
     $('#order-detail-update-location').click(function() {
-        var branch_id = _formOrderDetail.find("select[name=branch]").val();
-        
+        var branch_id = _formOrderDetail.find("select[name=branch_id]").val();
+        console.log(branch_id);
         if (branch_id != "") {
-            ajaxcall("GET", "/branches/"+branch_id+"/products", null, 
-                    function(data) {
-                        //var products = data;
-                        _products = data.filter(function (entry) {
-                            return entry.product.producttype_id != 2;
-                        });
-
-                        $("#orderdetail_product").empty();
-                        $("#orderdetail_product").append("<option value=''>-- Please select --</option>"); 
-                        for(var i=0; i<_products.length; i++){
-                            $("#orderdetail_product").append("<option value='"+_products[i].id+"'>"+_products[i].product.name+"</option>"); 
-                        }
-                        var tbody = $('#orderdetail_productTable tbody');
-                        tbody.empty();
-                        _orderdetails = [];
-                        update_order_totals();
-                    }, function(data) {
-                        console.log(data);
-                    });
-
-            $('#order-section-2').show();
-            $('#order-detail-footer').show();
+            select_branch(branch_id, function() {
+                var tbody = $('#orderdetail_productTable tbody');
+                tbody.empty();
+                _orderdetails = [];
+                update_order_totals();
+            });
         }        
      });
      $('#orderdetail_addproduct').click(function() {
@@ -68,7 +57,8 @@ $(document).ready(function() {
         
         if (data.length > 0) {
             var product = data[0];
-            var discount = _customerdetail.discount ?  _customerdetail.discount :  0;
+            var isCylinder = (product.product.producttype_id==1);
+            var discount = _customerdetail.discount && isCylinder ?  _customerdetail.discount :  0;
             var orderdetail ={
                 stock_id : product_id,
                 product : product.product.name,
@@ -80,7 +70,7 @@ $(document).ready(function() {
             
             var productRow = "<tr><td>"+orderdetail.product+"</td><td>" + orderdetail.quantity + "</td><td>" 
                         + orderdetail.unit_price.toFixed(2) + "</td><td>"+orderdetail.discount.toFixed(2)+"</td><td>"+orderdetail.total.toFixed(2)+"</td>"+
-                        "<td><a href=\"#\" class=\"btn btn-danger btn-xs\" action=\"remove\" data-id=\""+orderdetail.product_id+"\">X</a></td></tr>";
+                        "<td><a href=\"#\" class=\"btn btn-danger btn-xs\" action=\"remove\" data-id=\""+orderdetail.stock_id+"\">X</a></td></tr>";
         
             tbody.append(productRow);
             _orderdetails.push(orderdetail);
@@ -90,9 +80,12 @@ $(document).ready(function() {
     $('#orderdetail_productTable').on('click', 'tbody tr a[action="remove"]', function(event){
         var tr = $(this).closest('tr');        
         var product_id = tr.find('a[action="remove"]').data("id");
+        
         jQuery(_orderdetails).each(function (index){
+            console.log(_orderdetails[index].stock_id + ' = ' + product_id);
             if(_orderdetails[index].stock_id == product_id){
                 _orderdetails.splice(index,1); // This will remove the object that first name equals to Test1
+                console.log(_orderdetails);
                 return false; // This will stop the execution of jQuery each loop.
             }
         });
@@ -144,6 +137,30 @@ function init_dropdown() {
     });
 }
 
+function select_branch(branch_id, func) {
+      ajaxcall("GET", "/branches/"+branch_id+"/products", null, 
+            function(data) {
+                //var products = data;
+                _products = data.filter(function (entry) {
+                    return entry.product.producttype_id != 2;
+                });
+
+                $("#orderdetail_product").empty();
+                $("#orderdetail_product").append("<option value=''>-- Please select --</option>"); 
+                for(var i=0; i<_products.length; i++){
+                    $("#orderdetail_product").append("<option value='"+_products[i].id+"'>"+_products[i].product.name+"</option>"); 
+                }
+
+                if (func)
+                    func();                
+            }, function(data) {
+                console.log(data);
+            });
+
+    $('#order-section-2').show();
+    $('#order-detail-footer').show();
+}
+
 var search_customer = function() {
     keyword = $('#customer_search').val().trim();
     _customerContainer.DataTable().destroy();       
@@ -173,7 +190,7 @@ var search_customer = function() {
     });
 }
 
-var load_customer = function(id, selectfunction) {
+var load_customer = function(id, func) {
     ajaxcall("GET", "/customers/"+id, null, 
     function(data) {
         var data = data.data;
@@ -195,8 +212,8 @@ var load_customer = function(id, selectfunction) {
                         + data.phone + " / " + data.mobile + "</td><td>"+data.discount+"</td></tr>";
         tbody.empty();
         tbody.append(customerRow);    
-        if (selectfunction)
-            selectfunction();
+        if (func)
+            func();
 
     }, function(data) {
         console.log(data);
@@ -224,9 +241,11 @@ var update_order_totals = function() {
 
 var select_customer = function(id) {
     load_customer(id, function() {
+        init_order_table();
         $('#order-section-2').hide();
         $('#order-detail-footer').hide();
         $('#order-detail-box').boxWidget('expand');
+        
     })
 }
 
@@ -264,14 +283,15 @@ var save_order = function() {
     var $customer = _customerdetail.id;
     var $subtotal = $('#orderdetail_totalprice').val(); 
     var $discount = $('#orderdetail_totaldiscount').val();
-    var $branch_id = 1;
+    var $branch_id =  $('select[name="branch_id"').val();;
     var $payment_method_id = 10;
     var $order_status_id = $("#orderdetail_status").val();
     var $payment_status_id = 20; //Paid
     var $notes = "";
+    var $id = $("#orderdetail_id").val() == "" ? 0 :  $("#orderdetail_id").val();
 
     _orderdata = {
-        "id": 0,
+        "id": $id,
         "customer_id": $customer,
         "branch_id": $branch_id,
         "sub_total": $subtotal,
@@ -284,6 +304,7 @@ var save_order = function() {
     }
     console.log(_orderdata);
 
+    /*
     ajaxcall("POST", "/orders", _orderdata, function() {
         //success
         //show_payment_complete_modal();
@@ -291,5 +312,122 @@ var save_order = function() {
     }, function() {
         //error
     });
-                    
+      */              
+}
+
+var load_order_item = function(order_items) {
+    var tbody = $('#orderdetail_productTable tbody');
+    tbody.empty();
+    _orderdetails = [];
+
+    order_items.forEach(function(item) {
+        var product = item.stock;
+        var discount = item.discount == null ? 0 : item.discount;
+        var orderdetail ={
+            stock_id : item.stock_id,
+            product : product.product.name,
+            unit_price : parseFloat(item.unit_price),
+            quantity: parseInt(item.quantity),
+            discount :  parseFloat(discount),
+            total : (item.quantity * item.unit_price) - discount,
+        };
+        
+        var productRow = "<tr><td>"+orderdetail.product+"</td><td>" + orderdetail.quantity + "</td><td>" 
+                    + orderdetail.unit_price.toFixed(2) + "</td><td>"+orderdetail.discount.toFixed(2)+"</td><td>"+orderdetail.total.toFixed(2)+"</td>"+
+                    "<td><a href=\"#\" class=\"btn btn-danger btn-xs\" action=\"remove\" data-id=\""+orderdetail.stock_id+"\">X</a></td></tr>";
+    
+        $('#orderdetail_productTable tbody').append(productRow);
+        _orderdetails.push(orderdetail);
+
+    });
+    console.log(_orderdetails);  
+    update_order_totals();
+}
+
+var init_order_table = function() { 
+    console.log("customer " + _customerdetail.id);
+    if (_orderContainer.length > 0) {
+        _orderDt = _orderContainer.DataTable().destroy();
+        _orderDt = _orderContainer.DataTable({
+            processing: true,
+            serverSide: true,
+           ajax :  {
+                url: "/pos/list/",
+                data : {customer_id : _customerdetail.id}             
+            },
+            columns :  [
+                {data: "id", name : "id"},
+                {data: "order_date", name : "order_date"},
+                {data: "customername", name : "customers.name"},
+                {data: "sub_total", name : "sub_total"},
+                {data: "action_btns", name : "action_btns"},
+            ],
+            order: [[ 0, "desc" ]],           
+            drawCallback: function( settings, json) {
+                $('.order_action').on('change', function() {
+                    if ($(this).find(":selected").val() == "40"){
+                        init_rider();
+                        init_empty_cylinder();
+                        $('#order_update_id').val($(this).data("id"));
+                        $('#order_update_status_id').val($(this).find(":selected").val());
+                        _updateModal.modal('show');
+                        return;
+                    }
+                    update_order_status($(this).data("id"), $(this).find(":selected").val());
+                });
+            }
+        });
+
+        _orderContainer.off('click');
+        _orderContainer.on('click', 'tbody tr a[action="view"]', function(event){
+            var id = $(this).data("id");
+            var data = _orderDt.row( $(this).parents('tr') ).data();
+             _formOrderDetail.find('input[name="orderdetail_id"]').val(data.id);
+             _formOrderDetail.find('input[name="order_status_id"]').val(data.order_status_id);
+             _formOrderDetail.find('select[name="branch_id"]').val(data.branch_id);
+             _formOrderDetail.find('select[name="orderdetail_rider"]').val(data.rider_id);
+             $('#order_detail_id_label').html(data.id);
+             $('#order_detail_date_label').html(data.order_date);
+             select_branch(data.branch_id);
+            load_order_item(data.order_items);
+            
+            console.log(data);
+            //alert( data[0] +"'s salary is: "+ data[ 5 ] );
+        });
+
+    }
+}
+
+var reset_order = function() {
+    console.log('reset_order');
+    $('#customer-detail-box').boxWidget('expand');
+    $('#customer-search-box').boxWidget('collapse');
+    $('#orderdetail_branch').val("");
+    $('#orderdetail_status').val("10");
+    $('#orderdetail_id').val("");
+    $('#orderdetail_rider').val("");
+    $('#orderdetail_product').val("");
+    $('#orderdetail_qty').val("");
+    $('#order_detail_id_label').html("new");
+    $('#order_detail_date_label').html(formatDate(new Date()));
+    var tbody = $('#orderdetail_productTable tbody');
+    //tbody.empty();
+    _orderdetails = [];
+    update_order_totals();
+    $('#order-section-2').hide();
+    $('#order-detail-footer').hide();
+}
+
+var formatDate = function(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [month, day, year].join('-');
 }

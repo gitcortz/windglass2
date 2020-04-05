@@ -7,10 +7,10 @@
         </div>
     </div>
     <div class="box-body">
-            <table id="order_dataTable" class="table table-bordered table-striped dataTable" role="grid" >
+            <table id="order_dataTable" class="table table-bordered table-striped dataTable" role="grid" style="font-size:10px" >
                     <thead>
                         <tr>
-                            <th>Order#</th>
+                            <th>Id</th>
                             <th>OrderDate</th>
                             <th>Customer</th>
                             <th>Status</th>

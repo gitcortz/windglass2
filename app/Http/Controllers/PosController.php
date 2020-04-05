@@ -47,7 +47,7 @@ class PosController extends Controller
                 return $order->sub_total - $order->discount;  
             })
             ->addColumn("action_btns", function($order) {
-                return '<a href="#" class="btn btn-info" action="view" data-id="'.$order->id.'">View</a>';
+                return '<a href="#" class="btn btn-info btn-sm" action="view" data-id="'.$order->id.'">View</a>';
             })            
             ->rawColumns(["action_btns"])
             ->make(true);

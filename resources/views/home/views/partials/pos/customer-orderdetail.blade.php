@@ -124,7 +124,7 @@
                 <label for="inputEmail3" class="col-sm-7 control-label"> Discount :</label>
                 <div class="col-sm-5">
                     <input type="text" class="form-control form-control-sm input-right" id="orderdetail_totaldiscount" name="total_discount" 
-                            required>
+                            disabled required>
                 </div>
             </div>
             <div class="form-group">

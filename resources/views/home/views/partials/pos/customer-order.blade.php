@@ -13,6 +13,7 @@
                             <th>Order#</th>
                             <th>OrderDate</th>
                             <th>Customer</th>
+                            <th>Status</th>
                             <th>Total</th>
                             <th>Action</th>
                         </tr>

@@ -35,7 +35,7 @@
                 </select>
             </div>
             <div class="col-sm-2">
-                <button type="button" class="btn btn-primary btn-sm">Update Status</button>
+                <button type="button" style="display:none" class="btn btn-primary btn-sm">Update Status</button>
             </div>
         </div>        
         <table class="table table-bordered" id="orderdetail_customerTable">
@@ -67,7 +67,7 @@
             </div>
         </div>
         <div id="order-section-2" >
-        <div class="form-group" style="padding:10px 0px">
+        <div class="form-group" style="padding:10px 0px" id="add_product_section">
             <div class="col-sm-7">
                 <div class="form-group-sm">
                     <label for="name">Product</label>
@@ -84,7 +84,7 @@
             </div>
             <div class="col-sm-3">
                 <div class="form-group-sm">
-                    <label>&nbsp;_</label>
+                    <label><br/></label><br/>
                     <button type="button" class="btn btn-primary btn-sm" id="orderdetail_addproduct">Add Product</button>
                 </div>                
             </div>
@@ -106,11 +106,11 @@
             <div class="form-group" style="background: #aaa; padding:2px 0px">
                 <label for="inputEmail3" class="col-sm-3 control-label"> Rider :</label>
                 <div class="col-sm-5 form-group-sm">
-                    <select class="form-control" id="orderdetail_rider" name="rider">
+                    <select class="form-control" id="orderdetail_rider" name="rider_id">
                     </select>
                 </div>
                 <div class="col-sm-2">
-                    <button type="button" class="btn btn-primary btn-sm">Assign Rider</button>
+                    <button type="button" class="btn btn-primary btn-sm" style="display:none">Assign Rider</button>
                 </div>
             </div>
             <div class="form-group">

@@ -48,7 +48,7 @@ class OrderController extends Controller
 
     }
 
-    public function store(Request $request)
+    public function store(Request $request, StocksServiceInterface $stocksServiceInstance)
     {
         $validator = Validator::make($request->input(), array(
             'branch_id' => 'required',
@@ -92,9 +92,9 @@ class OrderController extends Controller
         else {
             $data = Order::find($request->id);            
             $data->rider_id = $request->input('rider_id');
+            $data->order_status_id =  $request->input('order_status_id');
 
-            if ($data->order_status_id  == OrderStatus::Draft) {
-                $data->order_status_id =  $request->input('order_status_id');
+            if ($data->order_status_id  == OrderStatus::Draft) {              
                 $data->sub_total =  $request->input('sub_total');
                 $data->discount =  $request->input('discount');
             
@@ -137,11 +137,13 @@ class OrderController extends Controller
 
 
             }
-            $data->save();
-
-           
+            $data->save();           
         }
         
+        if ($data->order_status_id  == OrderStatus::Completed) {
+            $stocksServiceInstance->completedOrder($data->id);
+        }
+
         return response()->json([
             'error' => false,
             'data'  => $data,

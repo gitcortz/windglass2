@@ -71,7 +71,7 @@ $(document).ready(function() {
             
             var productRow = "<tr><td>"+orderdetail.product+"</td><td>" + orderdetail.quantity + "</td><td>" 
                         + orderdetail.unit_price.toFixed(2) + "</td><td>"+orderdetail.discount.toFixed(2)+"</td><td>"+orderdetail.total.toFixed(2)+"</td>"+
-                        "<td><a href=\"#\" class=\"btn btn-danger btn-xs\" action=\"remove\" data-id=\""+orderdetail.stock_id+"\">X</a></td></tr>";
+                        "<td><a href=\"#\" class=\"btn btn-danger btn-xs product_remove\" action=\"remove\" data-id=\""+orderdetail.stock_id+"\">X</a></td></tr>";
         
             tbody.append(productRow);
             _orderdetails.push(orderdetail);
@@ -282,7 +282,8 @@ var save_order = function() {
     var $customer = _customerdetail.id;
     var $subtotal = $('#orderdetail_totalprice').val(); 
     var $discount = $('#orderdetail_totaldiscount').val();
-    var $branch_id =  $('select[name="branch_id"').val();;
+    var $branch_id =  $('select[name="branch_id"').val();
+    var $rider_id =  $('select[name="rider_id"').val();
     var $payment_method_id = 10;
     var $order_status_id = $("#orderdetail_status").val();
     var $payment_status_id = 20; //Paid
@@ -298,6 +299,7 @@ var save_order = function() {
         "payment_method_id": $payment_method_id,
         "order_status_id": $order_status_id,
         "payment_status_id": $payment_status_id,
+        "rider_id" : $rider_id,
         "notes": $notes,
         "items" : _orderdetails
     }
@@ -307,6 +309,8 @@ var save_order = function() {
     ajaxcall("POST", "/orders", _orderdata, function() {
         //success
         //show_payment_complete_modal();
+        initialize_select_status($order_status_id);
+        initialize_product_section($order_status_id);
         alert('saved');
         _orderDt.ajax.reload();
     }, function() {
@@ -334,23 +338,24 @@ var load_order_item = function(order_items) {
         
         var productRow = "<tr><td>"+orderdetail.product+"</td><td>" + orderdetail.quantity + "</td><td>" 
                     + orderdetail.unit_price.toFixed(2) + "</td><td>"+orderdetail.discount.toFixed(2)+"</td><td>"+orderdetail.total.toFixed(2)+"</td>"+
-                    "<td><a href=\"#\" class=\"btn btn-danger btn-xs\" action=\"remove\" data-id=\""+orderdetail.stock_id+"\">X</a></td></tr>";
+                    "<td><a href=\"#\" class=\"btn btn-danger btn-xs product_remove\" action=\"remove\" data-id=\""+orderdetail.stock_id+"\">X</a></td></tr>";
     
         $('#orderdetail_productTable tbody').append(productRow);
         _orderdetails.push(orderdetail);
 
     });
-    console.log(_orderdetails);  
+    
+    var $order_status_id = $("#orderdetail_status").val();
     update_order_totals();
 }
 
 var init_order_table = function() { 
-    console.log("customer " + _customerdetail.id);
     if (_orderContainer.length > 0) {
         _orderDt = _orderContainer.DataTable().destroy();
         _orderDt = _orderContainer.DataTable({
             processing: true,
             serverSide: true,
+            searching: false,
            ajax :  {
                 url: "/pos/list/",
                 data : {customer_id : _customerdetail.id}             
@@ -359,6 +364,7 @@ var init_order_table = function() {
                 {data: "id", name : "id"},
                 {data: "order_date", name : "order_date"},
                 {data: "customername", name : "customers.name"},
+                {data: "order_status", name : "order_status"},
                 {data: "total", name : "total", className: 'dt-body-right', render: $.fn.dataTable.render.number( ',', '.', 2 )},
                 {data: "action_btns", name : "action_btns"},
             ],
@@ -389,23 +395,26 @@ var init_order_table = function() {
 }
 
 var load_order = function(data) {   
+    initialize_select_status(data.order_status_id);
     _formOrderDetail.find('input[name="orderdetail_id"]').val(data.id);
     _formOrderDetail.find('input[name="order_status_id"]').val(data.order_status_id);
     _formOrderDetail.find('select[name="branch_id"]').val(data.branch_id);
-    _formOrderDetail.find('select[name="orderdetail_rider"]').val(data.rider_id);
+    _formOrderDetail.find('select[name="rider_id"]').val(data.rider_id);
     $('#order-detail-update-location').hide();
     $('#orderdetail_branch').prop("disabled", true);
     $('#order_detail_id_label').html(data.id);
     $('#order_detail_date_label').html(data.order_date);
     select_branch(data.branch_id);
    load_order_item(data.order_items);
-   
+   initialize_product_section(data.order_status_id);
    console.log(data);
    //alert( data[0] +"'s salary is: "+ data[ 5 ] );
 }
 
 var reset_order = function() {
     console.log('reset_order');
+    initialize_select_status(10);
+    initialize_product_section(10);
     $('#customer-search-box').boxWidget('collapse');
     $('#orderdetail_branch').val("");
     $('#orderdetail_status').val("10");
@@ -423,6 +432,39 @@ var reset_order = function() {
     update_order_totals();
     $('#order-section-2').hide();
     $('#order-detail-footer').hide();
+}
+
+var initialize_product_section = function(status) {
+    status = parseInt(status);
+    var add_product_section = $('#add_product_section');
+    var product_remove = $('.product_remove');
+ 
+    if (status <= 10) {
+        add_product_section.show();
+        product_remove.show();
+    }
+    else {
+        add_product_section.hide();
+        product_remove.hide();
+    }
+    
+}
+var initialize_select_status = function(status) {
+    status = parseInt(status);
+    var select_status = $('#orderdetail_status');
+    select_status.empty();
+    if (status <= 10) {
+        select_status.append($('<option>', { value: 10, text: 'DRAFT'}));        
+    }
+    if (status <= 20) {
+        select_status.append($('<option>', { value: 20, text: 'ORDERED'}));        
+    }
+    if (status <= 30) {
+        select_status.append($('<option>', { value: 30, text: 'DELIVERED'}));
+    }
+    if (status <= 40) {
+        select_status.append($('<option>', { value: 40, text: 'COMPLETED'}));
+    }
 }
 
 var formatDate = function(date) {

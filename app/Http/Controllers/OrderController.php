@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Enums\OrderStatus;
 use App\Library\Services\Stocks\StocksServiceInterface;
 use Datatables;
 use Validator;
@@ -79,22 +80,66 @@ class OrderController extends Controller
                 
                 $data_id = $data->id;
                 foreach ($request->items as $item) {
-                    $transfer_item = OrderItem::create([
+                    $order_item = OrderItem::create([
                         'order_id' => $data->id,     
                         'stock_id' => $item['stock_id'],
                         'quantity' => $item['quantity'],
                         'unit_price' => $item['unit_price'],
+                        'discount' => $item['discount'],
                     ]);  
                 }
         }
         else {
-            $data = Order::find($request->id);
-            /*$data->employee_id =  $request->input('employee_id');
-            $data->loan_amount =  $request->input('loan_amount');
-            if ($data->loan_status_id == LoanStatus::ForApproval)
-                $data->balance = $data->loan_amount;
-            */
+            $data = Order::find($request->id);            
+            $data->rider_id = $request->input('rider_id');
 
+            if ($data->order_status_id  == OrderStatus::Draft) {
+                $data->order_status_id =  $request->input('order_status_id');
+                $data->sub_total =  $request->input('sub_total');
+                $data->discount =  $request->input('discount');
+            
+                $request_stockIds = array_column($request->items, 'stock_id');
+                $orderitems = OrderItem::where("order_id", $data->id)->get();
+                $orderitem_stockIds = OrderItem::where("order_id", $data->id)->pluck('stock_id')->toArray();
+                $orderitem_stockIds = array_map('strval',$orderitem_stockIds);                        
+                $delete=array_diff($orderitem_stockIds,$request_stockIds);
+                $add=array_diff($request_stockIds,$orderitem_stockIds);
+                $update=array_intersect($orderitem_stockIds,$request_stockIds);
+            
+                //add|update
+                foreach ($request->items as $item) {
+                    if (in_array($item["stock_id"], $add)){
+                        $order_item = OrderItem::create([
+                            'order_id' => $data->id,     
+                            'stock_id' => $item['stock_id'],
+                            'quantity' => $item['quantity'],
+                            'unit_price' => $item['unit_price'],
+                            'discount' => $item['discount'],
+                        ]);                       
+                    }
+                    else if (in_array($item["stock_id"], $update)){
+                        $updateitems =  $orderitems->where("stock_id", $item["stock_id"]);
+                        foreach($updateitems as $updateitem) {
+                            $updatethis = OrderItem::find($updateitem["id"]);
+                            $updatethis->quantity = $item['quantity'];
+                            $updatethis->unit_price = $item['unit_price'];
+                            $updatethis->discount = $item['discount'];
+                            $updatethis->save();                           
+                        }
+                    }          
+                }
+                
+                foreach($orderitems as $orderitem) {                    
+                    if (in_array($orderitem->stock_id, $delete)){
+                        $task = OrderItem::destroy($orderitem->id);
+                    }
+                }
+
+
+            }
+            $data->save();
+
+           
         }
         
         return response()->json([

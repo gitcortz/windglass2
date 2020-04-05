@@ -43,6 +43,9 @@ class PosController extends Controller
             ->addColumn('payment_status', function (Order $order) {
                 return PaymentStatus::getName($order->payment_status_id);
             })
+            ->addColumn('total', function (Order $order) {
+                return $order->sub_total - $order->discount;  
+            })
             ->addColumn("action_btns", function($order) {
                 return '<a href="#" class="btn btn-info" action="view" data-id="'.$order->id.'">View</a>';
             })            

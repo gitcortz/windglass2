@@ -7,6 +7,7 @@ var _orderdetails;
 var _customerdetail;
 var _products;
 var _orderdata;
+
 $(document).ready(function() {
     
     //search_customer();
@@ -184,7 +185,6 @@ var search_customer = function() {
     _customerContainer.off('click'); 
     _customerContainer.on('click', 'tbody tr a[action="select"]', function(event){
         select_customer($(this).data("id"));
-        $('#customer-detail-box').boxWidget('expand');
         $('#customer-search-box').boxWidget('collapse');
         $('#orderdetail_branch').val("");
     });
@@ -205,7 +205,6 @@ var load_customer = function(id, func) {
         form.find("input[name=phone]").val(data.phone);
         form.find("input[name=discount]").val(data.discount);
         form.find("#city").val(data.city_id);
-        $('#customer-detail-box').boxWidget('expand');
         
         var tbody = $('#orderdetail_customerTable tbody');
         var customerRow = "<tr><td>"+data.name+"</td><td>" + data.address + "</td><td>" 
@@ -304,15 +303,16 @@ var save_order = function() {
     }
     console.log(_orderdata);
 
-    /*
+    
     ajaxcall("POST", "/orders", _orderdata, function() {
         //success
         //show_payment_complete_modal();
         alert('saved');
+        _orderDt.ajax.reload();
     }, function() {
         //error
     });
-      */              
+    
 }
 
 var load_order_item = function(order_items) {
@@ -359,7 +359,7 @@ var init_order_table = function() {
                 {data: "id", name : "id"},
                 {data: "order_date", name : "order_date"},
                 {data: "customername", name : "customers.name"},
-                {data: "sub_total", name : "sub_total"},
+                {data: "total", name : "total", className: 'dt-body-right', render: $.fn.dataTable.render.number( ',', '.', 2 )},
                 {data: "action_btns", name : "action_btns"},
             ],
             order: [[ 0, "desc" ]],           
@@ -380,27 +380,32 @@ var init_order_table = function() {
 
         _orderContainer.off('click');
         _orderContainer.on('click', 'tbody tr a[action="view"]', function(event){
-            var id = $(this).data("id");
-            var data = _orderDt.row( $(this).parents('tr') ).data();
-             _formOrderDetail.find('input[name="orderdetail_id"]').val(data.id);
-             _formOrderDetail.find('input[name="order_status_id"]').val(data.order_status_id);
-             _formOrderDetail.find('select[name="branch_id"]').val(data.branch_id);
-             _formOrderDetail.find('select[name="orderdetail_rider"]').val(data.rider_id);
-             $('#order_detail_id_label').html(data.id);
-             $('#order_detail_date_label').html(data.order_date);
-             select_branch(data.branch_id);
-            load_order_item(data.order_items);
-            
-            console.log(data);
-            //alert( data[0] +"'s salary is: "+ data[ 5 ] );
+            //var id = $(this).data("id");
+            var data = _orderDt.row($(this).parents('tr')).data();
+            load_order(data);
         });
 
     }
 }
 
+var load_order = function(data) {   
+    _formOrderDetail.find('input[name="orderdetail_id"]').val(data.id);
+    _formOrderDetail.find('input[name="order_status_id"]').val(data.order_status_id);
+    _formOrderDetail.find('select[name="branch_id"]').val(data.branch_id);
+    _formOrderDetail.find('select[name="orderdetail_rider"]').val(data.rider_id);
+    $('#order-detail-update-location').hide();
+    $('#orderdetail_branch').prop("disabled", true);
+    $('#order_detail_id_label').html(data.id);
+    $('#order_detail_date_label').html(data.order_date);
+    select_branch(data.branch_id);
+   load_order_item(data.order_items);
+   
+   console.log(data);
+   //alert( data[0] +"'s salary is: "+ data[ 5 ] );
+}
+
 var reset_order = function() {
     console.log('reset_order');
-    $('#customer-detail-box').boxWidget('expand');
     $('#customer-search-box').boxWidget('collapse');
     $('#orderdetail_branch').val("");
     $('#orderdetail_status').val("10");
@@ -410,8 +415,10 @@ var reset_order = function() {
     $('#orderdetail_qty').val("");
     $('#order_detail_id_label').html("new");
     $('#order_detail_date_label').html(formatDate(new Date()));
+    $('#order-detail-update-location').show();
+    $('#orderdetail_branch').prop("disabled", false);
     var tbody = $('#orderdetail_productTable tbody');
-    //tbody.empty();
+    tbody.empty();
     _orderdetails = [];
     update_order_totals();
     $('#order-section-2').hide();

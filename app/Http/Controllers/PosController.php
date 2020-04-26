@@ -18,6 +18,11 @@ class PosController extends Controller
         return view("home.views.pos-v2");
     }
 
+    public function receipt($id){ 
+        $order = Order::with('order_items')->find($id);
+        return view("home.views.receipt", ['order' => $order]);
+    }
+
     public function list(Request $request) {
         
         $matchThese = [];

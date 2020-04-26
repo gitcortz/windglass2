@@ -27,7 +27,7 @@ class Order extends Model
     }
 
     public function rider(){
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo('App\Models\Employee');
     }
 
     public function order_status() {

@@ -28,6 +28,9 @@ $(document).ready(function() {
     $('#btn-reset-order').click(function() {
         reset_order();
     });
+    $('#orderdetail_print').click(function() {
+        print_order();
+    });
     $('#order-detail-update-location').click(function() {
         var branch_id = _formOrderDetail.find("select[name=branch_id]").val();
         console.log(branch_id);
@@ -432,6 +435,12 @@ var reset_order = function() {
     update_order_totals();
     $('#order-section-2').hide();
     $('#order-detail-footer').hide();
+}
+
+var print_order = function() {
+    if (confirm("Generate Receipt?")) {
+        window.open("/pos/receipt/" + $('#order_detail_id_label').html());
+    }
 }
 
 var initialize_product_section = function(status) {

@@ -5,13 +5,14 @@ $(document).ready(function() {
             {data: "id", name : "id"},
             {data: "name", name : "name"},
             {data: "action_btns", name : "action_btns"},
-        ], function(data) {
+        ], function(e) {
             $('.nav-tabs a[href="#tab_1"]').tab('show');
-
+            data = e.data
             var form = crud.form_control;
             form.find("input[name=id]").val(data.id);
             form.find("input[name=name]").val(data.name);
             form.find("input[name=email]").val(data.email);
+            $("#role").val(e.role_id);
             init_user_branches(crud, data.id);
 
         }

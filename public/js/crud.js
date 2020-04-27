@@ -89,8 +89,11 @@ var Crud = (function ($) {
         var loadForm = function(id) { 
             ajaxcall("GET", "/"+_component+"/"+id, null, 
                 function(data) {
-                    var data = data.data;
-                    _loadCallBack(data);
+                    var data1 = data.data;
+                    if (data.role_id)
+                        _loadCallBack(data);
+                    else
+                        _loadCallBack(data1);
                 
                 }, function(data) {
                     console.log(data);

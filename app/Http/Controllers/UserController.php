@@ -69,10 +69,12 @@ class UserController extends Controller
     public function show($id)
     {
         $data = User::find($id);
-
+        $role = DB::table('model_has_roles')->where('model_id', $id)->first();
+        
         return response()->json([
             'error' => false,
             'data'  => $data,
+            'role_id' => $role->role_id
         ], 200);
     }
 
@@ -97,7 +99,7 @@ class UserController extends Controller
         if ($request->input('password'))
             $data->password =Hash::make($request->input('password'));
 
-        //$data->save();
+        $data->save();
 
         DB::table('model_has_roles')->where('model_id',$id)->delete();
         $data->assignRole($request->role);
@@ -113,7 +115,7 @@ class UserController extends Controller
                 $userbranch->updated_at = date('Y-m-d H:i:s');
                 $userbranches[] = $userbranch->attributesToArray();
             }
-          //  UserBranches::insert($userbranches);
+            UserBranches::insert($userbranches);
         }
 
 

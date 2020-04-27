@@ -6,23 +6,28 @@ use Illuminate\Http\Request;
 use Validator;
 use Auth;
 use Session;
+use App\Models\Branch;
+use App\Models\UserBranches;
 
 class AdminController extends Controller
 {
     public function adminLoginForm() {
+
+
         if (session("is_active") == 1) {
             return redirect("/");
         } else {
-            return view("home.views.login_form");
+            $branches = Branch::all();
+
+            return view("home.views.login_form", ['allBranches' => $branches]);
         }
     }
 
     public function checkUserLogin(Request $request) {
-        //print_r($request->all());
-
         $validator = Validator::make($request->input(), array(
             'email' => 'required',
             'password' => 'required',
+            'branch' => 'required'
         ));
 
         if ($validator->fails()) {
@@ -31,19 +36,34 @@ class AdminController extends Controller
 
         $user_info = array(
             "email" => $request->email,
-            "password" => $request->password,
+            "password" => $request->password,            
         );
-
+        $branch_id = $request->branch;
+        
+        
         if (auth()->guard("web")->attempt($user_info)) {
             $logged_user_details = auth()->guard("web")->user();
-            session(["is_active" => 1]);
-            session(["user_details" => $logged_user_details]);
-            return redirect("/");
+            if ($this->isUserHasBranch($logged_user_details->id, $branch_id)) {
+                session(["is_active" => 1]);
+                session(["user_details" => $logged_user_details]);
+                session(["branch_id" => $branch_id]);
+                return redirect("/");
+            }
+            else {
+                return redirect()->back()->withErrors("user not allowed");
+            }
         } else {
             $error_message = "Invalid credentials";
             return redirect()->back()->withErrors($error_message);
         }
 
+    }
+
+    private function isUserHasBranch($user_id, $branch_id) {
+        $branches = UserBranches::where('user_id', $user_id)
+                    ->where('branch_id', $branch_id)
+                    ->get();
+        return !$branches->isEmpty();
     }
 
     public function logout() {

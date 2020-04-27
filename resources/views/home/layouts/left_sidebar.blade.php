@@ -100,6 +100,7 @@
           <li><a href="{{ route('employeeloans') }}"><i class="fa fa-circle-o"></i> Loans</a></li>
           <li><a href="{{ route('timesheetdetails') }}"><i class="fa fa-circle-o"></i> Timesheets</a></li>
           <li><a href="{{ route('payrolls') }}"><i class="fa fa-circle-o"></i> Payrolls</a></li>
+          <li><a href="{{ route('reportloans') }}"><i class="fa fa-circle-o"></i> Loans Report</a></li>
         </ul>
       </li>
       @endcan

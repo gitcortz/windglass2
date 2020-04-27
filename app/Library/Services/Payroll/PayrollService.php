@@ -159,7 +159,7 @@ class PayrollService implements PayrollServiceInterface
             
 
             // Generate and return the spreadsheet
-            Excel::create('payments', function($excel) use ($payrollArray, $title, $rowStart, $rowEnd) {
+            Excel::create('payroll', function($excel) use ($payrollArray, $title, $rowStart, $rowEnd) {
                 $excel->setTitle('Payroll '.$title);
                 $excel->setCreator('Laravel')->setCompany('Windglass Company');
                 $excel->setDescription('employee timesheet');
@@ -215,6 +215,115 @@ class PayrollService implements PayrollServiceInterface
 
             })->download('xlsx');
     }
+
+    public function loansReportData($year, $weekno) {          
+        $loanreport = Payroll::where('year', $year)
+                ->where('week_no', $weekno)
+                ->where('payroll_status', 2)
+                ->join('employees as e', 'payrolls.employee_id', '=', 'e.id')
+                ->leftJoin('employee_loans as vl', 'payrolls.vale_loan_id', '=', 'vl.id')
+                ->leftJoin('employee_loans as sl', 'payrolls.sss_loan_id', '=', 'sl.id')
+                ->leftJoin('employee_loans as el', 'payrolls.salary_loan_id', '=', 'el.id')
+                ->selectRaw('payrolls.id,
+                        CONCAT(e.first_name, \' \', e.last_name) as employeename,
+                        (CASE WHEN payrolls.loan_payment IS NULL THEN 0 ELSE payrolls.loan_payment END) as loan_payment,
+                        (CASE WHEN payrolls.vale_payment IS NULL THEN 0 ELSE payrolls.vale_payment END) as vale_payment,
+                        (CASE WHEN payrolls.sssloan_payment IS NULL THEN 0 ELSE payrolls.sssloan_payment END) as sssloan_payment,
+                        (CASE WHEN payrolls.loan_payment IS NULL THEN 0 ELSE payrolls.loan_payment END + 
+                        CASE WHEN payrolls.vale_payment IS NULL THEN 0 ELSE payrolls.vale_payment END + 
+                        CASE WHEN payrolls.sssloan_payment IS NULL THEN 0 ELSE payrolls.sssloan_payment END)
+                         as total_loan_payment,
+                        (CASE WHEN vl.balance IS NULL THEN 0 ELSE vl.balance END) as vale_balance,
+                        (CASE WHEN el.balance IS NULL THEN 0 ELSE el.balance END) as emp_balance,
+                        (CASE WHEN sl.balance IS NULL THEN 0 ELSE sl.balance END) as sss_balance
+                        ');
+
+        return $loanreport;
+    }
+
+    public function exportLoanReport($year, $weekno)
+    {
+        $report = $this->loansReportData($year, $weekno)->get();
+
+            $excelArray = []; 
+
+            $title = $this->getStartAndEndTitle($year, $weekno);
+            $excelArray[] = ['Windglass Company'];
+            $excelArray[] = ['Employee Loan Report'];
+            $excelArray[] = [];
+            $excelArray[] = ['NO', $title,'COMPANY LOAN Balance','VALE / OTHERS','SSS Loan Balance',
+                                    'COMPANY LOAN Deduction','VALE / OTHERS Deduction','SSS Loan Deduction','Total Deduction'];
+            $idx = 1;    
+            foreach ($report as $data) {
+                $arr = array($idx,
+                            $data->employeename,
+                            $data->emp_balance,
+                            $data->vale_balance,
+                            $data->sss_balance,
+                            $data->loan_payment,
+                            $data->vale_payment,
+                            $data->sssloan_payment,                            
+                            $data->total_loan_payment,
+                        );
+                $excelArray[] = $arr;
+                $idx++;
+            }
+
+            $excelArray[] = [];
+            //Total
+            $rowStart = 5;
+            $rowEnd = $rowStart+$report->count()-1;           
+
+            // Generate and return the spreadsheet
+            Excel::create('loanreport', function($excel) use ($excelArray, $title, $rowStart, $rowEnd) {
+                $excel->setTitle('Loan Report '.$title);
+                $excel->setCreator('Laravel')->setCompany('Windglass Company');
+                $excel->setDescription('employee loan report');
+
+                
+                // Build the spreadsheet, passing in the payments array
+                $excel->sheet('sheet1', function($sheet) use ($excelArray, $rowStart, $rowEnd) {
+                    $sheet->fromArray($excelArray, null, 'A1', false, false);
+                    $sheet->mergeCells('A1:B1');
+                    $sheet->mergeCells('A2:B2');
+                    $sheet->getStyle('B4:I4')->applyFromArray(array(
+                        'font' => array(
+                            'name'      =>  'Calibri',
+                            'size'      =>  10,
+                            'bold'      =>  true,                        
+                        ),
+                    ))->getAlignment()->setWrapText(true)
+                    ->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+                    $sheet->setWidth(array(
+                        'B'     =>  23,
+                        'C'     =>  17,
+                        'D'     =>  17,
+                        'E'     =>  17,
+                        'F'     =>  17,
+                        'G'     =>  17,
+                        'H'     =>  17,
+                        'I'     =>  17,
+                    ));
+
+                    $sheet->getStyle('C'.$rowStart.':E'.$rowEnd)
+                    ->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                    $sheet->getStyle('F'.$rowStart.':H'.$rowEnd)->applyFromArray(array(
+                        'font' => array(
+                            'color' => array('rgb' => 'FF0000'),
+                        )
+                    ))->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                    $sheet->getStyle('I'.$rowStart.':I'.$rowEnd)->applyFromArray(array(
+                        'font' => array(
+                            'color' => array('rgb' => 'FF0000'),
+                            'bold'      =>  true,   
+                        )
+                    ))->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                });
+
+            })->download('xlsx');
+    }
+
 
     public function getStartAndEndDate($year, $weekno) {
       $dates['start'] = date("Y-m-d", strtotime($year.'W'.str_pad($weekno, 2, 0, STR_PAD_LEFT).' -1 days'));

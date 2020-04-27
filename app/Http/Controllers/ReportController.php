@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Branch;
+use App\Models\Payroll;
+use App\Library\Services\Payroll\PayrollServiceInterface;
 use App\Models\Enums\PaymentStatus;
 use Illuminate\Support\Facades\DB;
 use \Carbon\Carbon;
@@ -18,6 +20,65 @@ class ReportController extends Controller
 
     public function dailysalesindex(){ 
         return view("home.views.reports.dailysales");
+    }
+
+    public function loansindex(){ 
+        return view("home.views.reports.loans");
+    }
+
+    public function loansreport(Request $request) {
+        $validator = Validator::make($request->input(), array(
+            'weekno' => 'required',
+            'year' => 'required',
+        ));
+        if ($validator->fails()) {
+            return response()->json([
+                'error'    => true,
+                'messages' => $validator->errors(),
+            ], 422);
+        }
+        
+        $sales = Payroll::where('year', $request->query('year'))
+                ->where('week_no', $request->query('weekno'))
+                ->where('payroll_status', 2)
+                ->join('employees as e', 'payrolls.employee_id', '=', 'e.id')
+                ->leftJoin('employee_loans as vl', 'payrolls.vale_loan_id', '=', 'vl.id')
+                ->leftJoin('employee_loans as sl', 'payrolls.sss_loan_id', '=', 'sl.id')
+                ->leftJoin('employee_loans as el', 'payrolls.salary_loan_id', '=', 'el.id')
+                ->selectRaw('payrolls.id,
+                        CONCAT(e.first_name, \' \', e.last_name) as employeename,
+                        (CASE WHEN payrolls.loan_payment IS NULL THEN 0 ELSE payrolls.loan_payment END) as loan_payment,
+                        (CASE WHEN payrolls.vale_payment IS NULL THEN 0 ELSE payrolls.vale_payment END) as vale_payment,
+                        (CASE WHEN payrolls.sssloan_payment IS NULL THEN 0 ELSE payrolls.sssloan_payment END) as sssloan_payment,
+                        (CASE WHEN payrolls.loan_payment IS NULL THEN 0 ELSE payrolls.loan_payment END + 
+                        CASE WHEN payrolls.vale_payment IS NULL THEN 0 ELSE payrolls.vale_payment END + 
+                        CASE WHEN payrolls.sssloan_payment IS NULL THEN 0 ELSE payrolls.sssloan_payment END)
+                         as total_loan_payment,
+                        (CASE WHEN vl.balance IS NULL THEN 0 ELSE vl.balance END) as vale_balance,
+                        (CASE WHEN el.balance IS NULL THEN 0 ELSE el.balance END) as emp_balance,
+                        (CASE WHEN sl.balance IS NULL THEN 0 ELSE sl.balance END) as sss_balance
+                        ');
+       
+        return Datatables::of($sales)
+            ->make(true);
+        
+    }
+
+    public function loansreportexport(Request $request, PayrollServiceInterface $payrollServiceInstance)
+    {
+        $validator = Validator::make($request->input(), array(
+            'weekno' => 'required',
+            'year' => 'required',
+        ));
+        if ($validator->fails()) {
+            return response()->json([
+                'error'    => true,
+                'messages' => $validator->errors(),
+            ], 422);
+        }
+
+
+        $payrollServiceInstance->exportLoanReport($request->query('year'), $request->query('weekno'));       
     }
 
     public function dailysalesreport(Request $request) {

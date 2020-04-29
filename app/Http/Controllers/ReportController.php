@@ -227,7 +227,8 @@ class ReportController extends Controller
                 .($this->isNotDraftOrderedDelivered($orders->order_status_id) ? '' : 
                     ('<option value="'.OrderStatus::Delivered.'" '.($orders->order_status_id == OrderStatus::Delivered ? "selected" : "").' >Delivered</option>'))
                 .'<option value="'.OrderStatus::Completed.'" '.($orders->order_status_id == OrderStatus::Completed ? "selected" : "").' >Completed</option>'
-                .'<option value="'.OrderStatus::Void.'" '.($orders->order_status_id == OrderStatus::Void ? "selected" : "").' >Cancelled</option>'
+                .(!session("isAdmin") ? "" :
+                    '<option value="'.OrderStatus::Void.'" '.($orders->order_status_id == OrderStatus::Void ? "selected" : "").' >Cancelled</option>')
                 .'</select>'.$update_action_button;
         }
     }

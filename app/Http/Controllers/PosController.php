@@ -45,7 +45,7 @@ class PosController extends Controller
                 return $order->rider_firstname." ".$order->rider_lastname;
             })
             ->addColumn('order_status', function (Order $order) {
-                return OrderStatus::getName($order->order_status_id);
+                return $order->order_status_id == "0" ? "Cancelled" : OrderStatus::getName($order->order_status_id);
             })
             ->addColumn('payment_status', function (Order $order) {
                 return PaymentStatus::getName($order->payment_status_id);
@@ -105,9 +105,9 @@ class PosController extends Controller
         }
         else {
         return '<select class="order_action"  data-id="'.$orders->id.'">'
-                .'<option value="'.OrderStatus::Void.'" '.($orders->order_status_id == OrderStatus::Void ? "selected" : "").' >Void</option>'
-                .'<option value="'.OrderStatus::Ordered.'" '.($orders->order_status_id == OrderStatus::Ordered ? "selected" : "").' >Processing</option>'
-                .'<option value="'.OrderStatus::Delivered.'" '.($orders->order_status_id == OrderStatus::Delivered ? "selected" : "").' >Delivering</option>'
+                .'<option value="'.OrderStatus::Void.'" '.($orders->order_status_id == OrderStatus::Void ? "selected" : "").' >Cancelled</option>'
+                .'<option value="'.OrderStatus::Ordered.'" '.($orders->order_status_id == OrderStatus::Ordered ? "selected" : "").' >Ordered</option>'
+                .'<option value="'.OrderStatus::Delivered.'" '.($orders->order_status_id == OrderStatus::Delivered ? "selected" : "").' >Delivered</option>'
                 .'<option value="'.OrderStatus::Completed.'" '.($orders->order_status_id == OrderStatus::Completed ? "selected" : "").' >Completed</option>'
                 .'</select>';
         }

@@ -13,5 +13,6 @@ class MovementType extends BasicEnum
     const Adjustment = 40;
     const Lost = 50;
     const Destroyed = 60;
+    const CancelledOrder = 70;
     
 }

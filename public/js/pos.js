@@ -356,7 +356,7 @@ var save_order = function() {
         initialize_product_section($order_status_id);
         $('#order_detail_id_label').html(d.data.id);
         
-        alert('saved ' + d.data.id);
+        alert('saved ');
         _orderDt.ajax.reload();
     }, function() {
         //error
@@ -457,6 +457,13 @@ var load_order = function(data) {
     select_branch(data.branch_id);
    load_order_item(data.order_items);
    initialize_product_section(data.order_status_id);
+   if ((window.isAdmin && data.order_status_id != "40" && data.order_status_id != "0") || data.order_status_id == "10") {
+       $('#add_product_section').show();
+   }
+   else
+        $('#add_product_section').hide();
+
+
    console.log(data);
    //alert( data[0] +"'s salary is: "+ data[ 5 ] );
 }
@@ -495,7 +502,7 @@ var initialize_product_section = function(status) {
     var add_product_section = $('#add_product_section');
     var product_remove = $('.product_remove');
  
-    if (status <= 10) {
+    if (status <= 10 && status != 0) {
         add_product_section.show();
         product_remove.show();
     }
@@ -510,6 +517,11 @@ var initialize_select_status = function(status) {
     status = parseInt(status);
     var select_status = $('#orderdetail_status');
     select_status.empty();
+    if (status == 0) {
+        select_status.append($('<option>', { value: 0, text: 'CANCELLED'}));
+        return;        
+    }
+
     if (status <= 10) {
         select_status.append($('<option>', { value: 10, text: 'DRAFT'}));        
     }
@@ -522,7 +534,7 @@ var initialize_select_status = function(status) {
     if (status <= 40) {
         select_status.append($('<option>', { value: 40, text: 'COMPLETED'}));
     }
-    if (window.isAdmin && status >= 20){
+    if (window.isAdmin){
         select_status.append($('<option>', { value: 0, text: 'CANCELLED'}));
     }
 

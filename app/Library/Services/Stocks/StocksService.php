@@ -26,6 +26,23 @@ class StocksService implements StocksServiceInterface
 
     }
 
+    public function cancelledOrder($orderId)
+    {       
+        $orderItems = OrderItem::with('stock')
+        ->where('order_id', $orderId)
+        ->get();
+
+        foreach ($orderItems as $item) {
+            $this->moveStocks($item->stock_id,  // 
+                    0,                          //from
+                    $item->stock->branch_id,    //to
+                    $item->stock->current_stock, 
+                    $item->quantity,
+                    MovementType::CancelledOrder);
+        }
+
+    }
+
     public function moveStocks($stock_id, $from_id, $to_id, $qty_current, $qty_change, $type) {
             
             if ($type == MovementType::Sold || $type == MovementType::Transfer

@@ -144,6 +144,9 @@ class OrderController extends Controller
         if ($data->order_status_id  == OrderStatus::Completed) {
             $stocksServiceInstance->completedOrder($data->id);
         }
+        if ($data->order_status_id  == OrderStatus::Void) {
+            $stocksServiceInstance->cancelledOrder($data->id);
+        }
 
         return response()->json([
             'error' => false,
@@ -187,7 +190,7 @@ class OrderController extends Controller
             }
         }
 
-         $stocksServiceInstance->completedOrder($id);
+         //$stocksServiceInstance->completedOrder($id);
 
         return response()->json([
             'error' => false,

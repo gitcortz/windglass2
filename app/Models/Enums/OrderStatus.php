@@ -11,5 +11,4 @@ class OrderStatus extends BasicEnum
     const Ordered = 20;
     const Delivered = 30;
     const Completed = 40;
-    
 }

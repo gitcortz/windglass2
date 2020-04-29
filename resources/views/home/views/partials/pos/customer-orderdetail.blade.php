@@ -28,10 +28,7 @@
             <label for="inputEmail3" class="col-sm-3 control-label">Order Status :</label>
             <div class="col-sm-5 form-group-sm ">
                 <select class="form-control form-control-sm" id="orderdetail_status" name="order_status_id">
-                    <option value="10">DRAFT</option>
-                    <option value="20">ORDERED</option>
-                    <option value="30">DELIVERED</option>
-                    <option value="40">CLOSED</option>
+                   
                 </select>
             </div>
             <div class="col-sm-2">
@@ -56,16 +53,8 @@
             </tr>
             </tbody>
         </table>
-        <div class="form-group" style="background: #aaa; padding:2px 0px">
-            <label for="orderdetail_branch" class="col-sm-3 control-label"> Location :</label>
-            <div class="col-sm-5 form-group-sm">
-                <select class="form-control" id="orderdetail_branch" name="branch_id">                  
-                </select>
-            </div>
-            <div class="col-sm-2">
-                <button type="button" id="order-detail-update-location" class="btn btn-primary btn-sm">Update Location</button>
-            </div>
-        </div>
+        
+        <input type="hidden" id="orderdetail_branch_id" name="orderdetail_branch_id" />                  
         <div id="order-section-2" >
         <div class="form-group" style="padding:10px 0px" id="add_product_section">
             <div class="col-sm-7">
@@ -78,7 +67,7 @@
             <div class="col-sm-2">
                 <div class="form-group-sm">
                     <label for="name">Qty</label>
-                    <input type="number" class="form-control form-control-sm" min="1" id="orderdetail_qty" name="quantity" 
+                    <input type="number" class="form-control form-control-sm" min="1" id="orderdetail_qty" value="1" name="quantity" 
                         required >
                 </div>
             </div>
@@ -136,8 +125,8 @@
             </div>
         </div>
         <div class="box-footer1" id="order-detail-footer">
-            <button type="button" class="btn btn-primary pull-right" id="orderdetail_save">Save</button>
-            <button type="button" class="btn btn-primary pull-right" id="orderdetail_print">Print</button>
+            <button type="button" class="btn btn-primary pull-right" id="orderdetail_print">Print</button>            
+            <button type="button" class="btn btn-primary pull-right" style="margin-right:10px;" id="orderdetail_save">Save</button>
         </div>
 
 

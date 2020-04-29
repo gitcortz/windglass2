@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\OrderBringIn;
 use App\Models\Enums\OrderStatus;
 use App\Library\Services\Stocks\StocksServiceInterface;
 use Datatables;
@@ -164,8 +165,10 @@ class OrderController extends Controller
     {
         $data1 = json_decode($request->getContent(), true);
         $data = Order::find($id);
-        if ($data1["order_status_id"]) {
-            $data->order_status_id = $data1["order_status_id"];
+        if ($data1["order_status_id"] ||$data1["rider_id"] ) {
+
+            if ($data1["order_status_id"] != '')
+                $data->order_status_id = $data1["order_status_id"];
             
             if ($data1["rider_id"] != '')
                 $data->rider_id = $data1['rider_id'];
@@ -174,8 +177,9 @@ class OrderController extends Controller
         }
 
         if ($data1["cylinders"]) {
+            $affectedRows = OrderBringIn::where('order_id', '=', $id)->delete();
             foreach ($data1["cylinders"] as $item) {
-                \App\Models\OrderBringIn::create([
+                OrderBringIn::create([
                     'order_id' => $id,
                     'stock_id' => $item["id"],
                     'quantity' => $item["quantity"],
@@ -196,4 +200,34 @@ class OrderController extends Controller
       
     }
 
+    public function search(Request $request) {
+
+        if($request->keyword != "") {
+            $customers = DB::table('customers')
+                ->leftJoin('cities', 'customers.city_id', '=', 'cities.id')
+                -> where('customers.name', 'LIKE', '%'.$request->keyword.'%')
+                -> orWhere('address', 'LIKE', '%'.$request->keyword.'%')
+                -> orWhere('cities.name', 'LIKE', '%'.$request->keyword.'%')
+                ->select('customers.*', 'cities.name as city');
+        }
+        else { 
+            $customers = DB::table('customers')
+                ->leftJoin('cities', 'customers.city_id', '=', 'cities.id')
+                ->select('customers.*', 'cities.name as city');
+        }
+
+
+        return Datatables::of($customers)
+                ->addColumn('contact', function ($customer) {
+                    return ($customer->phone ? $customer->phone.' / ' : '').$customer->mobile;
+                })               
+                ->addColumn("action_btns", function($customers) {
+                    return '<a href="#" class="btn btn-info btn-sm" action="select" data-id="'.$customers->id.'">Select</a>';
+                })
+                ->rawColumns(["action_btns"])
+                ->make(true);             
+  
+    }
+
+    
 }

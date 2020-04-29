@@ -6,7 +6,7 @@
   <!-- Content Header (Page header) --> 
   <section class="content-header">
     <h1 style="display:inline">
-      POS      
+      POS
     </h1>
     <ol class="breadcrumb" style="display:none">
       <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -27,6 +27,7 @@
         </div>            
     </div><!-- /.row -->
     </section>
+    <input type="hidden" id="default_branch" value="{{ session('branch_id') }}" />
     <!-- /.content -->  
     
   </div>  

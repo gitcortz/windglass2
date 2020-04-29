@@ -28,6 +28,8 @@ class PosController extends Controller
         $matchThese = [];
         if($request->customer_id)
             $matchThese['customer_id'] = $request->customer_id;
+        if($request->order_id)
+            $matchThese['orders.id'] = $request->order_id;
 
         //$stocks = Stock::where($matchThese)->with('product', 'branch')->select('stocks.*');;
         $sales = Order::where($matchThese)->with('order_items')->with('order_items.stock')->with('order_items.stock.product')

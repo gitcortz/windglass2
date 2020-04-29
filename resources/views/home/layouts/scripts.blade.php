@@ -37,6 +37,14 @@
 <script src="{{ asset('assets/js/jquery.serializejson.min.js') }}"></script>
 <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
 <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
+<script>
+    @auth
+        window.isAdmin = {!! json_encode(Auth::user()->hasRole('admin'), true) !!};
+    @else
+        window.isAdmin = false;
+    @endauth
+    window.branchId = {!! json_encode(Session::get('branch_id'), true) !!}; 
+</script>
 <script src="{{ asset('assets/js/common.js') }}"></script>
 @section("scripts")
 @show

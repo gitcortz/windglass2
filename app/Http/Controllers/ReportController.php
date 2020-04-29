@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Branch;
 use App\Models\Payroll;
+use App\Models\Order;
+use App\Models\Enums\OrderStatus;
 use App\Library\Services\Payroll\PayrollServiceInterface;
 use App\Models\Enums\PaymentStatus;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +26,10 @@ class ReportController extends Controller
 
     public function loansindex(){ 
         return view("home.views.reports.loans");
+    }
+
+    public function pendingorderindex(){ 
+        return view("home.views.reports.pendingorder");
     }
 
     public function loansreport(Request $request) {
@@ -112,6 +118,36 @@ class ReportController extends Controller
         return $pdf->stream();
     }
 
+    public function pendingorderreport(Request $request) {
+        $branch_id = $request->id;
+        
+        $sales = Order::with('order_items')->with('order_items.stock')->with('order_items.stock.product')
+            ->with('order_bringins')->with('order_bringins.stock')->with('order_bringins.stock.product')
+            ->join('customers', 'orders.customer_id', '=', 'customers.id')
+            ->leftJoin('employees', 'orders.rider_id', '=', 'employees.id')
+            ->select(['orders.*', 'customers.name as customername', 'employees.first_name as rider_firstname', 
+                    'employees.last_name as rider_lastname'])
+            ->where("branch_id",  $branch_id)
+            ->whereNotIn("order_status_id", [OrderStatus::Completed, OrderStatus::Void]);
+
+        return Datatables::of($sales)
+                ->addColumn('rider', function (Order $order) {
+                    return $order->rider_firstname." ".$order->rider_lastname;
+                })
+                ->addColumn('order_status', function (Order $order) {
+                    return OrderStatus::getName($order->order_status_id);
+                })
+                ->addColumn('payment_status', function (Order $order) {
+                    return PaymentStatus::getName($order->payment_status_id);
+                })
+                ->addColumn("action_btns", function($orders) {
+                    return $this->session_action_button($orders); 
+                })
+                
+                ->rawColumns(["action_btns"])
+                ->make(true);
+    }
+
     function get_sales_data($start, $end)
     {
 
@@ -170,6 +206,42 @@ class ReportController extends Controller
         }
         $output .= '</table>';
         return $output;
+    }
+
+    private function session_action_button($orders) {
+        
+        if ($orders->order_status_id == OrderStatus::Completed) {
+            return '<div>Complete</div>';
+        }
+        else {
+            $update_action_button = '';
+            if ($orders->order_status_id == OrderStatus::Delivered){
+                $update_action_button = $this->update_action_button($orders->id);
+            }
+
+            return '<select class="order_action"  data-id="'.$orders->id.'" onfocus="this.setAttribute(\'prev\',this.value);">'                
+                .($orders->order_status_id != OrderStatus::Draft ? '' : 
+                    ('<option value="'.OrderStatus::Draft.'" '.($orders->order_status_id == OrderStatus::Draft ? "selected" : "").' >Draft</option>'))
+                .($this->isNotDraftOrdered($orders->order_status_id) ? '' : 
+                    ('<option value="'.OrderStatus::Ordered.'" '.($orders->order_status_id == OrderStatus::Ordered ? "selected" : "").' >Ordered</option>'))                    
+                .($this->isNotDraftOrderedDelivered($orders->order_status_id) ? '' : 
+                    ('<option value="'.OrderStatus::Delivered.'" '.($orders->order_status_id == OrderStatus::Delivered ? "selected" : "").' >Delivered</option>'))
+                .'<option value="'.OrderStatus::Completed.'" '.($orders->order_status_id == OrderStatus::Completed ? "selected" : "").' >Completed</option>'
+                .'<option value="'.OrderStatus::Void.'" '.($orders->order_status_id == OrderStatus::Void ? "selected" : "").' >Cancelled</option>'
+                .'</select>'.$update_action_button;
+        }
+    }
+
+    private function update_action_button($orders_id) {
+        $order = "pending.update_modal(".$orders_id.")";
+        return "<a href='javascript:void(0)' onclick='".$order."' class='btn btn-info btn-xs remove-empty'>...</a>";
+    }
+
+    private function isNotDraftOrdered($status_id) {
+        return $status_id != OrderStatus::Ordered && $status_id != OrderStatus::Draft;
+    }
+    private function isNotDraftOrderedDelivered($status_id) {
+        return $status_id != OrderStatus::Ordered && $status_id != OrderStatus::Draft &&  $status_id != OrderStatus::Delivered ;
     }
 
 }

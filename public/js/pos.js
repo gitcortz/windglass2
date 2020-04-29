@@ -7,14 +7,20 @@ var _orderdetails;
 var _customerdetail;
 var _products;
 var _orderdata;
+var _branch_id;
 
 $(document).ready(function() {
     
     //search_customer();
     init_dropdown();
-
+    initialize_select_status(10);
+    _branch_id = $('#default_branch').val();
+    
     $('#pos_customer_btnsearch').click(function() {
         search_customer();
+    });
+    $('#pos_order_btnsearch').click(function() {
+        search_order();
     });
     $('#customer_search').keydown(function(e) {
         if (e.keyCode == 13) {
@@ -52,8 +58,18 @@ $(document).ready(function() {
             return entry.stock_id == product_id;
         });
 
-        if (exists.length > 0)
-            return;
+        if (exists.length > 0) {
+            //remove if exists
+            var a = $("#orderdetail_productTable").find("[data-id='"+exists[0].stock_id+"']");  
+            var tr = a.closest('tr');
+            jQuery(_orderdetails).each(function (index){
+                if(_orderdetails[index].stock_id == exists[0].stock_id){
+                    _orderdetails.splice(index,1); // This will remove the object that first name equals to Test1
+                    return false; // This will stop the execution of jQuery each loop.
+                }
+            });
+            tr.remove();          
+        }
 
         var data = _products.filter(function (entry) {
             return entry.id == product_id;
@@ -79,6 +95,7 @@ $(document).ready(function() {
             tbody.append(productRow);
             _orderdetails.push(orderdetail);
             update_order_totals();
+            
         }
     });
     $('#orderdetail_productTable').on('click', 'tbody tr a[action="remove"]', function(event){
@@ -89,7 +106,6 @@ $(document).ready(function() {
             console.log(_orderdetails[index].stock_id + ' = ' + product_id);
             if(_orderdetails[index].stock_id == product_id){
                 _orderdetails.splice(index,1); // This will remove the object that first name equals to Test1
-                console.log(_orderdetails);
                 return false; // This will stop the execution of jQuery each loop.
             }
         });
@@ -154,19 +170,20 @@ function select_branch(branch_id, func) {
                 for(var i=0; i<_products.length; i++){
                     $("#orderdetail_product").append("<option value='"+_products[i].id+"'>"+_products[i].product.name+"</option>"); 
                 }
+                $('#order-section-2').show();
+                $('#order-detail-footer').show();
 
                 if (func)
                     func();                
             }, function(data) {
                 console.log(data);
             });
-
-    $('#order-section-2').show();
-    $('#order-detail-footer').show();
 }
 
 var search_customer = function() {
     keyword = $('#customer_search').val().trim();
+    _customerContainer.parent().show();
+
     _customerContainer.DataTable().destroy();       
     _customerDt = _customerContainer.DataTable({
         processing: true,
@@ -188,10 +205,23 @@ var search_customer = function() {
     _customerContainer.off('click'); 
     _customerContainer.on('click', 'tbody tr a[action="select"]', function(event){
         select_customer($(this).data("id"));
+        select_branch(_branch_id, function() {
+            var tbody = $('#orderdetail_productTable tbody');
+            tbody.empty();
+            _orderdetails = [];
+            update_order_totals();
+        });
         $('#customer-search-box').boxWidget('collapse');
         $('#orderdetail_branch').val("");
     });
 }
+
+var search_order = function() {
+    keyword = $('#order_search').val().trim();
+    _customerContainer.parent().hide();
+    display_order_table( {order_id : keyword});
+}
+
 
 var load_customer = function(id, func) {
     ajaxcall("GET", "/customers/"+id, null, 
@@ -222,6 +252,12 @@ var load_customer = function(id, func) {
     });
 }
 
+var open_order_details = function() {
+  
+   $('#order-detail-box').boxWidget('expand');
+  
+}
+
 var update_order_totals = function() {
     console.log('update_order_totals');
     var total_price = 0;
@@ -243,7 +279,7 @@ var update_order_totals = function() {
 
 var select_customer = function(id) {
     load_customer(id, function() {
-        init_order_table();
+        display_order_table({customer_id : _customerdetail.id});
         $('#order-section-2').hide();
         $('#order-detail-footer').hide();
         $('#order-detail-box').boxWidget('expand');
@@ -285,13 +321,17 @@ var save_order = function() {
     var $customer = _customerdetail.id;
     var $subtotal = $('#orderdetail_totalprice').val(); 
     var $discount = $('#orderdetail_totaldiscount').val();
-    var $branch_id =  $('select[name="branch_id"').val();
+    var $branch_id = $('#orderdetail_branch_id').val();
     var $rider_id =  $('select[name="rider_id"').val();
     var $payment_method_id = 10;
     var $order_status_id = $("#orderdetail_status").val();
     var $payment_status_id = 20; //Paid
     var $notes = "";
     var $id = $("#orderdetail_id").val() == "" ? 0 :  $("#orderdetail_id").val();
+    if ($id == 0)
+        $branch_id = _branch_id;
+    
+    console.log($branch_id);
 
     _orderdata = {
         "id": $id,
@@ -309,12 +349,14 @@ var save_order = function() {
     console.log(_orderdata);
 
     
-    ajaxcall("POST", "/orders", _orderdata, function() {
+    ajaxcall("POST", "/orders", _orderdata, function(d) {
         //success
         //show_payment_complete_modal();
         initialize_select_status($order_status_id);
         initialize_product_section($order_status_id);
-        alert('saved');
+        $('#order_detail_id_label').html(d.data.id);
+        
+        alert('saved ' + d.data.id);
         _orderDt.ajax.reload();
     }, function() {
         //error
@@ -352,7 +394,7 @@ var load_order_item = function(order_items) {
     update_order_totals();
 }
 
-var init_order_table = function() { 
+var display_order_table = function(searchdata) { 
     if (_orderContainer.length > 0) {
         _orderDt = _orderContainer.DataTable().destroy();
         _orderDt = _orderContainer.DataTable({
@@ -361,7 +403,7 @@ var init_order_table = function() {
             searching: false,
            ajax :  {
                 url: "/pos/list/",
-                data : {customer_id : _customerdetail.id}             
+                data : searchdata
             },
             columns :  [
                 {data: "id", name : "id"},
@@ -374,24 +416,29 @@ var init_order_table = function() {
             order: [[ 0, "desc" ]],           
             drawCallback: function( settings, json) {
                 $('.order_action').on('change', function() {
-                    if ($(this).find(":selected").val() == "40"){
-                        init_rider();
-                        init_empty_cylinder();
-                        $('#order_update_id').val($(this).data("id"));
-                        $('#order_update_status_id').val($(this).find(":selected").val());
-                        _updateModal.modal('show');
-                        return;
+                    if (window.confirm("Are you sure you want to update the status?")) { 
+                        if ($(this).find(":selected").val() == "40"){
+                            init_rider();
+                            init_empty_cylinder();
+                            $('#order_update_id').val($(this).data("id"));
+                            $('#order_update_status_id').val($(this).find(":selected").val());
+                            _updateModal.modal('show');
+                            return;
+                        }
+                        update_order_status($(this).data("id"), $(this).find(":selected").val());
                     }
-                    update_order_status($(this).data("id"), $(this).find(":selected").val());
                 });
-            }
+            },
         });
 
         _orderContainer.off('click');
         _orderContainer.on('click', 'tbody tr a[action="view"]', function(event){
-            //var id = $(this).data("id");
             var data = _orderDt.row($(this).parents('tr')).data();
+            if (!_customerdetail || data.customer_id != _customerdetail.id)
+                load_customer(data.customer_id);
             load_order(data);
+            open_order_details();
+
         });
 
     }
@@ -401,7 +448,7 @@ var load_order = function(data) {
     initialize_select_status(data.order_status_id);
     _formOrderDetail.find('input[name="orderdetail_id"]').val(data.id);
     _formOrderDetail.find('input[name="order_status_id"]').val(data.order_status_id);
-    _formOrderDetail.find('select[name="branch_id"]').val(data.branch_id);
+    _formOrderDetail.find('input[name="orderdetail_branch_id"]').val(data.branch_id);
     _formOrderDetail.find('select[name="rider_id"]').val(data.rider_id);
     $('#order-detail-update-location').hide();
     $('#orderdetail_branch').prop("disabled", true);
@@ -424,7 +471,7 @@ var reset_order = function() {
     $('#orderdetail_id').val("");
     $('#orderdetail_rider').val("");
     $('#orderdetail_product').val("");
-    $('#orderdetail_qty').val("");
+    $('#orderdetail_qty').val("1");
     $('#order_detail_id_label').html("new");
     $('#order_detail_date_label').html(formatDate(new Date()));
     $('#order-detail-update-location').show();
@@ -433,8 +480,8 @@ var reset_order = function() {
     tbody.empty();
     _orderdetails = [];
     update_order_totals();
-    $('#order-section-2').hide();
-    $('#order-detail-footer').hide();
+    //$('#order-section-2').hide();
+    //$('#order-detail-footer').hide();
 }
 
 var print_order = function() {
@@ -459,6 +506,7 @@ var initialize_product_section = function(status) {
     
 }
 var initialize_select_status = function(status) {
+     
     status = parseInt(status);
     var select_status = $('#orderdetail_status');
     select_status.empty();
@@ -466,7 +514,7 @@ var initialize_select_status = function(status) {
         select_status.append($('<option>', { value: 10, text: 'DRAFT'}));        
     }
     if (status <= 20) {
-        select_status.append($('<option>', { value: 20, text: 'ORDERED'}));        
+        select_status.append($('<option>', { value: 20, text: 'ORDERED'}));                        
     }
     if (status <= 30) {
         select_status.append($('<option>', { value: 30, text: 'DELIVERED'}));
@@ -474,6 +522,10 @@ var initialize_select_status = function(status) {
     if (status <= 40) {
         select_status.append($('<option>', { value: 40, text: 'COMPLETED'}));
     }
+    if (window.isAdmin && status >= 20){
+        select_status.append($('<option>', { value: 0, text: 'CANCELLED'}));
+    }
+
 }
 
 var formatDate = function(date) {

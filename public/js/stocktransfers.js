@@ -2,6 +2,7 @@ var _modal_status = $('#modal-status');
 var _form_status = $('#form-status');
 $(document).ready(function() {
     var crud = new Crud();
+    crud.set_datatableData({branch_id : window.branchId});
     crud.init(_component, 
         [
             {data: "id", name : "id"},

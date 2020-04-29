@@ -8,6 +8,8 @@
 <div class="box-header with-border">
     <h3 class="box-title">Order Details</h3>      
     <div class="box-tools pull-right" >
+         <a id="btn-pickup-order" href="javascript:void(0)" class="btn btn-primary btn-sm" 
+              data-toggle="modal"><span>pick-up</span></a>
         <a id="btn-reset-order" href="javascript:void(0)" class="btn btn-primary btn-sm" 
               data-toggle="modal"><span>new order</span></a>
         <button type="button" style="display:none" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>            

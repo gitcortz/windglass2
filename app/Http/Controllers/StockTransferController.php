@@ -18,8 +18,15 @@ class StockTransferController extends Controller
         return view("home.views.stocktransfers");
     }
 
-    public function list() {
-        $stocktransfers = StockTransfer::with('from_branch', 'to_branch')->select('stock_transfers.*');;
+    public function list(Request $request) {
+        if($request->branch_id) {
+            $stocktransfers = StockTransfer::where('from_branch_id', $request->branch_id)
+                        ->orWhere('to_branch_id', $request->branch_id)
+                        ->with('from_branch', 'to_branch')->select('stock_transfers.*');
+        }
+        else {
+            $stocktransfers = StockTransfer::with('from_branch', 'to_branch')->select('stock_transfers.*');
+        }
         return Datatables::of($stocktransfers)
                 ->addColumn('from_branch', function (StockTransfer $stocktransfer) {
                     return $stocktransfer->from_branch ? $stocktransfer->from_branch->name : '';

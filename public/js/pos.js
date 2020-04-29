@@ -28,6 +28,10 @@ $(document).ready(function() {
             search_customer();
         }        
     });
+    $('#btn-pickup-order').click(function() {
+        pick_up();
+    });
+    
     $('#customer_btnsave').click(function() {
         save_customer();
     });
@@ -199,6 +203,7 @@ var search_customer = function() {
             {data: "contact", name : "contact"},
             {data: "action_btns", name : "action_btns"},
         ],
+        iDisplayLength: 5,
         order: [[ 0, "desc" ]],    
         dom: '<"top">rt<"bottom"lip><"clear">'       
     });
@@ -216,12 +221,27 @@ var search_customer = function() {
     });
 }
 
+var pick_up = function(){
+    select_customer(1);
+    select_branch(_branch_id, function() {
+        var tbody = $('#orderdetail_productTable tbody');
+        tbody.empty();
+        _orderdetails = [];
+        update_order_totals();
+    });
+    $('#customer-search-box').boxWidget('collapse');
+    $('#orderdetail_branch').val("");
+}
+
 var search_order = function() {
     keyword = $('#order_search').val().trim();
     _customerContainer.parent().hide();
     display_order_table( {order_id : keyword});
 }
 
+var nullToStr = function(str) {
+    return !str || 0 === str.length ? '' : str;
+}
 
 var load_customer = function(id, func) {
     ajaxcall("GET", "/customers/"+id, null, 
@@ -240,8 +260,8 @@ var load_customer = function(id, func) {
         form.find("#city").val(data.city_id);
         
         var tbody = $('#orderdetail_customerTable tbody');
-        var customerRow = "<tr><td>"+data.name+"</td><td>" + data.address + "</td><td>" 
-                        + data.phone + " / " + data.mobile + "</td><td>"+data.discount+"</td></tr>";
+        var customerRow = "<tr><td>"+data.name+"</td><td>" + nullToStr(data.address) + "</td><td>" 
+                        + nullToStr(data.phone) + " / " + nullToStr(data.mobile) + "</td><td>"+nullToStr(data.discount)+"</td></tr>";
         tbody.empty();
         tbody.append(customerRow);    
         if (func)

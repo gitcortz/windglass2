@@ -18,10 +18,7 @@
               <div class="alert alert-danger d-none" id="error-bag">
                 <ul id="error-list"></ul>
               </div>
-              <div class="form-group">
-                <label for="branch">Branch</label>
-                <select class="form-control" id='branch' name='branch_id'></select>
-              </div>
+              <input type="hidden" class="form-control" id='branch' name='branch_id'></select>
               <div class="form-group">
                 <label for="product">Product</label>
                 <select class="form-control" id='product' name='product_id'></select>

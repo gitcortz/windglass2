@@ -58,12 +58,15 @@ var Crud = (function ($) {
 
         var init_datatable = function() {
             if (_datatable_container.length > 0) {
+                console.log(_datatable_data);
                 _datatable = _datatable_container.DataTable({
                     processing: true,
                     serverSide: true,
-                    ajax : "/"+_component+"/all",
+                    ajax :  {
+                        url: "/"+_component+"/all",
+                        data: _datatable_data                           
+                    },
                     columns : _columns,
-                    data: _datatable_data,
                     order: [[ 0, "desc" ]],    
                     dom: '<"top">rt<"bottom"lip><"clear">'       
                 });
@@ -216,6 +219,7 @@ var Crud = (function ($) {
             get_datatable : get_datatable_container,
             updateSuccess: updateSuccess,
             updateError : updateError,
+            set_datatableData : set_datatableData,
             set_addModalCallBack : set_addModalCallBack,
             set_btnSave : set_btnSave,
             set_modalAddUpdate : set_modalAddUpdate,

@@ -63,8 +63,27 @@ class StockController extends Controller
             ], 422);
         }
 
-        $data = Stock::create($request->all());
+        $exists = Stock::where('branch_id', $request->branch_id)
+                        ->where('product_id', $request->product_id)->get();
+        if ($exists){
+            return response()->json([
+                'error'    => true,
+                'messages' => ['stock' => ['stock already exists.']],
+            ], 422);
+        }
+        //"stock already exists"
 
+        if (!$request->current_stock);
+            $request->current_stock = $request->initial_stock;
+           
+        $data = Stock::create([
+            'branch_id' => $request->branch_id, 
+            'product_id' => $request->product_id,
+            'initial_stock' => $request->initial_stock,
+            'current_stock' => $request->current_stock,
+            'stock_status_id'=>$request->stock_status_id,
+        ]);
+        
         return response()->json([
             'error' => false,
             'data'  => $data,

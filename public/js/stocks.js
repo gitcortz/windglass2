@@ -11,10 +11,16 @@ var _stock_id = 0;
 
 var crud = new Crud();
 $(document).ready(function() {
+    crud.set_datatableData({branch_id : window.branchId});
+    crud.set_addModalCallBack(function() {
+        $('.stockName').html("");
+        crud.form_control.find("input[name=branch_id]").val(window.branchId);
+        $('#navtab_2').hide();
+        $('.nav-tabs a[href="#tab_1"]').tab('show');
+    });
     crud.init(_component, 
         [
             {data: "id", name : "id"},
-            {data: "branch", name : "branch"},
             {data: "product", name : "product"},
             {data: "producttype", name : "producttype"},
             {data: "initial_stock", name : "initial_stock"},
@@ -36,8 +42,9 @@ $(document).ready(function() {
             form.find("input[name=initial_stock]").prop( "disabled", true );
             form.find("input[name=current_stock]").prop( "disabled", true );
             $('.stockName').html(form.find("#product option:selected").html());
+            $('#navtab_2').show();            
             init_mv(data.id);
-            _stock_id = data.id;
+            _stock_id = data.id; 
             _branch_id = data.branch_id;
         }
     );
@@ -79,7 +86,7 @@ var updateError = function(data) {
 }
 
 function init_dropdown(crud) {
-    crud.ajaxcall("GET", "/branches/all", null, 
+    /*crud.ajaxcall("GET", "/branches/all", null, 
     function(data) {
         var branches = data.data;
         $("#branches").append("<option value=''>-- All --</option>"); 
@@ -94,7 +101,7 @@ function init_dropdown(crud) {
     $('#branches').change(function(){
         var branch_id = $('#branches').val();   
         crud.fetch_data({branch_id : branch_id});
-    });
+    });*/
 
     crud.ajaxcall("GET", "/products/all", null, 
     function(data) {

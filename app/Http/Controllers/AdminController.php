@@ -46,7 +46,8 @@ class AdminController extends Controller
             if ($this->isUserHasBranch($logged_user_details->id, $branch_id)) {
                 session(["is_active" => 1]);
                 session(["user_details" => $logged_user_details]);
-                session(["branch_id" => $branch_id]);
+                session(["branch_id" => $branch_id]);                
+                session(["branch_name" => Branch::find($branch_id)->name]);
                 return redirect("/");
             }
             else {

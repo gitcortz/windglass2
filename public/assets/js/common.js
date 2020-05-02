@@ -48,3 +48,16 @@ var uploadcall = function(type, url, data, success, error) {
         error: error
     });
 };
+
+var formatDateYYYYMMDD = function(d){
+    date = [
+        d.getFullYear(),
+        ('0' + (d.getMonth() + 1)).slice(-2),
+        ('0' + d.getDate()).slice(-2)
+      ].join('-');
+    return date;
+}
+
+var toDateOnly = function(d){
+    return d.substring(0, 10);
+}

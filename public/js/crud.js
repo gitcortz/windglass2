@@ -58,7 +58,6 @@ var Crud = (function ($) {
 
         var init_datatable = function() {
             if (_datatable_container.length > 0) {
-                console.log(_datatable_data);
                 _datatable = _datatable_container.DataTable({
                     processing: true,
                     serverSide: true,
@@ -115,15 +114,15 @@ var Crud = (function ($) {
 
         var showDeleteModal = function(id, text) {
             _modal_delete.modal('show');
-            _form_delete.find("#delete-title").html("Delete '" + text + "' (" + id + ")?");
+            _form_delete.find("#delete-title").html("Delete id = " + id + " ?");
             _form_delete.find("input[name=delete_id]").val(id);
         }
 
         var init_events = function() {
-            $('#btn-open-addupdate-modal').click(function() {
+            $('#btn-open-addupdate-modal').click(function() {                
+                showFormModal();
                 if (_addModalCallBack != undefined)
                     _addModalCallBack();
-                showFormModal();
             });
             
             _save_button.click(function() {
@@ -159,8 +158,8 @@ var Crud = (function ($) {
             _datatable_container.on('click', 'tbody tr a[action="delete"]', function(event){
                 var $row = $(this).closest("tr");
                 var data = _datatable.rows($row.index()).data();
-                
-                showDeleteModal(data[0].id, data[0].name);                
+                console.log(data[0]);
+                showDeleteModal(data[0].id, data[0]["name"]);                
             });
         };
 

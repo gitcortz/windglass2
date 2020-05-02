@@ -137,6 +137,17 @@ Route::group(['middleware' => 'not.auth'], function () {
         Route::delete('/{id}', [ 'uses' => 'EmployeeTypeController@destroy', 'as'   => 'employeetypes.destroy',]);
     });
 
+    
+    //Expenses Routes 
+    Route::group(['prefix' => 'expenses'], function () {
+        Route::get('', [ 'uses' => 'ExpenseController@index', 'as' => 'expenses',]);
+        Route::get('/all', [ 'uses' => 'ExpenseController@list', 'as' => 'expenses.list',]);
+        Route::get('/{id}', [ 'uses' => 'ExpenseController@show', 'as' => 'expenses.show',]);
+        Route::post('/', [ 'uses' => 'ExpenseController@store', 'as' => 'expenses.store',]);
+        Route::put('/{id}', [ 'uses' => 'ExpenseController@update', 'as' => 'expenses.update',]);
+        Route::delete('/{id}', [ 'uses' => 'ExpenseController@destroy', 'as'   => 'expenses.destroy',]);
+    });
+
     //Employee Routes 
     Route::group(['prefix' => 'employees'], function () {
         Route::get('', [ 'uses' => 'EmployeeController@index', 'as' => 'employees',]);

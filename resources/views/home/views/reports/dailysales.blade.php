@@ -32,7 +32,7 @@
                       <a id="btn-pdf" href="javascript:void(0)" class="btn btn-danger " ><i class="fa fa-download"></i> <span>download pdf</span></a>
                     </div>
                   </div>
-                </div-->
+                </div>
                 <hr />
                 <!-- /.box-header -->
                 <div class="box-body">

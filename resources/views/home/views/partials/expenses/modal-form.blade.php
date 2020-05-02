@@ -16,7 +16,7 @@
             <div class="input-group date">
               <div class="input-group-addon">
                 <i class="fa fa-calendar"></i>
-              </div>
+              </div> 
               <input class="form-control" id="expense_date" name="expense_date" placeholder="YYYY-MM-DD" type="text"/>
             </div>            
         </div>

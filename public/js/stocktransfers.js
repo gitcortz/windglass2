@@ -1,7 +1,17 @@
 var _modal_status = $('#modal-status');
 var _form_status = $('#form-status');
-$(document).ready(function() {
+$(document).ready(function() { 
     var crud = new Crud();
+    var options={
+        format: 'yyyy-mm-dd',
+        container: "body",
+        todayHighlight: true,
+        autoclose: true,
+    };
+
+    $('#scheduled_date').datepicker(options);
+    $('#received_date').datepicker(options);
+   
     crud.set_datatableData({branch_id : window.branchId});
     crud.init(_component, 
         [
@@ -15,13 +25,20 @@ $(document).ready(function() {
         ], function(data) {
             var form = crud.form_control;
             form.find("input[name=id]").val(data.id);
-            form.find("input[name=scheduled_date]").val(data.scheduled_date);
-            form.find("input[name=received_date]").val(data.received_date);
+            //form.find("input[name=scheduled_date]").val(data.scheduled_date);
+            // /form.find("input[name=received_date]").val(data.received_date);
             form.find("input[name=remarks]").val(data.remarks);
             form.find("#from_branch").val(data.from_branch_id);
             form.find("#to_branch").val(data.to_branch_id);
             form.find("#status").val(data.transfer_status_id);
-          
+            console.log(data.scheduled_date);
+            console.log(data.received_date);
+            if (data.scheduled_date)
+                $('#scheduled_date').datepicker('update', toDateOnly(data.scheduled_date));    
+            if (data.received_date)
+                $('#received_date').datepicker('update', toDateOnly(data.received_date));
+
+            init_detail();
             var list = data.stock_transfer_items;
             for(var i=0; i<list.length; i++){
                 _detail_datatable.row.add([
@@ -48,7 +65,7 @@ $(document).ready(function() {
                 $('.transfer_item_remove').show();
                 form.find(".modal-footer").show();
             }
- 
+            
         }
     );
     crud.set_addModalCallBack(function() {    
@@ -56,6 +73,8 @@ $(document).ready(function() {
         $('#addRow').show();        
         $('.transfer_item_remove').show();
         form.find(".modal-footer").show();
+       
+        init_detail();
     });
 
     crud.get_datatable().on('click', 'tbody tr a[action="transfer"]', function(event){
@@ -97,11 +116,19 @@ $(document).ready(function() {
     crud.set_saveCallBack(function() {        
         var data = $('#form-addupdate').serializeFormToObject();
         
-
         var form = crud.get_form();
         var transfer_items = [];
         var data = _detail_datatable.data().toArray();
-        console.log(form);
+        
+        $('#error-list').empty;
+        if ($("#from_branch").val() == $("#to_branch").val()) {
+            $('#error-bag').show();
+            $('#error-list').append('<li>from branch and to branch should not be the same</li>');
+            return;
+        }
+        else {
+            $('#error-bag').hide();           
+        }
 
         $('#items-error-list').empty;
         if (data.length == 0) {
@@ -143,10 +170,10 @@ $(document).ready(function() {
     
     init_dropdown(crud);
     
-    $(".modal-addupdate").on('show.bs.modal', function (e){
+    /*$(".modal-addupdate").on('show.bs.modal', function (e){
         init_detail();
     });
-
+    */
     
 });
 
@@ -194,13 +221,14 @@ var _detail_counter = 0;
 
 function init_detail() {
     //alert($('#form-addupdate').find("input[name=id]").val());
-
+    console.log("inits");
     if (_detail_datatable) {
         _detail_datatable.clear().draw();
         return;
     }
     
     if (_detail_datatable_container.length > 0) {
+        console.log('display table');
         _detail_datatable = _detail_datatable_container.DataTable({
             processing: true,
             paging: false,

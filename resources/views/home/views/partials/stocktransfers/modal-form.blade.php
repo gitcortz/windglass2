@@ -34,13 +34,22 @@
           <div class="col-md-6">
             <div class="form-group">
                 <label for="address">Scheduled Date</label>
-                <input type="date" class="form-control" id="scheduled_date" name="scheduled_date" 
-                    placeholder="Enter scheduled date">
+                <div class="input-group date">
+                  <div class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                  </div> 
+                  <input class="form-control" id="scheduled_date" name="scheduled_date" placeholder="YYYY-MM-DD" type="text"/>
+                </div>    
             </div>
             <div class="form-group">
                 <label for="address">Recevied Date</label>
-                <input type="date" class="form-control" id="received_date" name="received_date" 
-                    placeholder="Enter received date">
+                <div class="input-group date">
+                  <div class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                  </div> 
+                  <input class="form-control" id="received_date" name="received_date" placeholder="YYYY-MM-DD" type="text"/>
+                </div>
+                
             </div>
             <div class="form-group" style="display:none">
                 <label for="status">Status</label>

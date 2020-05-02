@@ -6,7 +6,7 @@ $(document).ready(function() {
       todayHighlight: true,
       autoclose: true,
     };
-    
+     
     $('#expense_date').datepicker(options);
     $('#start_date').datepicker(options);
     $('#start_date').datepicker('update', formatDateYYYYMMDD(new Date()));

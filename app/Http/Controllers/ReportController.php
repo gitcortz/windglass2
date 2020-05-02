@@ -90,8 +90,9 @@ class ReportController extends Controller
     public function dailysalesreport(Request $request) {
         $start = new Carbon(date('Y-m-d', strtotime($request->query('date'))));
         $end = $start->copy()->addDays(1);
+        $branch_id = $request->query('branch_id');
         
-        $report = $this->get_sales_data($start, $end);
+        $report = $this->get_sales_data($start, $end, $branch_id);
        
         return Datatables::of($report)
                 ->addColumn('total', function ($report) {
@@ -111,7 +112,11 @@ class ReportController extends Controller
     {
         $start = new Carbon(date('Y-m-d', strtotime($request->query('date'))));
         $end = $start->copy()->addDays(1);
-        $report = $this->get_sales_data($start, $end);
+        $branch_id = $request->query('branch_id');
+        if (session("branch_id") != $branch_id)
+            $branch_id = 0;
+
+        $report = $this->get_sales_data($start, $end, $branch_id);
 
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($this->convert_sales_data_to_html($report));
@@ -148,7 +153,7 @@ class ReportController extends Controller
                 ->make(true);
     }
 
-    function get_sales_data($start, $end)
+    function get_sales_data($start, $end, $branch_id)
     {
 
         $report = DB::table('orders')
@@ -161,6 +166,7 @@ class ReportController extends Controller
                     'order_items.discount', 'orders.payment_status_id')
             ->where('order_date', '>=', $start)
             ->where('order_date', '<=', $end)
+            ->where('orders.branch_id', '=', $branch_id)
             ->get();
         return $report;
     }

@@ -13,9 +13,8 @@ function fetch_data() {
             bFilter: false,
             ajax : {
                 url: "/"+_component+"/dailysalesreport",
-                "data": function(d){
-                    d.date = $("#start_date").val();
-                 }
+                data: { date : $("#start_date").val(),
+                        branch_id : window.branchId }
             },
             data : { date: $('#start_date').val() },
             columns : [
@@ -49,7 +48,7 @@ function init() {
     });
 
     $('#btn-pdf').click(function() {
-        window.open("/"+_component+"/dailysalesreport/pdf?date="+ $('#start_date').val());
+        window.open("/"+_component+"/dailysalesreport/pdf?branch_id="+ window.branchId +"&date="+ $('#start_date').val());
     });
     
     $('#search').click(function(){

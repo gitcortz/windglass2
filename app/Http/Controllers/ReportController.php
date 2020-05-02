@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Branch;
 use App\Models\Payroll;
 use App\Models\Order;
+use App\Models\Expense;
 use App\Models\Enums\OrderStatus;
 use App\Library\Services\Payroll\PayrollServiceInterface;
 use App\Models\Enums\PaymentStatus;
@@ -30,6 +31,10 @@ class ReportController extends Controller
 
     public function pendingorderindex(){ 
         return view("home.views.reports.pendingorder");
+    }
+    
+    public function expensesindex(){ 
+        return view("home.views.reports.expenses");
     }
 
     public function loansreport(Request $request) {
@@ -150,6 +155,23 @@ class ReportController extends Controller
                 })
                 
                 ->rawColumns(["action_btns"])
+                ->make(true);
+    }
+
+    public function expensesreport(Request $request) {
+        
+        if($request->query('date')){
+            $start = new Carbon(date('Y-m-d', strtotime($request->query('date'))));
+            $end = $start->copy()->addDays(1);
+        
+            $expenses = Expense::query()
+            ->where('expense_date', '>=', $start)
+            ->where('expense_date', '<=', $end);
+        }
+        else        
+            $expenses = Expense::query();
+        
+        return Datatables::of($expenses)
                 ->make(true);
     }
 

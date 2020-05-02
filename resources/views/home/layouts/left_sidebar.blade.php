@@ -45,6 +45,7 @@
           <li><a href="{{ route('reportdailysales') }}"><i class="fa fa-circle-o"></i> Daily Sales</a></li>
           <li><a href="{{ route('reportpendingorder') }}"><i class="fa fa-circle-o"></i> Pending Orders</a></li>
           <li><a href="{{ route('expenses') }}"><i class="fa fa-circle-o"></i> Expenses</a></li>
+          <li><a href="{{ route('reportexpenses') }}"><i class="fa fa-circle-o"></i> Expense Report</a></li>
           <li><a href="{{ route('customers') }}"><i class="fa fa-circle-o"></i> Customers</a></li>
         </ul>
       </li>

@@ -25,7 +25,7 @@
           <div class="box">
                 <div class="box-header">
                   <div class="row">
-                      <div class="col-md-3">
+                      <div class="col-md-3" style="display:none">
                         <div class="input-group input-group-sm">
                               <input type="text" name="start_date" id="start_date" class="form-control" />
                               <span class="input-group-addon">-</span>                        

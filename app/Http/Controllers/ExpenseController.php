@@ -24,7 +24,7 @@ class ExpenseController extends Controller
             ->orWhere('payee', 'LIKE', "%{$keyword}%")
             ->orWhere('particulars', 'LIKE', "%{$keyword}%");
         }
-        else if($request->query('start_date')){
+        /*else if($request->query('start_date')){
             $start = new Carbon(date('Y-m-d', strtotime($request->query('start_date'))));
             $end = new Carbon(date('Y-m-d', strtotime($request->query('end_date'))));
             $end = $end->copy()->addDays(1);
@@ -32,7 +32,7 @@ class ExpenseController extends Controller
             $expenses = Expense::query()
             ->where('expense_date', '>=', $start)
             ->where('expense_date', '<=', $end);
-        }
+        }*/
         else        
             $expenses = Expense::query();
         

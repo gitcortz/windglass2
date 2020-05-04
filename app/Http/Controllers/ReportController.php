@@ -139,7 +139,7 @@ class ReportController extends Controller
         $branch_id = $request->query('branch_id');
         if (session("branch_id") != $branch_id)
             $branch_id = 0;        
-        $salesServiceInstance->exportDailySales($start, $end, $branch_id);
+        $salesServiceInstance->salesExcelReport($start, $end, $branch_id);
 
 
     }
@@ -179,16 +179,30 @@ class ReportController extends Controller
         if($request->query('date')){
             $start = new Carbon(date('Y-m-d', strtotime($request->query('date'))));
             $end = $start->copy()->addDays(1);
-        
+            if($request->branch_id)
+                $branch_id = $request->branch_id;
+
+
             $expenses = Expense::query()
             ->where('expense_date', '>=', $start)
-            ->where('expense_date', '<=', $end);
+            ->where('expense_date', '<', $end)
+            ->where('branch_id', '=', $branch_id);
         }
         else        
             $expenses = Expense::query();
         
         return Datatables::of($expenses)
                 ->make(true);
+    }
+
+    function expensesreportexcel(Request $request, SalesServiceInterface $salesServiceInstance)
+    {
+        $start = new Carbon(date('Y-m-d', strtotime($request->query('date'))));
+        $end = $start->copy()->addDays(1);
+        $branch_id = $request->query('branch_id');
+        if (session("branch_id") != $branch_id)
+            $branch_id = 0;        
+        $salesServiceInstance->expensesExcelReport($start, $end, $branch_id);
     }
 
     function get_sales_data($start, $end, $branch_id)

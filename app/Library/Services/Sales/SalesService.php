@@ -19,7 +19,7 @@ class SalesService implements SalesServiceInterface
     private $daily_sales_data_end_idx;
     private $foo;
     
-    public function exportDailySales($start, $end, $branch_id)
+    public function salesExcelReport($start, $end, $branch_id)
     {
         $report = $this->get_sales_data($start, $end, $branch_id);
         
@@ -270,5 +270,95 @@ class SalesService implements SalesServiceInterface
     }
 
 
+    public function expensesExcelReport($start, $end, $branch_id)
+    {
+        $report = $this->get_expenses_data($start, $end, $branch_id);
+        
 
+        $branch = Branch::find($branch_id);
+        $report_date = Carbon::parse($start)->format('Y-m-d');
+        $title = "Daily Expenses Report ".$report_date." - ".$branch->name;        
+        $expensesArray[] = ['Windglass Marketing Inc'];
+        $expensesArray[] = [$branch->name];
+        $expensesArray[] = ['Expenses'];
+        $expensesArray[] = [$report_date];
+        $expensesArray[] = [];
+        $expensesArray[] = ['DATE', '#', 'PAYEE', 'PARTICULARS', 'AMOUNT'];
+
+
+        $idx = 1;
+        foreach ($report as $r) {
+           
+            $arr = array(
+                        Carbon::parse($r->expense_date)->format('Y-m-d'),
+                        $r->id,
+                        $r->payee,
+                        $r->particulars,
+                        (double)$r->amount,
+                    );
+            $expensesArray[] = $arr;
+            $idx++;
+        }
+
+        $rowStart = 7;
+        $rowEnd = $rowStart+$report->count()-1;
+
+        $expensesArray[] = ['','','','SUB TOTAL',
+            '=SUM(E'.$rowStart.':E'.$rowEnd.')',
+        ];
+
+        // Generate and return the spreadsheet
+        Excel::create('expenses', function($excel) use ($expensesArray, $title, $rowStart, $rowEnd) {
+            $excel->setTitle($title);
+            $excel->setCreator('Laravel')->setCompany('Windglass Company');
+            $excel->setDescription($title);
+
+            // Build the spreadsheet, passing in the payments array
+            $excel->sheet('sheet1', function($sheet) use ($expensesArray, $rowStart, $rowEnd) {
+                $sheet->fromArray($expensesArray, null, 'A1', false, false);
+               $this->updateExpensesExcelStyles($sheet, $rowStart, $rowEnd);
+                
+            });
+
+        })->download('xlsx');
+    }
+
+      
+    function get_expenses_data($start, $end, $branch_id)
+    {
+
+        $expenses =  DB::table('expenses')
+        ->where('expense_date', '>=', $start)
+        ->where('expense_date', '<', $end)
+        ->where('branch_id', '=', $branch_id)
+        ->get();
+
+        return $expenses;
+    }
+
+    private function updateExpensesExcelStyles($sheet, $rowStartIdx, $rowEndIdx) {
+        
+        $sheet->mergeCells('A1:D1');
+        $sheet->mergeCells('A2:D2');
+        $sheet->mergeCells('A3:D3');
+        $sheet->mergeCells('A4:D4');
+        
+        //format
+
+        $sheet->setColumnFormat(array('E'.$rowStartIdx.':E'.($rowEndIdx+1).'' => '0.00'));
+
+        
+
+        //borders
+            $sheet->getStyle('A'.($rowEndIdx+1).':E'.($rowEndIdx+1))->applyFromArray(array(
+                'borders' => array(
+                    'top' => [
+                        'style' => PHPExcel_Style_Border::BORDER_THIN,
+                        'color' => ['argb' => '000000'],
+                    ],
+                )
+            ));
+       
+        
+    }
 }

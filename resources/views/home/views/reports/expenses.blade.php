@@ -26,7 +26,8 @@
                       <input type="text" name="start_date" id="start_date" class="form-control" />
                     </div>
                     <div class="col-md-4">
-                      <input type="button" name="search" id="search" value="Search" class="btn btn-info" />                      
+                      <input type="button" name="search" id="search" value="Search" class="btn btn-info" />
+                      <a id="btn-excel" href="javascript:void(0)" class="btn btn-success " ><i class="fa fa-download"></i> <span>download excel</span></a>
                     </div>
                   </div>
                 </div>

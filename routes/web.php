@@ -212,6 +212,7 @@ Route::group(['middleware' => 'not.auth'], function () {
         Route::get('/{id}/pendingorderreport', [ 'uses' => 'ReportController@pendingorderreport', 'as' => 'pendingorderreport',]);    
         Route::get('/expenses', [ 'uses' => 'ReportController@expensesindex', 'as' => 'reportexpenses',]);    
         Route::get('/expensesreport', [ 'uses' => 'ReportController@expensesreport', 'as' => 'expensesreport',]);    
+        Route::get('/expensesreport/excel', [ 'uses' => 'ReportController@expensesreportexcel', 'as' => 'expensesreportexcel',]);    
     });
 
 

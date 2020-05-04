@@ -15,7 +15,7 @@ function fetch_data() {
             bFilter: false,
             ajax : {
                 url: "/"+_component+"/expensesreport",
-                data: { date : $("#start_date").val() }
+                data: { date : $("#start_date").val(), branch_id: window.branchId }
             },
             data : { date: $('#start_date').val() },
             columns : [
@@ -49,4 +49,8 @@ function init() {
         fetch_data('yes', start_date);
         
     }); 
+
+    $('#btn-excel').click(function() {
+        window.open("/"+_component+"/expensesreport/excel?branch_id="+ window.branchId +"&date="+ $('#start_date').val());
+    });
 }

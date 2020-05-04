@@ -27,6 +27,7 @@ function fetch_data() {
                 {data: "discount", name : "discount", render: $.fn.dataTable.render.number( ',', '.', 2 )},
                 {data: "total", name : "total", render: $.fn.dataTable.render.number( ',', '.', 2 )},
                 {data: "rider", name : "rider"},
+                {data: "order_status", name : "order_status"},
                 {data: "payment_status", name : "payment_status"},
             ],
             order: [[ 0, "desc" ]],           
@@ -47,8 +48,8 @@ function init() {
         todayHighlight: true,  
     });
 
-    $('#btn-pdf').click(function() {
-        window.open("/"+_component+"/dailysalesreport/pdf?branch_id="+ window.branchId +"&date="+ $('#start_date').val());
+    $('#btn-excel').click(function() {
+        window.open("/"+_component+"/dailysalesreport/excel?branch_id="+ window.branchId +"&date="+ $('#start_date').val());
     });
     
     $('#search').click(function(){

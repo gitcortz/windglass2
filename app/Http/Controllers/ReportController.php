@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\Expense;
 use App\Models\Enums\OrderStatus;
 use App\Library\Services\Payroll\PayrollServiceInterface;
+use App\Library\Services\Sales\SalesServiceInterface;
 use App\Models\Enums\PaymentStatus;
 use Illuminate\Support\Facades\DB;
 use \Carbon\Carbon;
@@ -106,6 +107,9 @@ class ReportController extends Controller
                 ->addColumn('rider', function ($report) {
                     return "rider";
                 })
+                ->addColumn('order_status', function ($report) {
+                    return OrderStatus::getName($report->order_status_id);
+                })
                 ->addColumn('payment_status', function ($report) {
                     return PaymentStatus::getName($report->payment_status_id);
                 })
@@ -126,6 +130,18 @@ class ReportController extends Controller
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($this->convert_sales_data_to_html($report));
         return $pdf->stream();
+    }
+
+    function dailysalesreportexcel(Request $request, SalesServiceInterface $salesServiceInstance)
+    {
+        $start = new Carbon(date('Y-m-d', strtotime($request->query('date'))));
+        $end = $start->copy()->addDays(1);
+        $branch_id = $request->query('branch_id');
+        if (session("branch_id") != $branch_id)
+            $branch_id = 0;        
+        $salesServiceInstance->exportDailySales($start, $end, $branch_id);
+
+
     }
 
     public function pendingorderreport(Request $request) {
@@ -185,10 +201,11 @@ class ReportController extends Controller
             ->join('customers', 'customers.id', '=', 'orders.customer_id')
             ->select('order_date', 'orders.id', 'customers.name as customer_name', 'products.name as product_name', 
                     'order_items.quantity', 'order_items.unit_price', 
-                    'order_items.discount', 'orders.payment_status_id')
+                    'order_items.discount', 'orders.payment_status_id', 'orders.order_status_id')
             ->where('order_date', '>=', $start)
             ->where('order_date', '<=', $end)
             ->where('orders.branch_id', '=', $branch_id)
+            ->where('orders.order_status_id', '=', (int)OrderStatus::Completed)
             ->get();
         return $report;
     }

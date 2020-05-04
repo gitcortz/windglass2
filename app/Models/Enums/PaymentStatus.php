@@ -8,6 +8,6 @@ class PaymentStatus extends BasicEnum
 {
     const NotPaid = 10;
     const Paid = 20;
-    const Recievables = 30;
+    const Receivables = 30;
     
 }

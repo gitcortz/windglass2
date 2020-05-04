@@ -29,7 +29,7 @@
                     </div>
                     <div class="col-md-4">
                       <input type="button" name="search" id="search" value="Search" class="btn btn-info" />
-                      <a id="btn-pdf" href="javascript:void(0)" class="btn btn-danger " ><i class="fa fa-download"></i> <span>download pdf</span></a>
+                      <a id="btn-excel" href="javascript:void(0)" class="btn btn-success " ><i class="fa fa-download"></i> <span>download excel</span></a>
                     </div>
                   </div>
                 </div>
@@ -48,7 +48,8 @@
                                 <th>Discount</th>
                                 <th>Total</th>
                                 <th>Rider</th>
-                                <th>Status</th>
+                                <th>Order Status</th>
+                                <th>Payment Status</th>
                             </tr>
                         </thead>                   
                   </table>     

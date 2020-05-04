@@ -204,6 +204,7 @@ Route::group(['middleware' => 'not.auth'], function () {
         Route::get('/dailysales', [ 'uses' => 'ReportController@dailysalesindex', 'as' => 'reportdailysales',]);    
         Route::get('/dailysalesreport', [ 'uses' => 'ReportController@dailysalesreport', 'as' => 'dailysalesreport',]);    
         Route::get('/dailysalesreport/pdf', [ 'uses' => 'ReportController@dailysalesreportpdf', 'as' => 'dailysalesreportpdf',]);    
+        Route::get('/dailysalesreport/excel', [ 'uses' => 'ReportController@dailysalesreportexcel', 'as' => 'dailysalesreportexcel',]);    
         Route::get('/loans', [ 'uses' => 'ReportController@loansindex', 'as' => 'reportloans',]);    
         Route::get('/loansreport', [ 'uses' => 'ReportController@loansreport', 'as' => 'loansreport',]);    
         Route::get('/loansreport/export', [ 'uses' => 'ReportController@loansreportexport', 'as' => 'loansreportexport',]);    

@@ -15,26 +15,19 @@ class ExpenseController extends Controller
     }
     
     public function list(Request $request) {
-        $keyword = $request->query('search_keyword');
         $matchThese = [];
+        if($request->branch_id)
+            $matchThese['branch_id'] = $request->branch_id;
 
+        $expenses = Expense::where($matchThese);
+
+        $keyword = $request->query('search_keyword');        
         if($keyword){
-            $expenses = Expense::query()
+            $expenses = $expenses
             ->where('id', '=', $keyword)
             ->orWhere('payee', 'LIKE', "%{$keyword}%")
             ->orWhere('particulars', 'LIKE', "%{$keyword}%");
-        }
-        /*else if($request->query('start_date')){
-            $start = new Carbon(date('Y-m-d', strtotime($request->query('start_date'))));
-            $end = new Carbon(date('Y-m-d', strtotime($request->query('end_date'))));
-            $end = $end->copy()->addDays(1);
-        
-            $expenses = Expense::query()
-            ->where('expense_date', '>=', $start)
-            ->where('expense_date', '<=', $end);
-        }*/
-        else        
-            $expenses = Expense::query();
+        }      
         
         return Datatables::of($expenses)
                 ->addColumn("action_btns", function($expenses) {

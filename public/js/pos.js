@@ -345,7 +345,7 @@ var save_order = function() {
     var $rider_id =  $('select[name="rider_id"').val();
     var $payment_method_id = 10;
     var $order_status_id = $("#orderdetail_status").val();
-    var $payment_status_id = 20; //Paid
+    var $payment_status_id = 10; //not Paid
     var $notes = "";
     var $id = $("#orderdetail_id").val() == "" ? 0 :  $("#orderdetail_id").val();
     if ($id == 0)

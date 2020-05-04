@@ -64,4 +64,5 @@
   <!-- /.login-box-body -->
 </div>
 <!-- /.login-box -->
+<script type="text/javascript" src="{{asset('js/login.js')}}"></script>
 @endsection

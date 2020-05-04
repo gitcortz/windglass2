@@ -102,10 +102,13 @@ var pending = (function(){
         })
     }
 
-    var update_order_status = function(id, value, rider = "", cylinders = "", success) {
-
+    var update_order_status = function(id, value, rider = "", payment_status_id, cylinders = "", success) {
+   
         var data1 = JSON.stringify(
-                {"order_status_id": value, "rider_id": rider, "cylinders" :  cylinders});
+                {"order_status_id": value, 
+                "rider_id": rider, 
+                "payment_status_id": payment_status_id, 
+                "cylinders" :  cylinders});
         
         console.log("data");
         console.log(data1);
@@ -124,8 +127,10 @@ var pending = (function(){
         var id = $('#order_update_id').val();
         var status_id = $('#order_update_status_id').val();
         var rider = $('#select_riders').val();
+        var payment_status_id = $('#payment_status_id').val();
+
         if (rider != "")
-            update_order_status(id, status_id, rider, _selected_empty_cylinders);
+            update_order_status(id, status_id, rider, payment_status_id, _selected_empty_cylinders);
         else {
             $('#order_update_text').html("please select a rider");
         }
@@ -176,11 +181,13 @@ var pending = (function(){
         
         var rider_id = order[0].rider_id;
         var bring_ins = order[0].order_bringins;
+        var payment_status_id = order[0].payment_status_id;
 
         init_rider(rider_id);
         init_empty_cylinder();
         init_cylinder_bringin(bring_ins);
         $('#order_update_id').val(orderid);
+        $("#payment_status_id").val(payment_status_id);
         $('#order_update_status_id').val(status);
         
         _updateModal.modal('show');
@@ -194,11 +201,12 @@ var pending = (function(){
                 serverSide: true,
                 ajax : "/reports/"+window.branchId+"/pendingorderreport/",
                 columns :  [
-                    {data: "id", name : "id"},
+                    {data: "id", name : "id", "width": "20px",},
                     {data: "order_date", name : "order_date"},
                     {data: "customername", name : "customers.name"},
                     {data: "sub_total", name : "sub_total"},
                     {data: "rider", name : "rider"},
+                    {data: "order_status", name : "order_status"},
                     {data: "payment_status", name : "payment_status"},
                     {data: "action_btns", name : "action_btns"},
                 ],

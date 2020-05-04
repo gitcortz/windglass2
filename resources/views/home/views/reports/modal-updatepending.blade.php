@@ -15,6 +15,17 @@
         <div class="row">
           <div class="col-md-12">
             <p>
+              Payment Status : 
+              <select id="payment_status_id" class="form-control form-control-sm">
+                <option value="20">Paid</option>
+                <option value="30">Receivables</option>
+              </select>
+            </p>            
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <p>
               Please select rider : 
               <select id="select_riders" class="form-control form-control-sm"></select>
             </p>            

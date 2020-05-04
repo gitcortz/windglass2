@@ -175,6 +175,9 @@ class OrderController extends Controller
             
             if ($data1["rider_id"] != '')
                 $data->rider_id = $data1['rider_id'];
+            
+            if ($data1["payment_status_id"] != '')
+                $data->payment_status_id = $data1['payment_status_id'];
 
             $data->save();
         }

@@ -375,7 +375,7 @@ var save_order = function() {
         initialize_select_status($order_status_id);
         initialize_product_section($order_status_id);
         $('#order_detail_id_label').html(d.data.id);
-        
+        $("#orderdetail_id").val(d.data.id);
         alert('saved ');
         _orderDt.ajax.reload();
     }, function() {

@@ -52,7 +52,6 @@ class OrderController extends Controller
     public function store(Request $request, StocksServiceInterface $stocksServiceInstance)
     {
         $validator = Validator::make($request->input(), array(
-            'branch_id' => 'required',
             'customer_id' => 'required',     
         ));
 
@@ -63,7 +62,7 @@ class OrderController extends Controller
             ], 422);
         }
 
-        if ($request->id == 0) {          
+        if ($request->id == 0) {
                 $data = Order::create([
                     'branch_id' => $request->branch_id, 
                     'customer_id' => $request->customer_id,
@@ -76,7 +75,7 @@ class OrderController extends Controller
                     'payment_method_id'=>$request->payment_method_id,
                     'discount'=>$request->discount,
                     'sub_total'=>$request->sub_total,
-                    
+                    'createdby_id'=>session("user_details")->id
                 ]);
                 
                 $data_id = $data->id;
@@ -94,6 +93,7 @@ class OrderController extends Controller
             $data = Order::find($request->id);            
             $data->rider_id = $request->input('rider_id');
             $data->order_status_id =  $request->input('order_status_id');
+            $data->lastupdatedby_id = session("user_details")->id;
 
             if ($data->order_status_id  == OrderStatus::Draft) {              
                 $data->sub_total =  $request->input('sub_total');

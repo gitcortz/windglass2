@@ -20,7 +20,7 @@ $(document).ready(function() {
             sales_dt = sales_dt_container.DataTable({
                 processing: true,
                 serverSide: true,
-                ajax : "/pos/session/",
+                ajax : "/v2/pos/session/",
                 columns :  [
                     {data: "id", name : "id"},
                     {data: "order_date", name : "order_date"},
@@ -96,7 +96,7 @@ $(document).ready(function() {
         console.log("data");
         console.log(data1);
        
-        ajaxcall("PUT", "/orders/"+id, data1, 
+        ajaxcall("PUT", "/v2/orders/"+id, data1, 
             function(data){
                 if (success)
                     success();
@@ -109,7 +109,7 @@ $(document).ready(function() {
 
     var init_rider = function() {
         if (_riders.length == 0) {
-            ajaxcall("GET", "/employees/riders", null, 
+            ajaxcall("GET", "/v2/employees/riders", null, 
             function(data) {
                 _riders = data.data;
                 $("#select_riders").append("<option value=''>-- Please select --</option>"); 
@@ -125,7 +125,7 @@ $(document).ready(function() {
 
     var init_empty_cylinder = function() {
         if (_cylinders.length == 0) {            
-            ajaxcall("GET", "/branches/1/emptycylinders", null, 
+            ajaxcall("GET", "/v2/branches/1/emptycylinders", null, 
             function(data) {
                 _cylinders = data;
                 $("#select_empty_cylinder").append("<option value=''>-- Please select --</option>");

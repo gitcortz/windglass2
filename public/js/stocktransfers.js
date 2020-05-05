@@ -103,7 +103,7 @@ $(document).ready(function() {
         var id = _form_status.find("input[name=transfer_status_id]").val();
         var status = _form_status.find(".transfer_status").html().toLowerCase();                
 
-        ajaxcall("POST", "/stocktransfers/"+id+"/"+status, null, 
+        ajaxcall("POST", "/v2/stocktransfers/"+id+"/"+status, null, 
            function(data){
                 _form_status.find(".close").click();
                crud.get_datatable().DataTable().ajax.reload();
@@ -161,9 +161,9 @@ $(document).ready(function() {
         };
 
         if (transfer.id == "") {        
-            crud.ajaxcall("POST", "/stocktransfers", transfer, crud.updateSuccess, crud.updateError);
+            crud.ajaxcall("POST", "/v2/stocktransfers", transfer, crud.updateSuccess, crud.updateError);
         } else {
-            crud.ajaxcall("PUT", "/stocktransfers"+"/"+transfer.id, transfer, crud.updateSuccess, crud.updateError);
+            crud.ajaxcall("PUT", "/v2/stocktransfers"+"/"+transfer.id, transfer, crud.updateSuccess, crud.updateError);
         }
         console.log(transfer);    
     });
@@ -178,7 +178,7 @@ $(document).ready(function() {
 });
 
 function init_dropdown(crud) {
-    crud.ajaxcall("GET", "/branches/all", null, 
+    crud.ajaxcall("GET", "/v2/branches/all", null, 
         function(data) {
             var branches = data.data;
             $("#from_branch").append("<option value=''>-- Select --</option>"); 
@@ -193,7 +193,7 @@ function init_dropdown(crud) {
         }
     );
 
-    crud.ajaxcall("GET", "/branches/1/products", null, 
+    crud.ajaxcall("GET", "/v2/branches/1/products", null, 
         function(data) {
             _products = data;
         }, 
@@ -202,7 +202,7 @@ function init_dropdown(crud) {
         }
     );
 
-    crud.ajaxcall("GET", "/producttypes/all", null, 
+    crud.ajaxcall("GET", "/v2/producttypes/all", null, 
         function(data) {
             _producttypes = data.data;
         }, 

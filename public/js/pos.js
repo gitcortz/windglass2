@@ -126,7 +126,7 @@ $(document).ready(function() {
 });
 
 function init_dropdown() {
-    ajaxcall("GET", "/cities/all", null, 
+    ajaxcall("GET", "/v2/cities/all", null, 
         function(data) {
             var cities = data.data;
             $("#customer_city").append("<option value=''>-- Please select --</option>"); 
@@ -137,7 +137,7 @@ function init_dropdown() {
         function(e) {
             console.log(e);
         });
-    ajaxcall("GET", "/branches/all", null, 
+    ajaxcall("GET", "/v2/branches/all", null, 
     function(data) {
         var branches = data.data;
         $("#orderdetail_branch").append("<option value=''>-- Please select --</option>"); 
@@ -148,7 +148,7 @@ function init_dropdown() {
     function(e) {
         console.log(e);
     });
-    ajaxcall("GET", "/employees/riders", null, 
+    ajaxcall("GET", "/v2/employees/riders", null, 
     function(data) {
         var riders = data.data;
         $("#orderdetail_rider").append("<option value=''>-- Please select --</option>"); 
@@ -162,7 +162,7 @@ function init_dropdown() {
 }
 
 function select_branch(branch_id, func) {
-      ajaxcall("GET", "/branches/"+branch_id+"/products", null, 
+      ajaxcall("GET", "/v2/branches/"+branch_id+"/products", null, 
             function(data) {
                 //var products = data;
                 _products = data.filter(function (entry) {
@@ -193,7 +193,7 @@ var search_customer = function() {
         processing: true,
         serverSide: true,
         ajax :  {
-            url: "/customers/search",
+            url: "/v2/customers/search",
             data : { keyword : keyword }               
         },
         columns : [
@@ -244,7 +244,7 @@ var nullToStr = function(str) {
 }
 
 var load_customer = function(id, func) {
-    ajaxcall("GET", "/customers/"+id, null, 
+    ajaxcall("GET", "/v2/customers/"+id, null, 
     function(data) {
         var data = data.data;
         _customerdetail = data;
@@ -316,13 +316,13 @@ var save_customer = function() {
 
     var data = form.serializeFormToObject();
     if (data.id == "")
-        ajaxcall("POST", "/customers", form.serializeFormToObject(), 
+        ajaxcall("POST", "/v2/customers", form.serializeFormToObject(), 
             function() { 
                 //_customerDt.ajax.reload();
                 load_customer(data_id);
             }, function() {});
     else
-        ajaxcall("PUT", "/customers/"+data_id, form.serializeFormToObject(),
+        ajaxcall("PUT", "/v2/customers/"+data_id, form.serializeFormToObject(),
             function() { 
                 //_customerDt.ajax.reload();
                 load_customer(data_id);
@@ -369,7 +369,7 @@ var save_order = function() {
     console.log(_orderdata);
 
     
-    ajaxcall("POST", "/orders", _orderdata, function(d) {
+    ajaxcall("POST", "/v2/orders", _orderdata, function(d) {
         //success
         //show_payment_complete_modal();
         initialize_select_status($order_status_id);
@@ -422,7 +422,7 @@ var display_order_table = function(searchdata) {
             serverSide: true,
             searching: false,
            ajax :  {
-                url: "/pos/list/",
+                url: "/v2/pos/list/",
                 data : searchdata
             },
             columns :  [

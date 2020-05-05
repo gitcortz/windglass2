@@ -30,7 +30,7 @@ $(document).ready(function() {
 function init_user_branches(crud, id) {
     $('.chkuserbranches').iCheck('uncheck');
     $('.chkuserbranches').iCheck('update');
-    crud.ajaxcall("GET", "/users/"+id+"/branches", null, 
+    crud.ajaxcall("GET", "/v2/users/"+id+"/branches", null, 
     function(data) {
         var userbranches = data;
         for(var i=0; i<userbranches.length; i++){
@@ -44,7 +44,7 @@ function init_user_branches(crud, id) {
 
 function init_branch_selection(crud) {
     
-    crud.ajaxcall("GET", "/branches/all", null, 
+    crud.ajaxcall("GET", "/v2/branches/all", null, 
         function(data) {
             var branch_checkbox = '<div class="col-md-4 mt-1"><label>'+
                                 '<input type="checkbox" class="chkuserbranches" id="branch_{BRANCH_ID}" name="branch[]" value="{BRANCH_ID}">'

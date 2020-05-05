@@ -51,9 +51,9 @@ var Crud = (function ($) {
         var save = function() {  
             var data = _form.serializeFormToObject();
             if (data.id == "")
-                ajaxcall("POST", "/"+_component, _form.serializeFormToObject(), updateSuccess, updateError);
+                ajaxcall("POST", "/v2/"+_component, _form.serializeFormToObject(), updateSuccess, updateError);
             else
-                ajaxcall("PUT", "/"+_component+"/"+data.id, _form.serializeFormToObject(), updateSuccess, updateError);
+                ajaxcall("PUT", "/v2/"+_component+"/"+data.id, _form.serializeFormToObject(), updateSuccess, updateError);
         };
 
         var init_datatable = function() {
@@ -62,7 +62,7 @@ var Crud = (function ($) {
                     processing: true,
                     serverSide: true,
                     ajax :  {
-                        url: "/"+_component+"/all",
+                        url: "/v2/"+_component+"/all",
                         data: _datatable_data                           
                     },
                     columns : _columns,
@@ -79,7 +79,7 @@ var Crud = (function ($) {
                 processing: true,
                 serverSide: true,
                 ajax :  {
-                    url: "/"+_component+"/all",
+                    url: "/v2/"+_component+"/all",
                     data : data               
                 },
                 columns : _columns,
@@ -89,7 +89,7 @@ var Crud = (function ($) {
         }
 
         var loadForm = function(id) { 
-            ajaxcall("GET", "/"+_component+"/"+id, null, 
+            ajaxcall("GET", "/v2/"+_component+"/"+id, null, 
                 function(data) {
                     var data1 = data.data;
                     if (data.role_id)
@@ -139,7 +139,7 @@ var Crud = (function ($) {
             $("#btn-delete").click(function() {
                 var id = _form_delete.find("input[name=delete_id]").val();
 
-                ajaxcall("DELETE", "/"+_component+"/"+id, null, 
+                ajaxcall("DELETE", "/v2/"+_component+"/"+id, null, 
                     function(data){
                         _form_delete.find(".close").click();
                         _datatable_container.DataTable().ajax.reload();

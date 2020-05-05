@@ -72,7 +72,7 @@ $(document).ready(function() {
     $("#btn-loan-save").click(function() {
         //_error_bag.hide();
         var data = _loanform.serializeFormToObject();
-        ajaxcall("PUT", "/employeeloans/"+data.id, _loanform.serializeFormToObject(), loan_updateSuccess, updateError);
+        ajaxcall("PUT", "/v2/employeeloans/"+data.id, _loanform.serializeFormToObject(), loan_updateSuccess, updateError);
     });
 
     $("#btn-open-new-loan").click(function() {
@@ -85,12 +85,12 @@ $(document).ready(function() {
     
     $('#btn-loan-add').click(function() {
         var data = _loanform_add.serializeFormToObject();
-        ajaxcall("POST", "/employeeloans", _loanform_add.serializeFormToObject(), loan_addSuccess, updateError);
+        ajaxcall("POST", "/v2/employeeloans", _loanform_add.serializeFormToObject(), loan_addSuccess, updateError);
     });
 
     $("#btn-delete-loan").click(function() {
         var id = _loanform_delete.find("input[name=delete_id]").val();
-        ajaxcall("DELETE", "/employeeloans/"+id, null, 
+        ajaxcall("DELETE", "/v2/employeeloans/"+id, null, 
             function(data){
                 _loanform_delete.find(".close").click();
                 _loan_container.DataTable().ajax.reload();
@@ -101,7 +101,7 @@ $(document).ready(function() {
 
     $("#btn-approve-loan").click(function() {
         var id = _form_approve.find("input[name=approve_id]").val();
-       ajaxcall("POST", "/employeeloans/"+id+"/approve", null, 
+       ajaxcall("POST", "/v2/employeeloans/"+id+"/approve", null, 
            function(data){
                _form_approve.find(".close").click();
                _loan_container.DataTable().ajax.reload();
@@ -113,7 +113,7 @@ $(document).ready(function() {
 });
 
 function init_dropdown(crud) {
-    crud.ajaxcall("GET", "/cities/all", null, 
+    crud.ajaxcall("GET", "/v2/cities/all", null, 
     function(data) {
         var cities = data.data;
         $("#city").append("<option value=''>-- Please select --</option>"); 
@@ -124,7 +124,7 @@ function init_dropdown(crud) {
     function(e) {
         console.log(e);
     });
-    crud.ajaxcall("GET", "/employeetypes/all", null, 
+    crud.ajaxcall("GET", "/v2/employeetypes/all", null, 
     function(data) {
         var types = data.data;
         $("#employeetype").append("<option value=''>-- Please select --</option>"); 
@@ -153,7 +153,7 @@ var showDeleteLoanModal = function(id, text) {
 }
 
 var loadLoanForm = function(id) { 
-    ajaxcall("GET", "/employeeloans/"+id, null, 
+    ajaxcall("GET", "/v2/employeeloans/"+id, null, 
         function(data) {
             var data = data.data;
             var form = _loanform;
@@ -177,7 +177,7 @@ var init_loans = function(id) {
             serverSide: true,
             destroy: true,
             searching: false,
-            ajax : "/employees/"+id+"/loans",
+            ajax : "/v2/employees/"+id+"/loans",
             columns : [
                 {data: "id", name : "id"},
                 {data: "employeename", name : "employeename"},

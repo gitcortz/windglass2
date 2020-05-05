@@ -7,7 +7,7 @@ var pending = (function(){
 
     var init_rider = function(rider_id) {
         if (_riders.length == 0) {
-            ajaxcall("GET", "/employees/riders", null, 
+            ajaxcall("GET", "/v2/employees/riders", null, 
             function(data) {
                 _riders = data.data;
                 $("#select_riders").append("<option value=''>-- Please select --</option>"); 
@@ -27,7 +27,7 @@ var pending = (function(){
 
     var init_empty_cylinder = function() {
         if (_cylinders.length == 0) {            
-            ajaxcall("GET", "/branches/1/emptycylinders", null, 
+            ajaxcall("GET", "/v2/branches/1/emptycylinders", null, 
             function(data) {
                 _cylinders = data;
                 $("#select_empty_cylinder").append("<option value=''>-- Please select --</option>");
@@ -113,7 +113,7 @@ var pending = (function(){
         console.log("data");
         console.log(data1);
        
-        ajaxcall("PUT", "/orders/"+id, data1, 
+        ajaxcall("PUT", "/v2/orders/"+id, data1, 
             function(data){
                 if (success)
                     success();
@@ -199,7 +199,7 @@ var pending = (function(){
             pending_dt = dt_container.DataTable({
                 processing: true,
                 serverSide: true,
-                ajax : "/reports/"+window.branchId+"/pendingorderreport/",
+                ajax : "/v2/reports/"+window.branchId+"/pendingorderreport/",
                 columns :  [
                     {data: "id", name : "id", "width": "20px",},
                     {data: "order_date", name : "order_date"},
@@ -310,7 +310,7 @@ function fetch_data() {
             serverSide: true,
             bFilter: false,
             ajax : {
-                url: "/"+_component+"/dailysalesreport",
+                url: "/v2/"+_component+"/dailysalesreport",
                 "data": function(d){
                     d.date = $("#start_date").val();
                  }
@@ -347,7 +347,7 @@ function init() {
     });
 
     $('#btn-pdf').click(function() {
-        window.open("/"+_component+"/dailysalesreport/pdf?date="+ $('#start_date').val());
+        window.open("/v2/"+_component+"/dailysalesreport/pdf?date="+ $('#start_date').val());
     });
     
     $('#search').click(function(){

@@ -49,9 +49,9 @@ var LoanReport = (function ($) {
         var save = function() {  
             var data = _form.serializeFormToObject();
             if (data.id == "")
-                ajaxcall("POST", "/"+_component, _form.serializeFormToObject(), updateSuccess, updateError);
+                ajaxcall("POST", "/v2/"+_component, _form.serializeFormToObject(), updateSuccess, updateError);
             else
-                ajaxcall("PUT", "/"+_component+"/"+data.id, _form.serializeFormToObject(), updateSuccess, updateError);
+                ajaxcall("PUT", "/v2/"+_component+"/"+data.id, _form.serializeFormToObject(), updateSuccess, updateError);
         };
 
         var init_datatable = function(data) {
@@ -62,7 +62,7 @@ var LoanReport = (function ($) {
                     paging :   false,
                     searching: false,
                     bFilter: false,
-                    ajax : "/reports/loansreport?weekno="+data.weekno+"&year="+data.year,
+                    ajax : "/v2/reports/loansreport?weekno="+data.weekno+"&year="+data.year,
                     columns : _columns,
                     order: [[ 0, "desc" ]]
                 });                
@@ -86,7 +86,7 @@ var LoanReport = (function ($) {
 
             $('#btn-process-payroll').click(function() {
                 var data =  _weekPicker.getSelectedValue();
-                ajaxcall("POST", "/"+_component+"/approve?weekno="+data.weekno+"&year="+data.year, null, 
+                ajaxcall("POST", "/v2/"+_component+"/approve?weekno="+data.weekno+"&year="+data.year, null, 
                     function(data){
                         _form_process.find(".close").click();
                         location.reload();

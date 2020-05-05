@@ -22,7 +22,7 @@ $(document).ready(function() {
 });
 
 function init_dropdown(crud) {
-    crud.ajaxcall("GET", "/producttypes/all", null, 
+    crud.ajaxcall("GET", "/v2/producttypes/all", null, 
     function(data) {
         var producttypes = data.data;
         $("#producttype").append("<option value=''>-- None --</option>"); 
@@ -33,7 +33,7 @@ function init_dropdown(crud) {
     function(e) {
         console.log(e);
     });
-    crud.ajaxcall("GET", "/brands/all", null, 
+    crud.ajaxcall("GET", "/v2/brands/all", null, 
     function(data) {
         var brands = data.data;
         $("#brand").append("<option value=''>-- None --</option>"); 

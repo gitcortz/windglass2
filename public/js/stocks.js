@@ -55,7 +55,7 @@ $(document).ready(function() {
     $("#btn-save-movement").click(function() {
         var data = _mvform.serializeFormToObject();
         console.log(data);
-        ajaxcall("POST", "/stocks/add_movement", data, mv_updateSuccess, updateError);
+        ajaxcall("POST", "/v2/stocks/add_movement", data, mv_updateSuccess, updateError);
     });
 
     $("#btn-open-new-mv").click(function() {
@@ -86,7 +86,7 @@ var updateError = function(data) {
 }
 
 function init_dropdown(crud) {
-    /*crud.ajaxcall("GET", "/branches/all", null, 
+    /*crud.ajaxcall("GET", "/v2/branches/all", null, 
     function(data) {
         var branches = data.data;
         $("#branches").append("<option value=''>-- All --</option>"); 
@@ -103,7 +103,7 @@ function init_dropdown(crud) {
         crud.fetch_data({branch_id : branch_id});
     });*/
 
-    crud.ajaxcall("GET", "/products/all", null, 
+    crud.ajaxcall("GET", "/v2/products/all", null, 
     function(data) {
         var products = data.data;
         $("#product").append("<option value=''>-- Select --</option>"); 
@@ -114,7 +114,7 @@ function init_dropdown(crud) {
     function(e) {
         console.log(e);
     });
-    crud.ajaxcall("GET", "/branches/all", null, 
+    crud.ajaxcall("GET", "/v2/branches/all", null, 
     function(data) {
         var branches = data.data;
         $("#branch").append("<option value=''>-- Select --</option>"); 
@@ -136,7 +136,7 @@ var init_mv = function(id) {
             serverSide: true,
             destroy: true,
             searching: false,
-            ajax : "/stocks/"+id+"/movements",
+            ajax : "/v2/stocks/"+id+"/movements",
             columns : [
                 //{data: "id", name : "id"},
                 {data: "created_at", name : "created_at"},

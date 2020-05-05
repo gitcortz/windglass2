@@ -14,7 +14,7 @@ function fetch_data() {
             serverSide: true,
             bFilter: false,
             ajax : {
-                url: "/"+_component+"/expensesreport",
+                url: "/v2/"+_component+"/expensesreport",
                 data: { date : $("#start_date").val(), branch_id: window.branchId }
             },
             data : { date: $('#start_date').val() },
@@ -51,6 +51,6 @@ function init() {
     }); 
 
     $('#btn-excel').click(function() {
-        window.open("/"+_component+"/expensesreport/excel?branch_id="+ window.branchId +"&date="+ $('#start_date').val());
+        window.open("/v2/"+_component+"/expensesreport/excel?branch_id="+ window.branchId +"&date="+ $('#start_date').val());
     });
 }

@@ -45,13 +45,13 @@ var PosCustomer = (function ($) {
         var save = function() {  
             var data = _form.serializeFormToObject();
             if (data.id == "")
-                ajaxcall("POST", "/"+_component, _form.serializeFormToObject(), updateSuccess, updateError);
+                ajaxcall("POST", "/v2/"+_component, _form.serializeFormToObject(), updateSuccess, updateError);
             else
-                ajaxcall("PUT", "/"+_component+"/"+data.id, _form.serializeFormToObject(), updateSuccess, updateError);
+                ajaxcall("PUT", "/v2/"+_component+"/"+data.id, _form.serializeFormToObject(), updateSuccess, updateError);
         };
 
         var loadForm = function(id) { 
-            ajaxcall("GET", "/"+_component+"/"+id, null, 
+            ajaxcall("GET", "/v2/"+_component+"/"+id, null, 
                 function(data) {
                     var data = data.data;
                     var form = _form;
@@ -87,7 +87,7 @@ var PosCustomer = (function ($) {
         }
                 
         var init_dropdown = function() {
-            ajaxcall("GET", "/cities/all", null, 
+            ajaxcall("GET", "/v2/cities/all", null, 
             function(data) {
                 var cities = data.data;
                 $("#city").append("<option value=''>-- Please select --</option>"); 

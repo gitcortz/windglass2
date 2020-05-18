@@ -216,6 +216,9 @@ var search_customer = function() {
             _orderdetails = [];
             update_order_totals();
         });
+        $('#orderdetail_print').hide();
+        $('#order_detail_id_label').html('');
+        $('#order_detail_date_label').html('');
         $('#customer-search-box').boxWidget('collapse');
         $('#orderdetail_branch').val("");
     });
@@ -376,6 +379,7 @@ var save_order = function() {
         initialize_product_section($order_status_id);
         $('#order_detail_id_label').html(d.data.id);
         $("#orderdetail_id").val(d.data.id);
+        $('#orderdetail_print').show();
         alert('saved ');
         _orderDt.ajax.reload();
     }, function() {
@@ -474,6 +478,7 @@ var load_order = function(data) {
     $('#orderdetail_branch').prop("disabled", true);
     $('#order_detail_id_label').html(data.id);
     $('#order_detail_date_label').html(data.order_date);
+    $('#orderdetail_print').show();
     select_branch(data.branch_id);
    load_order_item(data.order_items);
    initialize_product_section(data.order_status_id);
@@ -500,6 +505,7 @@ var reset_order = function() {
     $('#orderdetail_product').val("");
     $('#orderdetail_qty').val("1");
     $('#order_detail_id_label').html("new");
+    $('#orderdetail_print').hide();
     $('#order_detail_date_label').html(formatDate(new Date()));
     $('#order-detail-update-location').show();
     $('#orderdetail_branch').prop("disabled", false);

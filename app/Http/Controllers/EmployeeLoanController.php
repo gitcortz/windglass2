@@ -125,7 +125,7 @@ class EmployeeLoanController extends Controller
         $existing = EmployeeLoan::where('loan_type_id', '=', $data->loan_type_id)
                                 ->where('loan_status_id', '=', LoanStatus::Loaned)
                                 ->where('employee_id', '=', $data->employee_id)
-                                ->get();
+                                ->count();
 
         if ($existing) {
             return response()->json([

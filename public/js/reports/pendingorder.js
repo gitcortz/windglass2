@@ -27,7 +27,8 @@ var pending = (function(){
 
     var init_empty_cylinder = function() {
         if (_cylinders.length == 0) {            
-            ajaxcall("GET", "/branches/1/emptycylinders", null, 
+            var branch_id = window.branchId;
+            ajaxcall("GET", "/branches/"+branch_id+"/emptycylinders", null, 
             function(data) {
                 _cylinders = data;
                 $("#select_empty_cylinder").append("<option value=''>-- Please select --</option>");

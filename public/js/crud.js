@@ -27,7 +27,10 @@ var Crud = (function ($) {
             var errors = $.parseJSON(data.responseText);
             _errors.html('');
             $.each(errors.messages, function(key, value) {
-                _errors.append('<li>' + value + '</li>');
+                if (value[0].toLowerCase() == "the email has already been taken.")
+                    _errors.append('<li>The username has already been taken</li>');
+                else
+                    _errors.append('<li>' + value + '</li>');
             });
             _error_bag.show();
         }

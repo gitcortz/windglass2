@@ -28,9 +28,9 @@
                         required placeholder="Enter name">
                 </div>
                 <div class="form-group">
-                    <label for="email">Email</label>
+                    <label for="email">Username</label>
                     <input type="text" class="form-control" id="email" name="email" 
-                        required placeholder="Enter email">
+                        required placeholder="Enter username">
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>

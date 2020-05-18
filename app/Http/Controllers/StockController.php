@@ -64,7 +64,9 @@ class StockController extends Controller
         }
 
         $exists = Stock::where('branch_id', $request->branch_id)
-                        ->where('product_id', $request->product_id)->get();
+                        ->where('product_id', $request->product_id)->count();
+
+
         if ($exists){
             return response()->json([
                 'error'    => true,

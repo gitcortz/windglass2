@@ -4,7 +4,7 @@
 	</head>
     <body style="margin:0;padding:0;font-family:Arial Narrow;font-size:11px;width:100%;" onload="window.print();/*window.close();*/">
     
-    <div style="width:350px; border: 1px solid black; padding-left:10px;">
+    <div style="width:300px; border: 1px solid black; padding-left:10px;">
 
             <h1>{{ $order->branch->name }}</h1>
             {{ $order->branch->address }}<br/>
@@ -52,15 +52,13 @@
                     <td>Product</td>
                     <td>QTY</td>
                     <td>Price</td>
-                    <td>Disc</td>
                     <td>Amt</td>
                 </tr>
                     @foreach ($order->order_items as $row)
                     <tr>
                         <td>{{ $row["stock"]->product->name }}</td>
                         <td>{{ $row["quantity"] }}</td>
-                        <td>{{ number_format($row["unit_price"], 2) }}</td>
-                        <td>{{ number_format($row["discount"], 2) }}</td>
+                        <td>{{ number_format($row["unit_price"] - $row["discount"], 2) }}</td>
                         <td>{{  number_format($row["quantity"] * ($row["unit_price"] - $row["discount"]), 2) }}</td>
                     </tr>
                     @endforeach

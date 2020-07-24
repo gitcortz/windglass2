@@ -12,7 +12,7 @@ function fetch_data() {
             serverSide: true,
             bFilter: false,
             ajax : {
-                url: "/"+_component+"/dailysalesreport",
+                url: window.path + "/"+_component+"/dailysalesreport",
                 data: { date : $("#start_date").val(),
                         branch_id : window.branchId }
             },
@@ -49,7 +49,7 @@ function init() {
     });
 
     $('#btn-excel').click(function() {
-        window.open("/"+_component+"/dailysalesreport/excel?branch_id="+ window.branchId +"&date="+ $('#start_date').val());
+        window.open(window.path + "/"+_component+"/dailysalesreport/excel?branch_id="+ window.branchId +"&date="+ $('#start_date').val());
     });
     
     $('#search').click(function(){

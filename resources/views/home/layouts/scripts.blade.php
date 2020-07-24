@@ -43,6 +43,7 @@
     @else
         window.isAdmin = false;
     @endauth
+    window.path = '';
     window.branchId = {!! json_encode(Session::get('branch_id'), true) !!}; 
 </script>
 <script src="{{ asset('assets/js/common.js') }}"></script>

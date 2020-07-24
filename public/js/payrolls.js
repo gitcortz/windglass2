@@ -38,7 +38,7 @@ var Payroll = (function ($) {
             });
             $.ajax({
                 type: type,
-                url: url,
+                url: window.path + url,
                 data: data,
                 dataType: 'json',
                 success: success,
@@ -66,7 +66,7 @@ var Payroll = (function ($) {
                     searching: false,
                     info: false,
                     scrollX : true,
-                    ajax : "/"+_component+"/all?weekno="+data.weekno+"&year="+data.year,
+                    ajax : window.path + "/"+_component+"/all?weekno="+data.weekno+"&year="+data.year,
                     columns : _columns,
                     order: [[ 0, "desc" ]], 
                     initComplete : function(settings, json) {
@@ -126,7 +126,7 @@ var Payroll = (function ($) {
 
             $('#btn-export').click(function() {
                 var data =  _weekPicker.getSelectedValue();
-                window.open("/"+_component+"/export?weekno="+data.weekno+"&year="+data.year);
+                window.open(window.path + "/"+_component+"/export?weekno="+data.weekno+"&year="+data.year);
             });
             
             $('#btn-process').click(function() {

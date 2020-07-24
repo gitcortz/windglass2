@@ -136,7 +136,7 @@ var init_mv = function(id) {
             serverSide: true,
             destroy: true,
             searching: false,
-            ajax : "/stocks/"+id+"/movements",
+            ajax : window.path + "/stocks/"+id+"/movements",
             columns : [
                 //{data: "id", name : "id"},
                 {data: "created_at", name : "created_at"},

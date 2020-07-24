@@ -43,7 +43,7 @@ var Crud = (function ($) {
             });
             $.ajax({
                 type: type,
-                url: url,
+                url: window.path + url,
                 data: data,
                 dataType: 'json',
                 success: success,
@@ -65,7 +65,7 @@ var Crud = (function ($) {
                     processing: true,
                     serverSide: true,
                     ajax :  {
-                        url: "/"+_component+"/all",
+                        url: window.path + "/"+_component+"/all",
                         data: _datatable_data                           
                     },
                     columns : _columns,
@@ -82,7 +82,7 @@ var Crud = (function ($) {
                 processing: true,
                 serverSide: true,
                 ajax :  {
-                    url: "/"+_component+"/all",
+                    url: window.path + "/"+_component+"/all",
                     data : data               
                 },
                 columns : _columns,

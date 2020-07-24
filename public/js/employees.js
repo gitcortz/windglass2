@@ -177,7 +177,7 @@ var init_loans = function(id) {
             serverSide: true,
             destroy: true,
             searching: false,
-            ajax : "/employees/"+id+"/loans",
+            ajax : window.path + "/employees/"+id+"/loans",
             columns : [
                 {data: "id", name : "id"},
                 {data: "employeename", name : "employeename"},

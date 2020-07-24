@@ -1,3 +1,4 @@
+
 var ajaxcall = function(type, url, data, success, error) {
     $.ajaxSetup({
         headers: {
@@ -6,7 +7,7 @@ var ajaxcall = function(type, url, data, success, error) {
     });
     $.ajax({
         type: type,
-        url: url,
+        url: window.path + url,
         data: data,
         dataType: 'json',
         success: success,
@@ -54,7 +55,7 @@ var uploadcall = function(type, url, data, success, error) {
     });
     $.ajax({
         type: type,
-        url: url,
+        url: window.path + url,
         data: data,
         dataType: 'json',
         processData: false,

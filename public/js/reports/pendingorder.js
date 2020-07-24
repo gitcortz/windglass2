@@ -200,7 +200,7 @@ var pending = (function(){
             pending_dt = dt_container.DataTable({
                 processing: true,
                 serverSide: true,
-                ajax : "/reports/"+window.branchId+"/pendingorderreport/",
+                ajax : window.path + "/reports/"+window.branchId+"/pendingorderreport/",
                 columns :  [
                     {data: "id", name : "id", "width": "20px",},
                     {data: "order_date", name : "order_date"},
@@ -311,7 +311,7 @@ function fetch_data() {
             serverSide: true,
             bFilter: false,
             ajax : {
-                url: "/"+_component+"/dailysalesreport",
+                url: window.path + "/"+_component+"/dailysalesreport",
                 "data": function(d){
                     d.date = $("#start_date").val();
                  }
@@ -348,7 +348,7 @@ function init() {
     });
 
     $('#btn-pdf').click(function() {
-        window.open("/"+_component+"/dailysalesreport/pdf?date="+ $('#start_date').val());
+        window.open(window.path + "/"+_component+"/dailysalesreport/pdf?date="+ $('#start_date').val());
     });
     
     $('#search').click(function(){

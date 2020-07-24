@@ -20,7 +20,7 @@ $(document).ready(function() {
             sales_dt = sales_dt_container.DataTable({
                 processing: true,
                 serverSide: true,
-                ajax : "/pos/session/",
+                ajax : window.path + "/pos/session/",
                 columns :  [
                     {data: "id", name : "id"},
                     {data: "order_date", name : "order_date"},

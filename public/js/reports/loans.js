@@ -38,7 +38,7 @@ var LoanReport = (function ($) {
             });
             $.ajax({
                 type: type,
-                url: url,
+                url: window.path + url,
                 data: data,
                 dataType: 'json',
                 success: success,
@@ -62,7 +62,7 @@ var LoanReport = (function ($) {
                     paging :   false,
                     searching: false,
                     bFilter: false,
-                    ajax : "/reports/loansreport?weekno="+data.weekno+"&year="+data.year,
+                    ajax : window.path + "/reports/loansreport?weekno="+data.weekno+"&year="+data.year,
                     columns : _columns,
                     order: [[ 0, "desc" ]]
                 });                

@@ -26,8 +26,7 @@ class AdminController extends Controller
     public function checkUserLogin(Request $request) {
         $validator = Validator::make($request->input(), array(
             'email' => 'required',
-            'password' => 'required',
-            'branch' => 'required'
+            'password' => 'required'           
         ));
 
         if ($validator->fails()) {
@@ -43,16 +42,14 @@ class AdminController extends Controller
         
         if (auth()->guard("web")->attempt($user_info)) {
             $logged_user_details = auth()->guard("web")->user();
-            if ($this->isUserHasBranch($logged_user_details->id, $branch_id)) {
+            //if ($this->isUserHasBranch($logged_user_details->id, $branch_id)) {
                 session(["is_active" => 1]);
                 session(["user_details" => $logged_user_details]);
-                session(["branch_id" => $branch_id]);                
-                session(["branch_name" => Branch::find($branch_id)->name]);
                 return redirect("/");
-            }
-            else {
-                return redirect()->back()->withErrors("user not allowed");
-            }
+            //}
+            //else {
+            //    return redirect()->back()->withErrors("user not allowed");
+            //}
         } else {
             $error_message = "Invalid credentials";
             return redirect()->back()->withErrors($error_message);

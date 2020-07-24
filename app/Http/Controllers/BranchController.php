@@ -130,7 +130,11 @@ class BranchController extends Controller
         $user_id = session("user_details")->id;
         if (!session("user_branches")){
             $branches = UserBranches::with('branch')->where('user_id', $user_id)->get();
-            session(["user_branches" => $branches]);              
+            session(["user_branches" => $branches]);
+            if (session("user_branches")->count() > 0) {
+                session(["branch_id" => session("user_branches")[0]->branch_id ]);
+                session(["branch_name" => session("user_branches")[0]->branch->name]);            
+            } 
         }
         
         return response()->json([

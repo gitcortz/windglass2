@@ -36,15 +36,7 @@
       <div class="form-group has-feedback">
         <input type="password" name="password" class="form-control" placeholder="Password">
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-      </div>
-      <div class="form-group has-feedback">
-        <select name="branch" id="login_branch" class="form-control">
-          <option value="">-- Please select branch --</option>
-          @foreach ($allBranches as $branch)
-            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-          @endforeach          
-        </select>
-      </div>      
+      </div>    
       <div class="row">
         <div class="col-xs-8" >
           <div class="checkbox icheck" style="display:none">

@@ -1,18 +1,3 @@
-(function ($) {
-    if (!$) {
-        return;
-    }
-    
-    $.fn.serializeFormToObject = function() {
-        var $form = $(this);
-        var fields = $form.find('[disabled]');
-        fields.prop('disabled', false);
-        var json = $form.serializeJSON();
-        fields.prop('disabled', true);
-        return json;
-    };
-})(jQuery);
-
 var ajaxcall = function(type, url, data, success, error) {
     $.ajaxSetup({
         headers: {
@@ -28,6 +13,37 @@ var ajaxcall = function(type, url, data, success, error) {
         error: error
     });
 };
+
+var initialBranches = function() {
+    ajaxcall("GET", "/users/0/branches/", null, 
+    function(data) {
+        var branches = data.data;
+        for(var i=0; i<branches.length; i++){
+            $("#header_branch_selection").append("<option value='" + branches[i].branch_id + "' " +(data.selected == branches[i].branch_id ? "selected":"")+ " >"+branches[i].branch.name+"</option>"); 
+        }
+        
+        $('#header_branch_selection').change(function() {
+            switchBranch( $(this).find(":selected").val() );
+        });
+    }, 
+    function(e) {
+        console.log(e);
+    });
+
+   
+}
+
+var switchBranch = function(id){
+    ajaxcall("GET", "/branches/switch/"+id, null, 
+    function(data) {
+        if (data.result) {
+            location.href = "/";
+        }
+    }, 
+    function(e) {
+        console.log(e);
+    });
+}
 
 
 var uploadcall = function(type, url, data, success, error) {
@@ -56,8 +72,27 @@ var formatDateYYYYMMDD = function(d){
         ('0' + d.getDate()).slice(-2)
       ].join('-');
     return date;
-}
+};
 
 var toDateOnly = function(d){
     return d.substring(0, 10);
-}
+};
+
+
+(function ($) {
+    if (!$) {
+        return;
+    }
+    
+    $.fn.serializeFormToObject = function() {
+        var $form = $(this);
+        var fields = $form.find('[disabled]');
+        fields.prop('disabled', false);
+        var json = $form.serializeJSON();
+        fields.prop('disabled', true);
+        return json;
+    };
+
+    initialBranches();
+
+})(jQuery);

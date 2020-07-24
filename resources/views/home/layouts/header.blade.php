@@ -15,7 +15,12 @@
 
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          <li><div href="javascript:void(0)" style="font-weight:bold; position: relative; display: block; padding: 15px 15px; color:#fff">{{ session('branch_name') }}</div></li>
+          <li>
+            <div href="javascript:void(0)" style="font-weight:bold; position: relative; display: none; padding: 15px 15px; color:#fff">{{ session('branch_name') }}</div>
+            <div style="margin: 10px 10px;padding:5px;font-weight:bold;border:1px solid #fff"><span style="color:#fff">Branch:</span>
+            <select id="header_branch_selection"></select>
+            </div>
+          </li>
           <!-- User Account: style can be found in dropdown.less -->
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">

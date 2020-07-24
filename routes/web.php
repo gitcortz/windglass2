@@ -1,6 +1,7 @@
 <?php
 Route::group(['middleware' => 'not.auth'], function () {
     Route::get("/", "HomeController@dashboard");
+
     //Cities Routes 
     Route::group(['prefix' => 'cities'], function () {
         Route::get('', [ 'uses' => 'CityController@index', 'as' => 'cities',]);
@@ -37,8 +38,8 @@ Route::group(['middleware' => 'not.auth'], function () {
         Route::delete('/{id}', [ 'uses' => 'BranchController@destroy', 'as'   => 'branches.destroy',]);
         Route::get('/{id}/products', 'BranchController@products');
         Route::get('/{id}/emptycylinders', 'BranchController@empty_cylinders');
+        Route::get('/switch/{branch_id}', [ 'uses' => 'AdminController@set_branch', 'as'   => 'branches.switch',]);
     });
-
 
     //Brands Routes 
     Route::group(['prefix' => 'brands'], function () {
@@ -114,7 +115,7 @@ Route::group(['middleware' => 'not.auth'], function () {
         Route::get('', [ 'uses' => 'PosController@index', 'as' => 'pos',]);
         Route::get('/v2', [ 'uses' => 'PosController@index_v2', 'as' => 'pos-v2',]);
         Route::get('/receipt/{id}', [ 'uses' => 'PosController@receipt', 'as' => 'pos.receipt',]);
-        Route::get('/list', [ 'uses' => 'PosController@list', 'as' => 'pos.list',]);
+        Route::get('/{id}/list', [ 'uses' => 'PosController@list', 'as' => 'pos.list',]);
         Route::get('/session', [ 'uses' => 'PosController@session', 'as' => 'pos.session',]);
     });
 
@@ -228,6 +229,7 @@ Route::group(['middleware' => 'not.auth'], function () {
         Route::get('/{id}/branches', 'UserController@branches');
     });
 
+   
 });
 
 

@@ -24,8 +24,11 @@ class PosController extends Controller
     }
 
     public function list(Request $request) {
-        
+    
+        $branch_id = $request->id;
+    
         $matchThese = [];
+        $matchThese['branch_id'] =  $branch_id;
         if($request->customer_id)
             $matchThese['customer_id'] = $request->customer_id;
         if($request->order_id)

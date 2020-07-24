@@ -426,7 +426,7 @@ var display_order_table = function(searchdata) {
             serverSide: true,
             searching: false,
            ajax :  {
-                url: "/pos/list/",
+                url: "/pos/"+_branch_id+"/list/",
                 data : searchdata
             },
             columns :  [
@@ -548,9 +548,9 @@ var initialize_select_status = function(status) {
         return;        
     }
 
-    if (status <= 10) {
+    /*if (status <= 10) {
         select_status.append($('<option>', { value: 10, text: 'DRAFT'}));        
-    }
+    }*/
     if (status <= 20) {
         select_status.append($('<option>', { value: 20, text: 'ORDERED'}));                        
     }

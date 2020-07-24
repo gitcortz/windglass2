@@ -6,7 +6,7 @@
   <!-- Content Header (Page header) --> 
   <section class="content-header">
     <h1 style="display:inline">
-      POS
+      POS {{ session("branch_id") }}
     </h1>
     <ol class="breadcrumb" style="display:none">
       <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>

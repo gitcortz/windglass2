@@ -60,6 +60,22 @@ class AdminController extends Controller
 
     }
 
+    public function set_branch($branch_id) {
+        $valid = true;        
+        if ($this->isUserHasBranch(session("user_details")->id, $branch_id)) {
+            session(["branch_id" => $branch_id]);                
+            session(["branch_name" => Branch::find($branch_id)->name]);
+        }
+        else {
+            $valid = false;
+        }
+
+        return response()->json([
+            'error' => false,
+            'result'  => $valid,
+        ], 200);
+    }
+
     private function isUserHasBranch($user_id, $branch_id) {
         $branches = UserBranches::where('user_id', $user_id)
                     ->where('branch_id', $branch_id)

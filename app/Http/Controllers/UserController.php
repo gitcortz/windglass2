@@ -139,7 +139,23 @@ class UserController extends Controller
     public function branches(Request $request)
     {
         $user_id = $request->id;
-        $branches = UserBranches::where('user_id', $user_id)->get();
+        if ($user_id == 0) {
+            $user_id = session("user_details")->id;
+            if (!session("user_branches")){
+                $branches = UserBranches::with('branch')->where('user_id', $user_id)->get();
+                session(["user_branches" => $branches]);              
+            }
+            
+            return response()->json([
+                'error' => false,
+                'selected' => session("branch_id"),
+                'data'  => session("user_branches"),
+            ], 200);            
+        }
+
+        
+        $branches = UserBranches::with('branch')->where('user_id', $user_id)->get();
         return ($branches);
+        
     }
 }

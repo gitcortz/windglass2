@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Branch;
 use App\Models\Stock;
+use App\Models\UserBranches;
 use Datatables;
 use Validator;
 
@@ -122,5 +123,21 @@ class BranchController extends Controller
                     ->where('product_types.name', 'Empty Cylinders')
                     ->get(['stocks.*']);
         return ($products);
+    }
+
+    public function session(Request $request)
+    {
+        $user_id = session("user_details")->id;
+        if (!session("user_branches")){
+            $branches = UserBranches::with('branch')->where('user_id', $user_id)->get();
+            session(["user_branches" => $branches]);              
+        }
+        
+        return response()->json([
+            'error' => false,
+            'selected' => session("branch_id"),
+            'data'  => session("user_branches"),
+        ], 200);            
+        
     }
 }

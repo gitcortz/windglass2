@@ -15,7 +15,7 @@ var ajaxcall = function(type, url, data, success, error) {
 };
 
 var initialBranches = function() {
-    ajaxcall("GET", "/users/0/branches/", null, 
+    ajaxcall("GET", "/branches/session", null, 
     function(data) {
         var branches = data.data;
         for(var i=0; i<branches.length; i++){

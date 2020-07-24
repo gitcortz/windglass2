@@ -32,16 +32,18 @@ Route::group(['middleware' => 'not.auth'], function () {
     Route::group(['prefix' => 'branches'], function () {
         Route::get('', [ 'uses' => 'BranchController@index', 'as' => 'branches',]);
         Route::get('/all', [ 'uses' => 'BranchController@list', 'as' => 'branches.list',]);
+        Route::get('/session', [ 'uses' => 'BranchController@session', 'as'   => 'branches.session',]);
+        Route::get('/switch/{branch_id}', [ 'uses' => 'AdminController@set_branch', 'as'   => 'branches.switch',]);                
         Route::get('/{id}', [ 'uses' => 'BranchController@show', 'as' => 'branches.show',]);
         Route::post('/', [ 'uses' => 'BranchController@store', 'as' => 'branches.store',]);
         Route::put('/{id}', [ 'uses' => 'BranchController@update', 'as' => 'branches.update',]);
         Route::delete('/{id}', [ 'uses' => 'BranchController@destroy', 'as'   => 'branches.destroy',]);
         Route::get('/{id}/products', 'BranchController@products');
         Route::get('/{id}/emptycylinders', 'BranchController@empty_cylinders');
-        Route::get('/switch/{branch_id}', [ 'uses' => 'AdminController@set_branch', 'as'   => 'branches.switch',]);
+        
     });
 
-    //Brands Routes 
+    //Brands Routes 1
     Route::group(['prefix' => 'brands'], function () {
         Route::get('', [ 'uses' => 'BrandController@index', 'as' => 'brands',]);
         Route::get('/all', [ 'uses' => 'BrandController@list', 'as' => 'brands.list',]);
@@ -226,7 +228,7 @@ Route::group(['middleware' => 'not.auth'], function () {
         Route::post('/', [ 'uses' => 'UserController@store', 'as' => 'users.store',]);
         Route::put('/{id}', [ 'uses' => 'UserController@update', 'as' => 'users.update',]);
         Route::delete('/{id}', [ 'uses' => 'UserController@destroy', 'as'   => 'users.destroy',]);
-        Route::get('/{id}/branches', 'UserController@branches');
+        Route::get('/{id}/branches', [ 'uses' => 'UserController@branches', 'as'   => 'users.branches',]);
     });
 
    

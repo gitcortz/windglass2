@@ -41,7 +41,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'user.list',
             'user.create',
             'user.edit',
-            'user.delete'
+            'user.delete',
+            'users.branches'
          ];
  
  
@@ -53,7 +54,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $role = Role::create(['name' => 'user'])
             ->givePermissionTo(['pos.list', 'pos.create', 'pos.edit', 'pos.delete',
                                 'sales.list', 'sales.create', 'sales.edit', 'sales.delete',
-                                'inventory.list', 'inventory.create', 'inventory.edit', 'inventory.delete',]);
+                                'inventory.list', 'inventory.create', 'inventory.edit', 'inventory.delete','users.branches']);
 
         $role = Role::create(['name' => 'admin']);
         $role->givePermissionTo(Permission::all());

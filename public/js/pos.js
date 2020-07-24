@@ -193,7 +193,7 @@ var search_customer = function() {
         processing: true,
         serverSide: true,
         ajax :  {
-            url: "/customers/search",
+            url:  window.path + "/customers/search",
             data : { keyword : keyword }               
         },
         columns : [
@@ -225,6 +225,8 @@ var search_customer = function() {
 }
 
 var pick_up = function(){
+    $('#order-section-2').show();
+        
     select_customer(1);
     select_branch(_branch_id, function() {
         var tbody = $('#orderdetail_productTable tbody');
@@ -426,7 +428,7 @@ var display_order_table = function(searchdata) {
             serverSide: true,
             searching: false,
            ajax :  {
-                url: "/pos/"+_branch_id+"/list/",
+                url: window.path + "/pos/"+_branch_id+"/list/",
                 data : searchdata
             },
             columns :  [

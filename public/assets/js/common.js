@@ -38,7 +38,7 @@ var switchBranch = function(id){
     ajaxcall("GET", "/branches/switch/"+id, null, 
     function(data) {
         if (data.result) {
-            location.href = location.href;
+            location.href = location.href.replace("#", "");
         }
     }, 
     function(e) {

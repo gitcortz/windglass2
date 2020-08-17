@@ -85,6 +85,7 @@ var PosProducts = (function ($) {
                     console.log(data);
             });
 
+            alert('s');
             ajaxcall("GET", "/branches/1/products", null, 
                 function(data) {
                     _products = data;

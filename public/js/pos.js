@@ -501,7 +501,7 @@ var reset_order = function() {
     initialize_product_section(10);
     $('#customer-search-box').boxWidget('collapse');
     $('#orderdetail_branch').val("");
-    $('#orderdetail_status').val("10");
+    $('#orderdetail_status').val("20");
     $('#orderdetail_id').val("");
     $('#orderdetail_rider').val("");
     $('#orderdetail_product').val("");

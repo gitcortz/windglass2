@@ -3,6 +3,7 @@
 namespace App\Library\Services\Stocks;
 use Carbon\Carbon;
 use App\Models\OrderItem;
+use App\Models\OrderBringIn;
 use App\Models\Stock;
 use App\Models\Enums\MovementType;
 use Excel;
@@ -22,6 +23,15 @@ class StocksService implements StocksServiceInterface
         foreach ($orderItems as $item) {
             $this->moveStocks($item->stock_id, $item->stock->branch_id, 0, 
             $item->stock->current_stock ,$item->quantity, MovementType::Sold);
+        }
+
+        $orderBringIns = OrderBringIn::with('stock')
+        ->where('order_id', $orderId)
+        ->get();
+
+        foreach ($orderBringIns as $item) {
+            $this->moveStocks($item->stock_id, 0, $item->stock->branch_id, 
+            $item->stock->current_stock ,$item->quantity * -1, MovementType::Sold);
         }
 
     }

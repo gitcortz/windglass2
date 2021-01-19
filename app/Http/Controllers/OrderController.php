@@ -193,7 +193,9 @@ class OrderController extends Controller
             }
         }
 
-         //$stocksServiceInstance->completedOrder($id);
+        if ($data1["order_status_id"] == OrderStatus::Completed) {
+            $stocksServiceInstance->completedOrder($id);
+        }
 
         return response()->json([
             'error' => false,

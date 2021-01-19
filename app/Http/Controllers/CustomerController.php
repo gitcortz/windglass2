@@ -33,12 +33,15 @@ class CustomerController extends Controller
     public function search(Request $request) {
 
         if($request->keyword != "") {
+            $keyword = $request->keyword;
             $customers = DB::table('customers')
                 ->leftJoin('cities', 'customers.city_id', '=', 'cities.id')
-                -> whereNull('customers.deleted_at')                
-                -> where('customers.name', 'LIKE', '%'.$request->keyword.'%')
-                -> orWhere('address', 'LIKE', '%'.$request->keyword.'%')
-                -> orWhere('cities.name', 'LIKE', '%'.$request->keyword.'%')
+                ->whereNull('customers.deleted_at')
+                ->where(function($q) use ($keyword){
+                    $q->orWhere('customers.name', 'LIKE', '%'.$keyword.'%');
+                    $q->orWhere('address', 'LIKE', '%'.$keyword.'%');
+                    $q->orWhere('cities.name', 'LIKE', '%'.$keyword.'%');
+                })
                 ->select('customers.*', 'cities.name as city');
         }
         else { 
